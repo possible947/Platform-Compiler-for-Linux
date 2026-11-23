@@ -808,6 +808,26 @@ Its principal output is not a kernel configuration file.
 
 Its principal output is a **verified platform implementation**, of which the kernel configuration and kernel binary are generated components.
 
+## Development
+
+Create and activate a virtual environment, then install the project and its test
+dependencies:
+
+```sh
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -e '.[dev]'
+pytest
+platform-compiler --help
+platform-compiler version
+platform-compiler workspace init /path/to/local/workspace
+```
+
+Machine-specific evidence, local state, and generated artifacts belong in an
+external workspace, not in this Git checkout. See the [developer guide](DEVELOPER_README.md)
+and the [inference](ADR-001-LLM-Inference-Architecture.md) and
+[canonical ACPI](ADR-002-Canonical-ACPI-and-Reference-Platform-Policy.md) ADRs.
+
 ---
 
 ## 19. Current Architecture Status
