@@ -111,7 +111,7 @@ def collect_snapshot(
     usable = any(
         capture.status == CollectionStatus.SUCCESS
         and capture.provenance.reference.startswith(("/proc/", "/sys/"))
-        and capture.transformation != "filtered_directory_inventory"
+        and capture.transformation not in {"filtered_directory_inventory", "existence_check"}
         for result in results for capture in result.captures
     )
     status = CollectionStatus.FAILED
@@ -139,4 +139,9 @@ def collect_snapshot(
     _write_private(temporary_manifest, (snapshot.model_dump_json(indent=2) + "\n").encode("utf-8"))
     os.link(temporary_manifest, destination / "manifest.json")
     temporary_manifest.unlink()
+    directory = os.open(destination, os.O_RDONLY | os.O_DIRECTORY)
+    try:
+        os.fsync(directory)
+    finally:
+        os.close(directory)
     return snapshot, destination

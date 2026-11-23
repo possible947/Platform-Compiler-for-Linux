@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import errno
 import hashlib
+import os
 import re
 from collections.abc import Callable
 from datetime import datetime, timezone
@@ -21,6 +22,7 @@ from platform_compiler.snapshot.models import (
 
 T = TypeVar("T")
 R = TypeVar("R")
+_CAPTURE_LIMIT = 8 * 1024 * 1024
 
 
 def utc_now() -> datetime:
@@ -50,11 +52,19 @@ class KernelReader:
         return path
 
     def read(self, interface: str) -> bytes:
-        with self.path(interface).open("rb") as stream:
-            content = stream.read(8 * 1024 * 1024 + 1)
-        if len(content) > 8 * 1024 * 1024:
-            raise CaptureLimitExceeded()
-        return content
+        # Bounded chunks: some procfs handlers allocate the requested read size.
+        chunks = []
+        total = 0
+        with self.path(interface).open("rb", buffering=0) as stream:
+            while chunk := stream.read(64 * 1024):
+                total += len(chunk)
+                if total > _CAPTURE_LIMIT:
+                    raise CaptureLimitExceeded()
+                chunks.append(chunk)
+        return b"".join(chunks)
+
+    def exists(self, interface: str) -> bool:
+        return os.path.lexists(self.path(interface))
 
     def entries(self, interface: str) -> tuple[str, ...]:
         return tuple(sorted(path.name for path in self.path(interface).iterdir()))

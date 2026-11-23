@@ -84,6 +84,7 @@ class PCIDevice(ObservationModel):
     device_id: str | None = None
     class_id: str | None = None
     driver: str | None = None
+    driver_bound: bool | None = None
     sysfs_path: str | None = None
     parent_path: str | None = None
     numa_node: int | None = None
@@ -97,10 +98,22 @@ class PCITopology(ObservationModel):
     devices: tuple[PCIDevice, ...] = ()
 
 
+class ACPITableHeader(ObservationModel):
+    signature: str
+    length: int
+    revision: int
+    oem_id: str
+    oem_table_id: str
+    oem_revision: int
+    creator_id: str
+    creator_revision: int
+
+
 class ACPITable(ObservationModel):
     name: str
     source: str
     capture_id: str
+    header: ACPITableHeader | None = None
 
 
 class ACPIInventory(ObservationModel):
@@ -114,6 +127,7 @@ class KernelEnvironment(ObservationModel):
     release: str | None = None
     version: str | None = None
     command_line: str | None = None
+    efi_runtime_interface: bool | None = None
 
 
 Observation = Annotated[

@@ -20,6 +20,7 @@ from platform_compiler.snapshot.collectors import (
     ACPICollector,
     CPUCollector,
     IRQCollector,
+    KernelCollector,
     MemoryCollector,
     NUMACollector,
     PCICollector,
@@ -81,21 +82,33 @@ def context(tmp_path: Path) -> CollectionContext:
            " 24:          1          2   PCI-MSI fixture_irq\n")
     tables = sysfs / "firmware/acpi/tables"
     (tables / "dynamic").mkdir(parents=True)
-    header = b"APIC" + (44).to_bytes(4, "little") + b"\x01\xab"
-    _write(tables, "APIC", header + b"PRIVATE_OEM_HEADER".ljust(26, b"_") + bytes(8))
-    _write(tables, "DSDT", b"PRIVATE_AML_SERIAL")
+    _write(tables, "APIC", _acpi_table(b"APIC", b"\x01\x02\x03\x04\x05\x06\x07\x08"))
+    _write(tables, "DSDT", _acpi_table(b"DSDT", b"\x10AML"))
+    _write(tables, "FACS", b"FACS" + (64).to_bytes(4, "little") + bytes(56))
     _write(tables, "MSDM", b"PRIVATE_LICENSE_KEY")
     _write(proc, "sys/kernel/osrelease", "6.12-fixture")
     _write(proc, "sys/kernel/version", "#1 SMP fixture-build")
     _write(proc, "cmdline", "ro quiet numa_balancing=0 root=UUID=PRIVATE_UUID "
            "password=PRIVATE_PASSWORD username=PRIVATE_USER hostname=PRIVATE_HOST "
-           "ip=PRIVATE_MAC api_key=PRIVATE_API_KEY unknown-bare-secret\n")
+           "ip=PRIVATE_MAC api_key=PRIVATE_API_KEY rd.luks.uuid=PRIVATE_LUKS "
+           "BOOTIF=PRIVATE_BOOTIF crashkernel=0123456789abcdef0123 "
+           "0123456789abcdef0123 acpi_osi=Darwin nomodeset pcie_aspm=off\n")
+    (sysfs / "firmware/efi").mkdir(parents=True)
     for path in ("sys/kernel/hostname", "sys/kernel/random/boot_id", "version",
                  "self/environ", "self/status"):
         _write(proc, path, "PRIVATE_DO_NOT_COLLECT")
     _write(sysfs, "class/net/eth0/address", "PRIVATE_MAC")
     _write(sysfs, "class/dmi/id/product_serial", "PRIVATE_SERIAL")
     return CollectionContext(KernelReader(proc, sysfs), "fixture64")
+
+
+def _acpi_table(signature: bytes, body: bytes) -> bytes:
+    length = 36 + len(body)
+    return (
+        signature + length.to_bytes(4, "little") + b"\x02\x00" + b"OEMID\x00"
+        + b"TABLEID\x00" + (7).to_bytes(4, "little") + b"INTL"
+        + (0x20200925).to_bytes(4, "little") + body
+    )
 
 
 def _workspace(tmp_path: Path) -> Workspace:
@@ -158,6 +171,59 @@ def test_pci_sysfs_topology_resources_and_pm_are_observations(context: Collectio
     assert device.local_cpu_ids == (2,)
     assert device.resources == ((0x1000, 0x1fff, 0x200), (0, 0, 0))
     assert device.runtime_pm == {"control": "auto", "runtime_status": "suspended"}
+    assert device.driver_bound is True
+
+
+def test_pci_device_without_driver_is_an_observation_not_an_error(
+    context: CollectionContext,
+) -> None:
+    (context.reader.sys_root / "devices/pci0000:00/0000:00:01.0/0000:01:00.0/driver").unlink()
+    result = PCICollector().collect(context)
+    assert result.status == CollectionStatus.SUCCESS
+    assert not result.errors
+    device, = result.observations.devices
+    assert (device.driver, device.driver_bound) == (None, False)
+
+
+def test_kernel_identity_and_boot_arguments_redact_only_identifying_values(
+    context: CollectionContext,
+) -> None:
+    result = KernelCollector().collect(context)
+    assert result.status == CollectionStatus.SUCCESS
+    kernel = result.observations
+    assert (kernel.release, kernel.version) == ("6.12-fixture", "#1 SMP fixture-build")
+    assert kernel.efi_runtime_interface is True
+    assert kernel.command_line == (
+        "ro quiet numa_balancing=0 root=[redacted] password=[redacted] "
+        "username=[redacted] hostname=[redacted] ip=[redacted] api_key=[redacted] "
+        "rd.luks.uuid=[redacted] BOOTIF=[redacted] crashkernel=[redacted] [redacted] "
+        "acpi_osi=Darwin nomodeset pcie_aspm=off"
+    )
+    assert "PRIVATE" not in result.model_dump_json()
+    assert all(b"PRIVATE" not in (c.content or b"") for c in result.captures)
+
+
+def test_kernel_reader_reads_procfs_in_bounded_chunks(
+    context: CollectionContext, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _write(context.reader.proc_root, "interrupts", b"x" * (200 * 1024))
+    requested = []
+    original_open = Path.open
+
+    def tracked_open(path, *args, **kwargs):
+        stream = original_open(path, *args, **kwargs)
+        original_read = stream.read
+
+        def read(size=-1):
+            requested.append(size)
+            return original_read(size)
+
+        stream.read = read
+        return stream
+
+    monkeypatch.setattr(Path, "open", tracked_open)
+    assert context.reader.read("/proc/interrupts") == b"x" * (200 * 1024)
+    assert requested and all(0 < size <= 64 * 1024 for size in requested)
 
 
 def test_malformed_fields_are_reported_without_discarding_other_observations(
@@ -244,9 +310,9 @@ def test_partial_snapshot_hashes_manifest_and_privacy(
                 assert capture.error
     everything = manifest + b"".join(persisted)
     assert b"PRIVATE_" not in everything
-    assert b"unknown-bare-secret" not in everything
     assert b"DO_NOT_READ" not in everything and b"DO_NOT_MAP" not in everything
     assert b"root=UUID" not in everything
+    assert b"acpi_osi=Darwin" in everything
     assert b"ro quiet numa_balancing=0" in everything
     assert str(tmp_path).encode() not in everything
     assert "hostname" not in json.loads(manifest)
@@ -254,25 +320,39 @@ def test_partial_snapshot_hashes_manifest_and_privacy(
     assert ((path / "manifest.json").stat().st_mode & 0o777) == 0o600
 
 
-def test_acpi_inventory_and_permission_denied_body_are_retained(
+def test_acpi_inventory_retains_exact_readable_tables_and_records_denials(
     context: CollectionContext, monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    probe = context.reader.probe
+    read = context.reader.read
 
-    def denied(interface: str) -> None:
+    def denied(interface: str) -> bytes:
         if interface.endswith("/DSDT"):
             raise PermissionError("PRIVATE_PATH")
-        probe(interface)
+        return read(interface)
 
-    monkeypatch.setattr(context.reader, "probe", denied)
+    monkeypatch.setattr(context.reader, "read", denied)
     result = ACPICollector().collect(context)
     assert result.status == CollectionStatus.PARTIAL
-    assert [table.name for table in result.observations.tables] == ["APIC", "DSDT", "MSDM"]
-    captures = {capture.provenance.reference.rsplit("/", 1)[-1]: capture for capture in result.captures}
+    tables = {table.name: table for table in result.observations.tables}
+    assert list(tables) == ["APIC", "DSDT", "FACS", "MSDM"]
+    captures = {c.provenance.reference.rsplit("/", 1)[-1]: c for c in result.captures}
+    apic = (context.reader.sys_root / "firmware/acpi/tables/APIC").read_bytes()
+    assert captures["APIC"].content == apic
+    assert captures["APIC"].transformation is None
+    assert captures["APIC"].content_sha256 == hashlib.sha256(apic).hexdigest()
+    header = tables["APIC"].header
+    assert (header.signature, header.length, header.oem_id, header.oem_table_id) == (
+        "APIC", len(apic), "OEMID", "TABLEID",
+    )
+    assert (header.oem_revision, header.creator_id) == (7, "INTL")
+    assert tables["APIC"].capture_id == captures["APIC"].capture_id
     assert captures["DSDT"].status == CollectionStatus.PERMISSION_DENIED
+    assert tables["DSDT"].header is None
+    assert captures["FACS"].status == CollectionStatus.SUCCESS
+    assert tables["FACS"].header is None
     assert captures["MSDM"].status == CollectionStatus.UNSUPPORTED
-    assert captures["APIC"].content[10:36] == bytes(26)
-    assert captures["APIC"].transformation == "acpi_header_identifiers_redacted"
+    assert captures["MSDM"].content is None
+    assert "PRIVATE" not in result.model_dump_json()
 
 
 def test_one_collector_crashing_does_not_destroy_other_results(
@@ -462,7 +542,7 @@ def test_privacy_excluded_interfaces_are_not_read(
     assert "/proc/cpuinfo" in reads and "/proc/cmdline" in reads
     assert not any(
         name in interface for interface in reads
-        for name in ("/DSDT", "/MSDM", "/config", "/resource0", "/dmi/",
+        for name in ("/MSDM", "/config", "/resource0", "/dmi/",
                      "/class/net/", "/hostname", "/boot_id", "/self/", "/proc/version")
     )
 
