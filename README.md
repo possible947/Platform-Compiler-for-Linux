@@ -728,7 +728,7 @@ LLM reasoning and reference implementations may explain or propose a solution, b
 
 ### Optional local reference corpora
 
-DarwinDumped can be configured as an offline, read-only source of comparative Apple platform evidence. Its artifacts are never target CPM facts or patch recipes, and reference differences alone cannot authorize escalation. See [Local reference-platform sources](docs/reference-platforms.md) for indexing, matching, provenance, and configuration details.
+The optional reference layer retrieves explicitly selected artifacts from a local source and materializes hash-verified snapshots in an external workspace/cache. For the first platform, the caller supplies `reference_id = "MacPro7,1"`; the source does not select a reference or make verification decisions. This milestone removes automatic matching/scoring, feature extraction, Native Gate/reference-acceptance workflows, reference-driven verification, semantic applicability policy, and premature ACPI comparison. Patch generation, correction workflows, verification gates, and semantic ACPI analysis remain deferred. See [Local reference artifact access](docs/reference-platforms.md) for the retained access layer and its limits.
 
 ---
 

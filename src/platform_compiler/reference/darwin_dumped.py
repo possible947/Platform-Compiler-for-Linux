@@ -5,20 +5,19 @@ from pathlib import Path
 
 from platform_compiler.reference.indexer import (
     DARWINDUMPED_REPOSITORY,
-    DarwinDumpedIndexer,
+    _DarwinDumpedIndexer,
+    _revision,
 )
 from platform_compiler.reference.models import (
     ArtifactClass,
     ReferenceArtifact,
-    ReferenceIndex,
-    ReferencePlatformId,
-    ReferencePlatformModel,
+    ReferenceSnapshot,
 )
-from platform_compiler.reference.source import LocalReferenceRoot
+from platform_compiler.reference.source import LocalReferenceSource
 
 
 class DarwinDumpedSource:
-    """Read-only adapter over a local DarwinDumped checkout."""
+    """Local adapter; DarwinDumped repository paths remain private to this class."""
 
     def __init__(
         self,
@@ -26,54 +25,54 @@ class DarwinDumpedSource:
         *,
         cache_path: Path | None = None,
     ) -> None:
-        self.root = LocalReferenceRoot(local_path)
-        self.indexer = DarwinDumpedIndexer(
-            self.root.path,
-            cache_path=cache_path,
-            repository=DARWINDUMPED_REPOSITORY,
+        self._root = local_path.resolve()
+        self._indexer = _DarwinDumpedIndexer(self._root, cache_path=cache_path)
+        self._source: LocalReferenceSource
+        self.refresh_index()
+
+    def refresh_index(self) -> None:
+        revision, artifacts = self._indexer.build()
+        self._source = LocalReferenceSource(
+            self._root,
+            DARWINDUMPED_REPOSITORY,
+            revision,
+            artifacts,
         )
-        self._index: ReferenceIndex | None = None
-
-    def refresh_index(self) -> ReferenceIndex:
-        self._index = self.indexer.build()
-        return self._index
-
-    def _get_index(self) -> ReferenceIndex:
-        if self._index is None:
-            self._index = self.indexer.build()
-        return self._index
-
-    def list_platforms(self) -> tuple[ReferencePlatformModel, ...]:
-        return self._get_index().platforms
 
     def get_artifacts(
         self,
-        platform: ReferencePlatformId,
-        artifact_classes: Sequence[ArtifactClass],
+        reference_id: str,
+        artifact_classes: Sequence[ArtifactClass] | None = None,
     ) -> tuple[ReferenceArtifact, ...]:
-        model = next(
-            (item for item in self.list_platforms() if item.identity == platform),
-            None,
-        )
-        if model is None:
-            return ()
-        selected = set(artifact_classes)
-        return tuple(
-            artifact
-            for artifact in model.artifacts
-            if artifact.artifact_class in selected
-        )
-
-    def read_artifact(self, artifact: ReferenceArtifact) -> bytes:
-        return self.root.read(artifact.relative_path)
+        return self._get_source().get_artifacts(reference_id, artifact_classes)
 
     def read_excerpt(
         self,
         artifact: ReferenceArtifact,
         max_bytes: int,
     ) -> tuple[bytes, bool]:
-        return self.root.read_excerpt(
-            artifact.relative_path,
-            max_bytes,
-            artifact.content_sha256,
+        return self._get_source().read_excerpt(artifact, max_bytes)
+
+    def materialize_snapshot(
+        self,
+        reference_id: str,
+        snapshot_root: Path,
+        artifact_classes: Sequence[ArtifactClass] | None = None,
+        *,
+        max_artifacts: int = 8,
+        max_bytes_per_artifact: int = 16_384,
+    ) -> ReferenceSnapshot:
+        return self._get_source().materialize_snapshot(
+            reference_id,
+            snapshot_root,
+            artifact_classes,
+            max_artifacts=max_artifacts,
+            max_bytes_per_artifact=max_bytes_per_artifact,
         )
+
+    def _get_source(self) -> LocalReferenceSource:
+        if _revision(self._root) != self._source.revision:
+            raise ValueError(
+                "reference source revision changed; refresh the index before retrieval"
+            )
+        return self._source
