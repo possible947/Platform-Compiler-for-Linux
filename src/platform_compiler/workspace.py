@@ -33,3 +33,19 @@ class Workspace:
         if not path.is_dir():
             raise ValueError(f"workspace directory does not exist: {path}")
         return cls(WorkspaceConfig(path=path.resolve()))
+
+    def require_external(self) -> Path:
+        """Validate a capture destination before writing any target data."""
+        path = self.config.path.resolve()
+        if not path.is_dir():
+            raise ValueError("workspace directory does not exist")
+        for protected in (Path("/proc"), Path("/sys"), Path("/dev")):
+            if path.is_relative_to(protected):
+                raise ValueError("workspace must not be in a kernel/device filesystem")
+        for parent in (path, *path.parents):
+            if (parent / ".git").exists():
+                raise ValueError("capture workspace must be outside Git repositories")
+        source_root = Path(__file__).resolve().parents[2]
+        if (source_root / "pyproject.toml").is_file() and path.is_relative_to(source_root):
+            raise ValueError("capture workspace must be outside the source checkout")
+        return path
