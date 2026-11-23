@@ -825,7 +825,11 @@ pytest
 platform-compiler --help
 platform-compiler version
 platform-compiler workspace init /path/to/local/workspace
+platform-compiler snapshot collect --workspace /path/to/local/workspace
 ```
+
+The [current-system snapshot](docs/current-system-snapshots.md) command captures
+read-only Linux observations and raw evidence without analysis or inference.
 
 Machine-specific evidence, local state, and generated artifacts belong in an
 external workspace, not in this Git checkout. See the [developer guide](DEVELOPER_README.md)
