@@ -65,6 +65,8 @@ class LocalReferenceSource:
             provenance = artifact.provenance
             if provenance.source != source or provenance.revision != revision:
                 raise ValueError("artifact provenance does not match local source")
+            if provenance.content_sha256 != artifact.content_sha256:
+                raise ValueError("artifact provenance digest does not match artifact")
             source_path = Path(relative_path)
             if (
                 source_path.is_absolute()
@@ -159,22 +161,27 @@ class LocalReferenceSource:
             raise ValueError("reference snapshots must be outside the source checkout")
 
         available = self.get_artifacts(reference_id, artifact_classes)
-        bounded = available[:max_artifacts]
-        included = tuple(
-            item for item in bounded if item.size_bytes <= max_bytes_per_artifact
+        eligible = tuple(
+            item for item in available if item.size_bytes <= max_bytes_per_artifact
         )
+        included = eligible[:max_artifacts]
+        omitted_size = len(available) - len(eligible)
+        omitted_count_limit = len(eligible) - len(included)
         omitted = len(available) - len(included)
         manifest = {
             "reference_id": reference_id,
             "source": self.source,
             "revision": self.revision,
             "omitted_artifact_count": omitted,
+            "omitted_size_count": omitted_size,
+            "omitted_count_limit_count": omitted_count_limit,
             "artifacts": [
                 {
                     "artifact_id": item.artifact_id,
                     "artifact_class": item.artifact_class.value,
                     "size_bytes": item.size_bytes,
                     "content_sha256": item.content_sha256,
+                    "provenance": item.provenance.model_dump(),
                 }
                 for item in included
             ],
@@ -190,6 +197,8 @@ class LocalReferenceSource:
             / manifest_digest
         )
         if snapshot_path.exists():
+            for artifact in included:
+                self._read_artifact(artifact, max_bytes_per_artifact)
             return self._reuse_snapshot(snapshot_path, manifest, included, omitted)
 
         snapshot_path.parent.mkdir(parents=True, exist_ok=True)
@@ -218,6 +227,8 @@ class LocalReferenceSource:
             path=snapshot_path,
             artifacts=included,
             omitted_artifact_count=omitted,
+            omitted_size_count=omitted_size,
+            omitted_count_limit_count=omitted_count_limit,
         )
 
     def _reuse_snapshot(
@@ -253,6 +264,8 @@ class LocalReferenceSource:
             path=snapshot_path,
             artifacts=artifacts,
             omitted_artifact_count=omitted,
+            omitted_size_count=manifest["omitted_size_count"],
+            omitted_count_limit_count=manifest["omitted_count_limit_count"],
         )
 
     def _validate_artifact(self, artifact: ReferenceArtifact) -> str:

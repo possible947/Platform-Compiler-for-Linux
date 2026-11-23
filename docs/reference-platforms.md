@@ -15,14 +15,20 @@ verification decisions.
   structure is not exposed as a Platform Compiler domain model.
 - Artifact metadata records the explicit reference identifier, source, source
   revision (Git commit, or `working-tree` when no Git metadata exists), opaque
-  artifact identifier, and SHA-256 digest.
+  artifact identifier, opaque source locator, and SHA-256 digest. The locator
+  identifies the source object for auditability; only the adapter interprets
+  its format. DarwinDumped uses a repository-relative path, never a host path
+  or a path outside the repository.
 - A local index cache reuses hashes when file size and modification time are
-  unchanged. Retrieval verifies content against the indexed digest.
+  unchanged. This stat cache is a performance optimization, not a trust
+  boundary: retrieval and materialization verify actual content against the
+  indexed SHA-256, including when reusing an existing snapshot.
 - Materialization writes a local immutable snapshot under the caller-supplied
-  workspace/cache, with a manifest containing artifact hashes and provenance.
-  Files are placed under `artifacts/<artifact_id>`; source repository paths are
-  not part of the generic artifact model.
-- Artifact count and per-artifact byte limits bound snapshot retrieval.
+  workspace/cache, with a manifest containing artifact hashes and complete
+  provenance, including the locator. Files are placed under
+  `artifacts/<artifact_id>`; generic code does not interpret repository layout.
+- Per-artifact byte eligibility is checked before the artifact count limit.
+  The snapshot and manifest report size and count-limit omissions separately.
 - The source operates on an existing local checkout and performs no network
   access.
 
@@ -51,12 +57,27 @@ snapshot = source.materialize_snapshot(
 ```
 
 Each snapshot is keyed by the reference identifier, source revision, and
-requested artifact set. If the checkout's Git revision changes, the adapter
-refuses retrieval until the caller explicitly refreshes its index. Artifact
-hashes also detect content changes since indexing, including for non-Git local
-sources. Repeating materialization for the same request reuses the snapshot
-only if its manifest and files still match; a changed snapshot is rejected
-rather than overwritten.
+requested artifact set. A Git reference checkout must be clean to claim its
+HEAD commit: staged, modified, deleted, untracked, and ignored files cause
+rejection. This deliberately conservative check includes ignored files even
+when they are not artifacts, and rejects Git index flags that can hide tracked
+changes (`assume-unchanged` and `skip-worktree`). Platform Compiler never
+cleans, resets, stashes, or otherwise modifies the reference checkout. If the
+checkout becomes dirty, or its Git revision changes, indexing and retrieval
+fail closed; after the user resolves the state, a changed revision requires
+an explicit index refresh.
+Artifact hashes also detect content changes since indexing, including for
+non-Git local sources. Repeating materialization reuses a snapshot only if its
+source content, manifest, and files still match; integrity failures are
+rejected rather than overwritten.
+
+The checkout is not locked against concurrent writers. Callers must avoid
+changing it while indexing or retrieving artifacts. For non-Git sources,
+`working-tree` is not an immutable revision; the digest identifies the
+indexed bytes, and stat-cache collisions can require the user to remove the
+external index cache and refresh the index. Git checkout transformations such
+as line-ending conversion may make clean working-tree bytes differ from the
+commit's blob; the artifact digest always identifies the working-tree bytes.
 
 ## Intentionally removed or deferred
 

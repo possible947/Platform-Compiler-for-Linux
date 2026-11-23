@@ -30,6 +30,7 @@ class ArtifactProvenance(BaseModel):
     source: str
     revision: str
     reference_id: str
+    source_locator: str
     content_sha256: str
 
 
@@ -52,3 +53,5 @@ class ReferenceSnapshot(BaseModel):
     path: Path
     artifacts: tuple[ReferenceArtifact, ...]
     omitted_artifact_count: int = 0
+    omitted_size_count: int = 0
+    omitted_count_limit_count: int = 0

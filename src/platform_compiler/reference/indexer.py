@@ -42,17 +42,40 @@ def _revision(root: Path) -> str:
         return "working-tree"
     try:
         result = subprocess.run(
-            ["git", "-C", str(root), "rev-parse", "HEAD"],
+            ["git", "--no-optional-locks", "-C", str(root), "rev-parse", "HEAD"],
             check=True,
             capture_output=True,
             text=True,
             timeout=3,
+        )
+        status = subprocess.run(
+            [
+                "git", "--no-optional-locks", "-C", str(root),
+                "-c", "core.fsmonitor=false", "status", "--porcelain=v1",
+                "--untracked-files=all", "--ignored=matching",
+                "--ignore-submodules=none",
+            ],
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        index_flags = subprocess.run(
+            ["git", "--no-optional-locks", "-C", str(root), "ls-files", "-v", "-z"],
+            check=True,
+            capture_output=True,
+            timeout=30,
         )
     except (OSError, subprocess.SubprocessError) as error:
         raise ValueError(f"unable to determine immutable source revision: {root}") from error
     revision = result.stdout.strip()
     if not revision:
         raise ValueError(f"unable to determine immutable source revision: {root}")
+    if status.stdout or any(
+        entry[:1] == b"S" or entry[:1].islower()
+        for entry in index_flags.stdout.split(b"\0") if entry
+    ):
+        raise ValueError(f"dirty Git reference checkout is not allowed: {root}")
     return revision
 
 
@@ -97,10 +120,18 @@ class _DarwinDumpedIndexer:
         stats: dict[str, list[int]] = {}
         reference_families: dict[str, str] = {}
         for family_dir in sorted(self.root.iterdir(), key=lambda item: item.name):
-            if not family_dir.is_dir() or family_dir.name.startswith("."):
+            if (
+                family_dir.is_symlink()
+                or not family_dir.is_dir()
+                or family_dir.name.startswith(".")
+            ):
                 continue
             for model_dir in sorted(family_dir.iterdir(), key=lambda item: item.name):
-                if not model_dir.is_dir() or model_dir.name.startswith("."):
+                if (
+                    model_dir.is_symlink()
+                    or not model_dir.is_dir()
+                    or model_dir.name.startswith(".")
+                ):
                     continue
                 reference_id = model_dir.name
                 previous_family = reference_families.setdefault(
@@ -135,6 +166,7 @@ class _DarwinDumpedIndexer:
                             source=DARWINDUMPED_REPOSITORY,
                             revision=revision,
                             reference_id=reference_id,
+                            source_locator=relative,
                             content_sha256=digest,
                         ),
                     )
@@ -144,6 +176,8 @@ class _DarwinDumpedIndexer:
                             relative,
                         )
                     )
+        if _revision(self.root) != revision:
+            raise ValueError("reference source revision changed during indexing")
         self._save_cache(revision, artifacts, stats)
         return revision, tuple(artifacts)
 

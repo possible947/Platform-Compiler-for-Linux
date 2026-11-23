@@ -1,13 +1,16 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import os
 import socket
+import subprocess
 from pathlib import Path
 
 import pytest
 from pydantic import ValidationError
 
+from platform_compiler.evidence.models import EvidenceClass, EvidenceKind, EvidenceRecord
 from platform_compiler.reference import (
     ArtifactClass,
     DarwinDumpedConfig,
@@ -32,6 +35,93 @@ def _fixture(root: Path) -> None:
     _write(root, "MacPro/MacPro7,1/LSPCI/lspci.txt", b"0000:00:1f.0")
     _write(root, "MacPro/MacPro7,1 (Retail Demo)/CPU/cpu.txt", b"cpu")
     _write(root, "MacBookPro/MacBookPro15,1/Mystery/unknown.bin", b"unknown")
+
+
+def _git(root: Path, *args: str) -> str:
+    return subprocess.run(
+        ["git", "-C", str(root), *args],
+        check=True,
+        capture_output=True,
+        text=True,
+        env={
+            **os.environ,
+            "GIT_CONFIG_GLOBAL": os.devnull,
+            "GIT_CONFIG_SYSTEM": os.devnull,
+            "GIT_TERMINAL_PROMPT": "0",
+        },
+    ).stdout.strip()
+
+
+def _git_fixture(root: Path) -> str:
+    root.mkdir()
+    _git(root, "init", "-q")
+    _fixture(root)
+    _git(root, "add", ".")
+    _git(
+        root, "-c", "user.name=Fixture", "-c", "user.email=fixture@example.invalid",
+        "commit", "-q", "--no-verify", "-m", "fixture",
+    )
+    return _git(root, "rev-parse", "HEAD")
+
+
+def test_clean_git_checkout_uses_head_revision(tmp_path: Path) -> None:
+    root = tmp_path / "source"
+    revision = _git_fixture(root)
+    source = DarwinDumpedSource(root)
+    assert source.get_artifacts("MacPro7,1")[0].provenance.revision == revision
+
+
+@pytest.mark.parametrize(
+    "change",
+    ["modified", "staged", "deleted", "untracked", "ignored", "assume", "skip"],
+)
+def test_dirty_git_checkout_is_rejected_without_modification(
+    tmp_path: Path, change: str,
+) -> None:
+    root = tmp_path / "source"
+    _git_fixture(root)
+    source = DarwinDumpedSource(root)
+    artifact = source.get_artifacts("MacPro7,1")[0]
+    path = root / "MacPro/MacPro7,1/ACPI Tables/DSDT.aml"
+    if change in {"modified", "staged", "assume", "skip"}:
+        if change in {"assume", "skip"}:
+            flag = "--assume-unchanged" if change == "assume" else "--skip-worktree"
+            _git(root, "update-index", flag, str(path))
+        path.write_bytes(b"changed")
+        if change == "staged":
+            _git(root, "add", str(path))
+    elif change == "deleted":
+        path.unlink()
+    elif change == "untracked":
+        _write(root, "MacPro/MacPro7,1/ACPI Tables/new.aml", b"untracked")
+    else:
+        (root / ".git" / "info" / "exclude").write_text("*.aml\n", encoding="utf-8")
+        _write(root, "MacPro/MacPro7,1/ACPI Tables/new.aml", b"ignored")
+    before_status = _git(root, "status", "--porcelain=v1", "--ignored", "-uall")
+    index_before = (root / ".git" / "index").read_bytes()
+    files_before = {
+        p.relative_to(root): p.read_bytes()
+        for p in root.rglob("*")
+        if p.is_file() and ".git" not in p.relative_to(root).parts
+    }
+
+    with pytest.raises(ValueError, match="dirty Git reference checkout"):
+        DarwinDumpedSource(root)
+    with pytest.raises(ValueError, match="dirty Git reference checkout"):
+        source.read_excerpt(artifact, 1024)
+    with pytest.raises(ValueError, match="dirty Git reference checkout"):
+        source.refresh_index()
+    with pytest.raises(ValueError, match="dirty Git reference checkout"):
+        source.materialize_snapshot("MacPro7,1", tmp_path / "snapshots")
+
+    assert (root / ".git" / "index").read_bytes() == index_before
+    assert _git(root, "status", "--porcelain=v1", "--ignored", "-uall") == before_status
+    assert {
+        p.relative_to(root): p.read_bytes()
+        for p in root.rglob("*")
+        if p.is_file() and ".git" not in p.relative_to(root).parts
+    } == files_before
+    assert not (tmp_path / "snapshots").exists()
 
 
 def test_explicit_reference_id_returns_only_its_artifacts(tmp_path: Path) -> None:
@@ -106,8 +196,28 @@ def test_artifact_hashes_and_provenance_are_stable(tmp_path: Path) -> None:
     assert artifact.provenance.source == "possible947/DarwinDumped"
     assert artifact.provenance.revision == "working-tree"
     assert artifact.provenance.reference_id == "MacPro7,1"
+    assert artifact.provenance.source_locator == "MacPro/MacPro7,1/ACPI Tables/DSDT.aml"
     assert artifact.provenance.content_sha256 == artifact.content_sha256
     assert artifact.size_bytes == len(b"raw-acpi")
+    assert ReferenceArtifact.model_validate_json(artifact.model_dump_json()) == artifact
+
+
+def test_adapter_does_not_index_symlinked_reference_directories(tmp_path: Path) -> None:
+    root = tmp_path / "source"
+    outside = tmp_path / "outside"
+    _write(root, "Family/Model/file.bin", b"inside")
+    _write(outside, "OtherModel/file.bin", b"outside")
+    (root / "LinkedFamily").symlink_to(outside, target_is_directory=True)
+    (root / "Family" / "LinkedModel").symlink_to(
+        outside / "OtherModel", target_is_directory=True
+    )
+    source = DarwinDumpedSource(root)
+
+    with pytest.raises(ValueError, match="reference is not available"):
+        source.get_artifacts("LinkedModel")
+    with pytest.raises(ValueError, match="reference is not available"):
+        source.get_artifacts("OtherModel")
+    assert source.get_artifacts("Model")[0].provenance.source_locator == "Family/Model/file.bin"
 
 
 def test_snapshot_materialization_is_bounded_hash_verified_and_idempotent(
@@ -131,8 +241,14 @@ def test_snapshot_materialization_is_bounded_hash_verified_and_idempotent(
     assert len(snapshot.artifacts) == 1
     artifact = snapshot.artifacts[0]
     assert artifact.artifact_class is ArtifactClass.ACPI
+    assert source.read_excerpt(artifact, 16) == (b"raw-acpi", False)
     assert (snapshot.path / "artifacts" / artifact.artifact_id).read_bytes() == b"raw-acpi"
     assert (snapshot.path / "manifest.json").is_file()
+    manifest = json.loads((snapshot.path / "manifest.json").read_text())
+    assert manifest["artifacts"][0]["provenance"] == artifact.provenance.model_dump()
+    assert artifact.provenance.source_locator == "MacPro/MacPro7,1/ACPI Tables/DSDT.aml"
+    assert snapshot.omitted_size_count == 1
+    assert snapshot.omitted_count_limit_count == 0
     assert source.materialize_snapshot(
         "MacPro7,1",
         workspace,
@@ -155,8 +271,68 @@ def test_snapshot_artifact_count_limit_and_external_workspace(tmp_path: Path) ->
     )
     assert len(snapshot.artifacts) == 1
     assert snapshot.omitted_artifact_count == 1
+    assert snapshot.omitted_size_count == 0
+    assert snapshot.omitted_count_limit_count == 1
     with pytest.raises(ValueError, match="outside the source checkout"):
         source.materialize_snapshot("MacPro7,1", source_root / "snapshots")
+
+
+def test_snapshot_filters_size_before_count_and_accounts_for_omissions(tmp_path: Path) -> None:
+    root = tmp_path / "source"
+    _write(root, "Family/Model/a.bin", b"oversized")
+    _write(root, "Family/Model/b.bin", b"b")
+    _write(root, "Family/Model/c.bin", b"c")
+    _write(root, "Family/Model/d.bin", b"d")
+    _write(root, "Family/Model/e.bin", b"oversized")
+    source = DarwinDumpedSource(root)
+    snapshot = source.materialize_snapshot(
+        "Model", tmp_path / "snapshots", max_artifacts=2, max_bytes_per_artifact=1,
+    )
+    assert [a.provenance.source_locator for a in snapshot.artifacts] == [
+        "Family/Model/b.bin", "Family/Model/c.bin",
+    ]
+    assert snapshot.omitted_artifact_count == 3
+    assert snapshot.omitted_size_count == 2
+    assert snapshot.omitted_count_limit_count == 1
+    manifest = json.loads((snapshot.path / "manifest.json").read_text())
+    assert manifest["omitted_artifact_count"] == 3
+    assert manifest["omitted_size_count"] == 2
+    assert manifest["omitted_count_limit_count"] == 1
+    assert source.materialize_snapshot(
+        "Model", tmp_path / "snapshots", max_artifacts=2, max_bytes_per_artifact=1,
+    ) == snapshot
+
+
+def test_stale_stat_cache_never_accepts_same_size_changed_bytes(tmp_path: Path) -> None:
+    root = tmp_path / "source"
+    path = _write(root, "Family/Model/file.bin", b"original")
+    cache = tmp_path / "index.json"
+    source = DarwinDumpedSource(root, cache_path=cache)
+    artifact = source.get_artifacts("Model")[0]
+    snapshot = source.materialize_snapshot("Model", tmp_path / "snapshots")
+    stat = path.stat()
+    path.write_bytes(b"modified")
+    os.utime(path, ns=(stat.st_atime_ns, stat.st_mtime_ns))
+    source.refresh_index()
+    assert source.get_artifacts("Model")[0].content_sha256 == artifact.content_sha256
+    with pytest.raises(ValueError, match="changed since indexing"):
+        source.read_excerpt(artifact, 4)
+    with pytest.raises(ValueError, match="changed since indexing"):
+        source.materialize_snapshot("Model", tmp_path / "snapshots")
+    with pytest.raises(ValueError, match="changed since indexing"):
+        source.materialize_snapshot("Model", tmp_path / "new-snapshots")
+    assert (snapshot.path / "artifacts" / artifact.artifact_id).read_bytes() == b"original"
+
+
+def test_reference_evidence_cannot_be_observed_target() -> None:
+    with pytest.raises(ValidationError, match="reference-platform evidence"):
+        EvidenceRecord.model_validate({
+            "identifier": "reference",
+            "kind": EvidenceKind.REFERENCE_PLATFORM,
+            "evidence_class": EvidenceClass.OBSERVED_TARGET,
+            "provenance": {"source": "synthetic-reference", "reference": "fixture"},
+            "summary": "Reference evidence",
+        })
 
 
 def test_changed_artifact_is_rejected_after_indexing(tmp_path: Path) -> None:
