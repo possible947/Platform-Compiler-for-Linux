@@ -29,6 +29,18 @@ def _build_parser() -> argparse.ArgumentParser:
     snapshot_commands = snapshot.add_subparsers(dest="snapshot_command", required=True)
     collect = snapshot_commands.add_parser("collect", help="collect Linux kernel observations")
     collect.add_argument("--workspace", type=Path, required=True, help="existing external workspace")
+
+    acpi = commands.add_parser("acpi", help="derive offline artifacts from captured ACPI tables")
+    acpi_commands = acpi.add_subparsers(dest="acpi_command", required=True)
+    disassemble = acpi_commands.add_parser(
+        "disassemble", help="jointly disassemble a snapshot's boot DSDT/SSDT set with iASL",
+    )
+    disassemble.add_argument("--workspace", type=Path, required=True, help="existing external workspace")
+    disassemble.add_argument("--snapshot", required=True, help="snapshot ID in the workspace")
+    disassemble.add_argument(
+        "--iasl", type=Path, help="ACPICA iasl executable or toolchain directory (default: PATH)",
+    )
+    disassemble.add_argument("--timeout", type=float, default=600.0, help="seconds (default: 600)")
     return parser
 
 
@@ -65,6 +77,34 @@ def main(argv: Sequence[str] | None = None) -> int:
         print("Successful collectors: " + (", ".join(successful) or "none"))
         print("Partial/unavailable/failed collectors: " + (", ".join(incomplete) or "none"))
         return 1 if snapshot.status == CollectionStatus.FAILED else 0
+
+    if args.command == "acpi":
+        from platform_compiler.acpi import (
+            DerivationStatus,
+            Publication,
+            disassemble_snapshot,
+        )
+
+        if args.timeout <= 0:
+            parser.error("--timeout must be positive")
+        try:
+            outcome = disassemble_snapshot(
+                Workspace.open(args.workspace), args.snapshot,
+                iasl=args.iasl, timeout=args.timeout,
+            )
+        except (OSError, ValueError) as error:
+            parser.error(str(error))
+        record = outcome.record
+        print(f"Derivation {record.derivation_id}: {outcome.path}")
+        print(f"Publication: {outcome.publication.value}")
+        print(f"Status: {record.status.value}" + (f" ({record.failure})" if record.failure else ""))
+        print("Inputs: " + ", ".join(block.table_name for block in record.inputs))
+        if outcome.differing_attempt is not None:
+            print(f"Differing attempt preserved: {outcome.differing_attempt}")
+        return 0 if (
+            record.status == DerivationStatus.SUCCEEDED
+            and outcome.publication in {Publication.PUBLISHED, Publication.REPRODUCED}
+        ) else 1
 
     parser.print_help()
     return 0

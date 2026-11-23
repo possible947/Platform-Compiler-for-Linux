@@ -826,10 +826,14 @@ platform-compiler --help
 platform-compiler version
 platform-compiler workspace init /path/to/local/workspace
 platform-compiler snapshot collect --workspace /path/to/local/workspace
+platform-compiler acpi disassemble --workspace /path/to/local/workspace --snapshot <snapshot-id>
 ```
 
 The [current-system snapshot](docs/current-system-snapshots.md) command captures
 read-only Linux observations and raw evidence without analysis or inference.
+[Offline ACPI disassembly](docs/offline-acpi-disassembly.md) verifies a stored
+snapshot and derives joint iASL output from its boot DSDT/SSDT captures; the
+external ACPICA `iasl` executable is required and never installed automatically.
 
 Machine-specific evidence, local state, and generated artifacts belong in an
 external workspace, not in this Git checkout. See the [developer guide](DEVELOPER_README.md)

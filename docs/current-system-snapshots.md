@@ -98,7 +98,9 @@ CPU-info coverage varies by architecture; absent kernel interfaces remain
 explicitly unavailable, and exposed sentinel values such as PCI NUMA `-1` are
 preserved without interpretation. DIMM/SPD inventory, PCI configuration space,
 BAR mappings, firmware/DMI identity, detailed hugepage policy, logs and ACPI
-disassembly are intentionally excluded.
+disassembly are intentionally excluded from collection. Deterministic offline
+derivations from a published snapshot are described in
+[offline ACPI disassembly](offline-acpi-disassembly.md).
 
 The read-only boundary means no kernel/device writes, utility execution, driver
 changes, affinity/NUMA/PM changes, firmware methods, benchmarks, reboot or suspend.

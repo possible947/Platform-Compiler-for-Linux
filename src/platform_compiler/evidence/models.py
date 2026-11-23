@@ -75,6 +75,67 @@ class PlatformEvidence(BaseModel):
     records: tuple[EvidenceRecord, ...] = ()
 
 
+_SHA256_PATTERN = r"^[0-9a-f]{64}$"
+
+
+class ToolInvocation(BaseModel):
+    """One recorded execution of a deterministic external tool."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    tool: str
+    executable: str
+    executable_sha256: str = Field(pattern=_SHA256_PATTERN)
+    version: str
+    argv: tuple[str, ...] = Field(min_length=1)
+    working_directory: str
+    environment: dict[str, str]
+    timeout_seconds: float = Field(gt=0)
+    timed_out: bool
+    exit_status: int | None
+    stdout_sha256: str = Field(pattern=_SHA256_PATTERN)
+    stderr_sha256: str = Field(pattern=_SHA256_PATTERN)
+
+
+class SourceCapture(BaseModel):
+    """Identity of one observed raw capture consumed by a derivation."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    snapshot_id: str
+    capture_id: str
+    content_sha256: str = Field(pattern=_SHA256_PATTERN)
+
+
+class DerivedArtifact(BaseModel):
+    """Deterministic tool output derived from identified observed captures.
+
+    It is neither raw observed evidence nor an AI hypothesis: its trust is that of
+    its source captures plus the recorded tool invocation that produced it.
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    artifact_path: str
+    size_bytes: int = Field(ge=0)
+    content_sha256: str = Field(pattern=_SHA256_PATTERN)
+    derivation_id: str = Field(pattern=_SHA256_PATTERN)
+    source_evidence_class: Literal[EvidenceClass.OBSERVED_TARGET] = (
+        EvidenceClass.OBSERVED_TARGET
+    )
+    subject_capture_id: str | None = None
+    derived_from: tuple[SourceCapture, ...] = Field(min_length=1)
+    derived_by: ToolInvocation
+
+    @model_validator(mode="after")
+    def subject_is_a_source(self) -> DerivedArtifact:
+        if self.subject_capture_id is not None and self.subject_capture_id not in {
+            source.capture_id for source in self.derived_from
+        }:
+            raise ValueError("derived artifact subject must be one of its source captures")
+        return self
+
+
 class Finding(BaseModel):
     """Derived, unverified interpretation linked to its supporting evidence."""
 

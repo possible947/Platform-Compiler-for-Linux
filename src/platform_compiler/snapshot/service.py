@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import hashlib
 import os
-import re
 import sys
 import uuid
 from collections.abc import Sequence
@@ -25,6 +24,12 @@ from platform_compiler.snapshot.reader import (
     Collector,
     KernelReader,
     utc_now,
+)
+from platform_compiler.snapshot.store import (
+    MANIFEST_NAME,
+    RAW_DIRECTORY,
+    SNAPSHOT_ID_PATTERN,
+    SNAPSHOTS_DIRECTORY,
 )
 from platform_compiler.workspace import Workspace
 
@@ -57,9 +62,9 @@ def collect_snapshot(
     identifier = snapshot_id if snapshot_id is not None else (
         started.strftime("%Y%m%dT%H%M%SZ") + "-" + uuid.uuid4().hex
     )
-    if not re.fullmatch(r"[a-zA-Z0-9][a-zA-Z0-9_-]{0,95}", identifier):
+    if not SNAPSHOT_ID_PATTERN.fullmatch(identifier):
         raise ValueError("invalid snapshot identifier")
-    snapshots = root / "snapshots"
+    snapshots = root / SNAPSHOTS_DIRECTORY
     if snapshots.is_symlink():
         raise ValueError("snapshot storage must not be a symlink")
     snapshots.mkdir(mode=0o700, exist_ok=True)
@@ -67,7 +72,7 @@ def collect_snapshot(
         raise ValueError("snapshot storage escapes workspace")
     destination = snapshots / identifier
     destination.mkdir(mode=0o700)
-    raw = destination / "raw"
+    raw = destination / RAW_DIRECTORY
     raw.mkdir(mode=0o700)
 
     results = []
@@ -105,7 +110,7 @@ def collect_snapshot(
                 _write_private(target, capture.content)
                 if hashlib.sha256(target.read_bytes()).hexdigest() != digest:
                     raise ValueError("persisted capture failed hash verification")
-                capture = capture.model_copy(update={"raw_path": f"raw/{filename}"})
+                capture = capture.model_copy(update={"raw_path": f"{RAW_DIRECTORY}/{filename}"})
             captures.append(capture)
         results.append(result.model_copy(update={"captures": tuple(captures)}))
     usable = any(
@@ -137,7 +142,7 @@ def collect_snapshot(
     )
     temporary_manifest = destination / ".manifest.json.tmp"
     _write_private(temporary_manifest, (snapshot.model_dump_json(indent=2) + "\n").encode("utf-8"))
-    os.link(temporary_manifest, destination / "manifest.json")
+    os.link(temporary_manifest, destination / MANIFEST_NAME)
     temporary_manifest.unlink()
     directory = os.open(destination, os.O_RDONLY | os.O_DIRECTORY)
     try:
