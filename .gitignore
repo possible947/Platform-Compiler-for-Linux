@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+build/
+dist/
+
+# Development environments and local settings
+.venv/
+venv/
+env/
+.env
+.env.*
+!.env.example
+
+# Local workspaces and target-machine data
+/.workspace/
+/workspace/
+/workspaces/
+/local-workspace/
+/captures/
+/evidence/
+/runtime/
+/artifacts/
+/generated/
+*.aml
+*.acpidump
+DSDT*
+SSDT*
+*.trace
+*.log
+*.sqlite
+*.sqlite3
+*.db
+
+# Kernel and boot build artifacts
+*.o
+*.ko
+*.mod
+*.mod.c
+*.img
+*.cpio
+/linux/
+/kernel-build/
