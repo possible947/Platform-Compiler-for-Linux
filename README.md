@@ -726,6 +726,10 @@ Platform Compiler follows an evidence hierarchy rather than trusting one compone
 
 LLM reasoning and reference implementations may explain or propose a solution, but acceptance requires independently testable evidence relevant to the exact target machine.
 
+### Optional local reference corpora
+
+The optional reference layer retrieves explicitly selected artifacts from a local source and materializes hash-verified snapshots in an external workspace/cache. For the first platform, the caller supplies `reference_id = "MacPro7,1"`; the source does not select a reference or make verification decisions. This milestone removes automatic matching/scoring, feature extraction, Native Gate/reference-acceptance workflows, reference-driven verification, semantic applicability policy, and premature ACPI comparison. Patch generation, correction workflows, verification gates, and semantic ACPI analysis remain deferred. See [Local reference artifact access](docs/reference-platforms.md) for the retained access layer and its limits.
+
 ---
 
 ## 15. Security and Privacy Considerations
