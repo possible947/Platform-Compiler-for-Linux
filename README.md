@@ -726,6 +726,10 @@ Platform Compiler follows an evidence hierarchy rather than trusting one compone
 
 LLM reasoning and reference implementations may explain or propose a solution, but acceptance requires independently testable evidence relevant to the exact target machine.
 
+### Optional local reference corpora
+
+DarwinDumped can be configured as an offline, read-only source of comparative Apple platform evidence. Its artifacts are never target CPM facts or patch recipes, and reference differences alone cannot authorize escalation. See [Local reference-platform sources](docs/reference-platforms.md) for indexing, matching, provenance, and configuration details.
+
 ---
 
 ## 15. Security and Privacy Considerations
