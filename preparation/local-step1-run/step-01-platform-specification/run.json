@@ -1,0 +1,57 @@
+{
+  "schema_version": "1",
+  "stage": "step_1_platform_specification",
+  "status": "complete_with_unknowns",
+  "started_at": "2026-11-24T19:03:46+02:00",
+  "completed_at": "2026-11-24T19:08:02+02:00",
+  "prompt": {
+    "path": "prompts/step_1/PROMPT.md",
+    "sha256": "a16f1973163f00e36bae6ddf3d87793fb422d0dadcb7ada12f97d10696380798"
+  },
+  "model": {
+    "provider": "GitHub Copilot CLI",
+    "model_id": "claude-sonnet-5.5"
+  },
+  "repository": {
+    "revision": "48dae867b41507c128e1832e93767cffff6e646e"
+  },
+  "python": {
+    "executable": ".venv/bin/python",
+    "version": "Python 3.15.2"
+  },
+  "isolation": "problems.md and goals.md were not read or used",
+  "commands": [
+    "uname -a",
+    "lscpu",
+    "cat /sys/class/dmi/id/*",
+    "lspci -nnvmm / -nn -D / -tvnn / -vvnn",
+    "dmidecode (sudo -n; denied)",
+    "dmesg (denied)",
+    "iasl -d <captured tables>",
+    "helpers/collect.py",
+    "helpers/acpi_parse.py",
+    "helpers/build_report.py",
+    "web_fetch Intel ARK 6248",
+    "sysfs reads under /sys/devices/system/{cpu,node,edac}, /sys/bus/pci, /sys/class/{powercap,iommu}, /sys/kernel/iommu_groups"
+  ],
+  "generated_helpers": [
+    "helpers/collect.py",
+    "helpers/acpi_parse.py",
+    "helpers/build_report.py"
+  ],
+  "limitations": [
+    "Run was unprivileged (uid 1000): no MSR, SMBIOS table, PCI capability decode, MMIO, or kernel log access.",
+    "ACPI analysis used the repository-supplied capture in ./ACPI; hashes were not verified against live firmware tables (root-only), only file names/sizes matched.",
+    "Intel ARK page was retrieved as unlabeled markdown; only unambiguous values were used.",
+    "Link current state is a point-in-time observation and may reflect link power management.",
+    "No stress/workload tests were run; no target policy was changed."
+  ],
+  "output_hashes": {
+    "report.json": "c4c40055d184e66043d7e764f3d52904440abdf7f6fd00307259884131fcacb6",
+    "report.md": "7db97bde71d7ab8d9546abcdc3ccbffbf338e6c7f3483cadf40f44dedbb33297",
+    "sources.json": "fad245202a610f0c9bdd25a7978aadd54c500fda1290baa97dfe40d762176731",
+    "helpers/collect.py": "a99790ba341b6f78e6bdb8a702d137a3d69ebf5ebeb0e0247512ea9726e6b37e",
+    "helpers/acpi_parse.py": "f56c24504a5fe715e3cbfdfdcc2ca96701f925a7b8e38e84f2af854dbc2f29fb",
+    "helpers/build_report.py": "b7e7f180b6804cd042c08df0e3f821b6d9b215b859e2e7b18128fabfd1fe29ad"
+  }
+}

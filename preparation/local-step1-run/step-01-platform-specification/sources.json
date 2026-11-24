@@ -1,0 +1,195 @@
+{
+  "schema_version": "1",
+  "sources": [
+    {
+      "id": "S-DMI",
+      "class": "observed_target",
+      "kind": "sysfs",
+      "locator": "/sys/class/dmi/id/*",
+      "description": "SMBIOS identity (serials/UUID deliberately excluded)",
+      "observed_at": "2026-11-24T19:08:02+02:00",
+      "content_sha256": null
+    },
+    {
+      "id": "S-CPUINFO",
+      "class": "observed_target",
+      "kind": "procfs",
+      "locator": "/proc/cpuinfo",
+      "description": "CPU identity, flags, apicid, microcode",
+      "observed_at": "2026-11-24T19:08:02+02:00",
+      "content_sha256": null
+    },
+    {
+      "id": "S-LSCPU",
+      "class": "observed_target",
+      "kind": "command",
+      "locator": "lscpu",
+      "description": "CPU summary, cache totals",
+      "observed_at": "2026-11-24T19:08:02+02:00",
+      "content_sha256": null
+    },
+    {
+      "id": "S-CPUSYS",
+      "class": "observed_target",
+      "kind": "sysfs",
+      "locator": "/sys/devices/system/cpu/cpu*/topology, /cache, /cpufreq, /acpi_cppc, /smt",
+      "description": "Topology, caches, hardware freq limits, CPPC capability registers",
+      "observed_at": "2026-11-24T19:08:02+02:00",
+      "content_sha256": null
+    },
+    {
+      "id": "S-NODE",
+      "class": "observed_target",
+      "kind": "sysfs",
+      "locator": "/sys/devices/system/node/node*",
+      "description": "NUMA membership, memory, distance",
+      "observed_at": "2026-11-24T19:08:02+02:00",
+      "content_sha256": null
+    },
+    {
+      "id": "S-EDAC",
+      "class": "observed_target",
+      "kind": "sysfs",
+      "locator": "/sys/devices/system/edac/mc/*",
+      "description": "IMC/channel/DIMM presence reported by EDAC (skx_edac)",
+      "observed_at": "2026-11-24T19:08:02+02:00",
+      "content_sha256": null
+    },
+    {
+      "id": "S-PCI",
+      "class": "observed_target",
+      "kind": "sysfs+command",
+      "locator": "/sys/bus/pci/devices/*; lspci -nn -D; lspci -tvnn",
+      "description": "PCI inventory, link capability/state, numa_node (unprivileged: capability registers not decoded by lspci)",
+      "observed_at": "2026-11-24T19:08:02+02:00",
+      "content_sha256": null
+    },
+    {
+      "id": "S-IOMMU",
+      "class": "observed_target",
+      "kind": "sysfs",
+      "locator": "/sys/class/iommu, /sys/kernel/iommu_groups, /proc/cmdline",
+      "description": "Kernel-visible IOMMU instances/groups",
+      "observed_at": "2026-11-24T19:08:02+02:00",
+      "content_sha256": null
+    },
+    {
+      "id": "S-RAPL",
+      "class": "observed_target",
+      "kind": "sysfs",
+      "locator": "/sys/class/powercap/intel-rapl:*",
+      "description": "Power-domain names exposed (names only)",
+      "observed_at": "2026-11-24T19:08:02+02:00",
+      "content_sha256": null
+    },
+    {
+      "id": "S-EFI",
+      "class": "observed_target",
+      "kind": "sysfs",
+      "locator": "/sys/firmware/efi, /sys/firmware/acpi/pm_profile, /sys/firmware/acpi/tables (names/sizes)",
+      "description": "UEFI presence, live ACPI table names/sizes",
+      "observed_at": "2026-11-24T19:08:02+02:00",
+      "content_sha256": null
+    },
+    {
+      "id": "S-ACPI-CAP",
+      "class": "observed_target",
+      "kind": "file",
+      "locator": "ACPI/*.aml (repository-supplied capture)",
+      "description": "Captured ACPI binaries; sha256 in report.acpi.tables",
+      "observed_at": "2026-11-24T19:08:02+02:00",
+      "content_sha256": {
+        "APIC.aml": "8adc567bcd6ae1a3135e00a76a78b1762c35dcb8713f67aca287d3ff6ab0ca7e",
+        "BERT.aml": "c114a98a09c68b029a121e3228ea6375f876d04141d0903417ea9b83bd510a89",
+        "BGRT.aml": "07da8331a7462c71812d0c28a06db1dfee5c32737955372ed895bf7899a79a2a",
+        "DMAR.aml": "ef4c6a187fe2c7838fd77c3e086f6ee527ed9fe4e685450e3dbed4f1ffddb097",
+        "DSDT.aml": "a612e6dcc7e2c682a1a8369c64bc889bfe0914145f2db9a44d50da8ae910d934",
+        "EINJ.aml": "2a3713d91a016dcadd43312f8f22359da5dd5e0c374f68927581172c2fea6d9a",
+        "ERST.aml": "c47545c25f9e599b466eda8553c1c1fa5509eb4d274f581e0a6b29c3b19664a6",
+        "FACP.aml": "6a534f4439ee98b2504338479e7534951741882b61dc2d343dfcf13ff94531af",
+        "FACS.aml": "21f2e1dc4bbfe1b056b3e00e44367cfbe4142a8352db34dec2c468261821ada6",
+        "FIDT.aml": "3f5e85af0fd5c2bc10f00ffc9317da496f7d1335023daf57ce98d67ab93c16e9",
+        "FPDT.aml": "8f100718a6f2f43fadc7140ac2e98baac876a811a73683ae874ef2e7456b161c",
+        "HEST.aml": "8936444394bd04079a27d6dad0669aaf93fd035e36ac0a3209ca043cb505bfb8",
+        "HPET.aml": "077cb8748f2758eb71725ee418add3f4e28c43b234acdc9ef27d9395d17b55ee",
+        "MCFG.aml": "11fb59634ee12e13042e959fe144ba7ecb2d10a6f0efb31de2f762816a87d333",
+        "MIGT.aml": "ae78b6bae673635e99c3b1e47e8c2467d8eec4bfe0c80027130a192b26889ef3",
+        "MSCT.aml": "ab481ae67a1005e6fc1e4af240d5f9158a0d450709ca67ab2997e4babfed521c",
+        "OEM1.aml": "312c68888c680f3bc7ff8a69aa6dc3eb58b7e128322eebaff2e89b8d77373485",
+        "OEM2.aml": "52d810e18d7e9bc9390172ba81ca459e5cf29c3860d65d289dc987768f98eb04",
+        "OEM4.aml": "033045600f768f9e938182cb2fa95668b5b177c74d41b4965b79d2ef07381c5e",
+        "PCAT.aml": "23661512db657265e126248699da736e89967c21f2cc8d687157021e9555eab9",
+        "PCCT.aml": "7fcfec629d7adcda3b46973fd3ed34094c9a0ff2bb143a480a5c7a2bec203fdb",
+        "RASF.aml": "f6e29b2da057018d0734e52ae456756d87f08053b4a95825e209780a60b3caac",
+        "SLIT.aml": "d5b47c9f64f972f27f24575dd5a64477b13f66ee23150ee2426c870bdc9c46d5",
+        "SPCR.aml": "2d6cf1ee63380c7d07b12eb482849916f86ea71f1b27b19b40f470ba4bf76460",
+        "SPMI.aml": "156991cd8ccca0d8b96f135e2d40dfd8ccb1e91e58e64ab0007922d7f54d5206",
+        "SRAT.aml": "1e91359067d11156e97646a40a0cb544ebd9435f8057d6d96c5d2ed411f5e63c",
+        "SSDT1.aml": "cc0e0e2f75ba800fa28a6847feab33efd937a381e5e4e21dd5928c4b5472b88c",
+        "SSDT2.aml": "c7ea2544e987f32dd007b1e4ed0e736e70096647ca28f575fbb6bb1a095a31a6",
+        "SSDT3.aml": "7e69037d040f4596e2019f8bffd77cbf2635c19a6c15bbc3b2c4ac7c2994d6e5",
+        "SSDT4.aml": "ee805e03f38d849e37900eb8f89b7d905e3dc65761eb1fb5d9001448f7e63e18",
+        "SVOS.aml": "4ba81b82af76a666413386039a54ea30fef962708676fb95c4df3de244e8dd37",
+        "VFCT.aml": "9f33208708a8e8333213e8b6be89b9584e143b0422631da91fc606a1a526548a",
+        "WDDT.aml": "31d7251969357ba206d4d6811576fa05d37e47ed0cd16ba4b252d96ee91e5bfe",
+        "WSMT.aml": "397ff541a0a051c219a6268237477db7cbcc65e9002a0280c0a593524b2a072e"
+      }
+    },
+    {
+      "id": "D-ACPI",
+      "class": "deterministic_derived",
+      "kind": "python",
+      "locator": "helpers/acpi_parse.py",
+      "description": "Binary parse of SRAT/SLIT/MADT/MCFG/DMAR/HPET and kernel cross-checks",
+      "observed_at": "2026-11-24T19:08:02+02:00",
+      "content_sha256": null
+    },
+    {
+      "id": "D-IASL",
+      "class": "deterministic_derived",
+      "kind": "command",
+      "locator": "iasl -d (ACPICA 20260930) of captured tables",
+      "description": "Standalone disassembly of each table; AML inventory counts",
+      "observed_at": "2026-11-24T19:08:02+02:00",
+      "content_sha256": null
+    },
+    {
+      "id": "D-COLLECT",
+      "class": "deterministic_derived",
+      "kind": "python",
+      "locator": "helpers/collect.py",
+      "description": "Collector producing facts.json",
+      "observed_at": "2026-11-24T19:08:02+02:00",
+      "content_sha256": null
+    },
+    {
+      "id": "D-MEMBW",
+      "class": "deterministic_derived",
+      "kind": "arithmetic",
+      "locator": "channels x transfer-rate x 8 B",
+      "description": "Theoretical documented-maximum bandwidth from ARK DDR4-2933, 6 channels",
+      "observed_at": "2026-11-24T19:08:02+02:00",
+      "content_sha256": null
+    },
+    {
+      "id": "X-ARK-6248",
+      "class": "external_authoritative",
+      "kind": "vendor_documentation",
+      "locator": "https://www.intel.com/content/www/us/en/products/sku/192446/intel-xeon-gold-6248-processor-27-5m-cache-2-50-ghz/specifications.html",
+      "title": "Intel Xeon Gold 6248 Processor Specifications (Intel ARK)",
+      "provider": "Intel",
+      "observed_at": "2026-11-24T19:08:02+02:00",
+      "content_sha256": null,
+      "description": "Fetched as unlabeled markdown; only unambiguous values used: base 2.50 GHz, max turbo 3.90 GHz, TDP 150 W, Tcase 86 C, DDR4-2933, 6 memory channels, 3 UPI links, codename Cascade Lake. Per-active-core turbo and AVX frequency tables not present on this page."
+    },
+    {
+      "id": "M-INFER",
+      "class": "model_inference",
+      "kind": "inference",
+      "locator": "n/a",
+      "description": "Interpretive labels (e.g. chipset family naming from PCI IDs) marked as inference in report",
+      "observed_at": "2026-11-24T19:08:02+02:00",
+      "content_sha256": null
+    }
+  ]
+}

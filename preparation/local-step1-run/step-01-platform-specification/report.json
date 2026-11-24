@@ -1,0 +1,1882 @@
+{
+  "schema_version": "1",
+  "stage": "step_1_platform_specification",
+  "status": "complete_with_unknowns",
+  "platform": {
+    "architecture": {
+      "state": "known",
+      "value": "x86_64",
+      "refs": [
+        "S-LSCPU"
+      ]
+    },
+    "system": {
+      "state": "known",
+      "vendor": "HUANANZHI",
+      "product_name": "X11D-16D",
+      "product_version": "Default string",
+      "chassis_type": "3",
+      "refs": [
+        "S-DMI"
+      ]
+    },
+    "board": {
+      "state": "known",
+      "vendor": "HUANANZHI",
+      "name": "X11D-16D",
+      "version": "V1.0",
+      "refs": [
+        "S-DMI"
+      ]
+    },
+    "platform_generation": {
+      "state": "known",
+      "value": "Intel Purley-class dual-socket server platform: 2nd Gen Intel Xeon Scalable (Cascade Lake) with C620-series PCH",
+      "basis": "CPU codename from Intel ARK (X-ARK-6248); PCH identified from PCI IDs (S-PCI)",
+      "refs": [
+        "X-ARK-6248",
+        "S-PCI"
+      ]
+    },
+    "chipset": {
+      "state": "known",
+      "pci_id": "8086:a1c1",
+      "description": "Intel C621 Chipset LPC/eSPI Controller (00:1f.0) among C620 Series Chipset Family functions",
+      "refs": [
+        "S-PCI"
+      ]
+    },
+    "pm_profile": {
+      "state": "known",
+      "value": 4,
+      "meaning": "FADT preferred PM profile 4 = Enterprise Server (ACPI spec encoding)",
+      "refs": [
+        "S-EFI"
+      ]
+    },
+    "kernel_release_at_collection": {
+      "state": "known",
+      "value": "7.3.4-300.fc45.x86_64",
+      "refs": [
+        "S-CPUINFO"
+      ]
+    },
+    "baseboard_management": {
+      "state": "known",
+      "value": "ASPEED AST2000-family VGA (1a03:2000) behind AST1150 bridge at 04:00.0 (BMC graphics)",
+      "refs": [
+        "S-PCI"
+      ]
+    }
+  },
+  "cpu": {
+    "model_name": {
+      "state": "known",
+      "value": "Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz",
+      "refs": [
+        "S-CPUINFO"
+      ]
+    },
+    "vendor": {
+      "state": "known",
+      "value": "GenuineIntel",
+      "refs": [
+        "S-CPUINFO"
+      ]
+    },
+    "family_model_stepping": {
+      "state": "known",
+      "family": 6,
+      "model": 85,
+      "model_hex": "0x55",
+      "stepping": 7,
+      "refs": [
+        "S-CPUINFO"
+      ]
+    },
+    "microcode": {
+      "state": "known",
+      "value": "0x5003901",
+      "refs": [
+        "S-CPUINFO"
+      ]
+    },
+    "microarchitecture": {
+      "state": "known",
+      "value": "Cascade Lake (Cascade Lake-SP server, 14 nm)",
+      "basis": "Intel ARK product collection for Xeon Gold 6248",
+      "refs": [
+        "X-ARK-6248"
+      ]
+    },
+    "topology": {
+      "sockets": {
+        "state": "known",
+        "value": 2,
+        "refs": [
+          "S-CPUSYS"
+        ]
+      },
+      "physical_cores_per_socket": {
+        "state": "known",
+        "value": {
+          "0": 20,
+          "1": 20
+        },
+        "refs": [
+          "S-CPUSYS"
+        ]
+      },
+      "logical_cpus": {
+        "state": "known",
+        "value": 80,
+        "refs": [
+          "S-CPUSYS"
+        ]
+      },
+      "threads_per_core": {
+        "state": "known",
+        "value": 2,
+        "smt_active": true,
+        "refs": [
+          "S-CPUSYS",
+          "S-LSCPU"
+        ]
+      },
+      "dies_per_socket": {
+        "state": "known",
+        "value": 1,
+        "note": "kernel die_id is 0 for package 0 and 1 for package 1 (one die per package; no sub-NUMA/COD split exposed)",
+        "refs": [
+          "S-CPUSYS"
+        ]
+      },
+      "cpu_to_socket": {
+        "state": "known",
+        "value": {
+          "0": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59
+          ],
+          "1": [
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79
+          ]
+        },
+        "refs": [
+          "S-CPUSYS"
+        ]
+      },
+      "cpu_to_numa": {
+        "state": "known",
+        "value": {
+          "0": "0-19,40-59",
+          "1": "20-39,60-79"
+        },
+        "refs": [
+          "S-NODE"
+        ]
+      },
+      "smt_sibling_example": {
+        "cpu0": "0,40",
+        "cpu20": "20,60"
+      },
+      "socket_interconnect": {
+        "state": "known",
+        "value": "3 UPI links per processor (vendor spec); link state/topology between sockets not observable from OS",
+        "refs": [
+          "X-ARK-6248"
+        ],
+        "observed_link_state": "unavailable"
+      }
+    },
+    "caches": {
+      "state": "known",
+      "cpu0": [
+        {
+          "level": "1",
+          "type": "Data",
+          "size": "32K",
+          "ways": "8",
+          "shared_cpu_list_cpu0": "0,40"
+        },
+        {
+          "level": "1",
+          "type": "Instruction",
+          "size": "32K",
+          "ways": "8",
+          "shared_cpu_list_cpu0": "0,40"
+        },
+        {
+          "level": "2",
+          "type": "Unified",
+          "size": "1024K",
+          "ways": "16",
+          "shared_cpu_list_cpu0": "0,40"
+        },
+        {
+          "level": "3",
+          "type": "Unified",
+          "size": "28160K",
+          "ways": "11",
+          "shared_cpu_list_cpu0": "0-19,40-59"
+        }
+      ],
+      "l3_shared_cpu_list_cpu20": "20-39,60-79",
+      "lscpu_totals": "L1d 1.3 MiB (40), L1i 1.3 MiB (40), L2 40 MiB (40), L3 55 MiB (2 instances)",
+      "refs": [
+        "S-CPUSYS",
+        "S-LSCPU"
+      ]
+    },
+    "frequency_capability": {
+      "base_mhz": {
+        "state": "known",
+        "value": 2500,
+        "refs": [
+          "X-ARK-6248",
+          "S-CPUSYS"
+        ],
+        "note": "kernel base_frequency 2500000 kHz and CPPC nominal_perf 25 agree"
+      },
+      "max_turbo_mhz_single_core": {
+        "state": "known",
+        "value": 3900,
+        "refs": [
+          "X-ARK-6248",
+          "S-CPUSYS"
+        ],
+        "note": "kernel cpuinfo_max_freq 3900000 kHz and CPPC highest_perf 39 agree"
+      },
+      "min_mhz": {
+        "state": "known",
+        "value": 1000,
+        "refs": [
+          "S-CPUSYS"
+        ],
+        "note": "kernel cpuinfo_min_freq; CPPC lowest_perf=7 (x100 MHz) => 700 MHz differs from cpuinfo_min_freq (see unknowns/notes)"
+      },
+      "turbo_by_active_core_count": {
+        "state": "unknown",
+        "values": []
+      },
+      "documented_all_core_turbo": {
+        "state": "unknown"
+      },
+      "avx_frequency_behavior": {
+        "state": "unknown"
+      }
+    },
+    "cppc": {
+      "state": "known",
+      "present_in_firmware": true,
+      "per_cpu_objects_in_AML": 112,
+      "registers_cpu0": {
+        "highest_perf": 39,
+        "nominal_perf": 25,
+        "lowest_nonlinear_perf": 10,
+        "lowest_perf": 7,
+        "guaranteed_perf": 25,
+        "reference_perf": 25
+      },
+      "refs": [
+        "S-CPUSYS",
+        "D-IASL"
+      ],
+      "note": "_CPC methods found in OEM2 (OEM table id 'CPU  HWP')"
+    },
+    "hwp": {
+      "state": "known",
+      "supported": true,
+      "flags_present": [
+        "hwp",
+        "hwp_act_window",
+        "hwp_epp",
+        "hwp_pkg_req"
+      ],
+      "refs": [
+        "S-CPUINFO"
+      ]
+    },
+    "eist_pstates": {
+      "state": "known",
+      "est_flag": true,
+      "turbo_flag_ida": true,
+      "firmware_pstate_tables": "OEM table id 'CPU EIST' present (OEM1)",
+      "refs": [
+        "S-CPUINFO",
+        "S-ACPI-CAP"
+      ]
+    },
+    "instruction_sets": {
+      "state": "known",
+      "flags": {
+        "sse4_2": true,
+        "avx": true,
+        "avx2": true,
+        "fma": true,
+        "avx512f": true,
+        "avx512dq": true,
+        "avx512cd": true,
+        "avx512bw": true,
+        "avx512vl": true,
+        "avx512_vnni": true,
+        "avx512_bf16": false,
+        "aes": true,
+        "vmx": true,
+        "hwp": true,
+        "hwp_epp": true,
+        "hwp_act_window": true,
+        "hwp_pkg_req": true,
+        "est": true,
+        "ida": true,
+        "dtherm": true,
+        "pln": true,
+        "pts": true,
+        "rdt_a": true,
+        "cat_l3": true,
+        "mba": true,
+        "intel_pt": true,
+        "x2apic": true
+      },
+      "refs": [
+        "S-CPUINFO"
+      ],
+      "note": "AVX-512 F/DQ/CD/BW/VL/VNNI present; avx512_bf16 absent"
+    },
+    "tdp_w": {
+      "state": "known",
+      "value": 150,
+      "refs": [
+        "X-ARK-6248"
+      ]
+    },
+    "thermal_limit": {
+      "state": "known",
+      "tcase_c": 86,
+      "refs": [
+        "X-ARK-6248"
+      ],
+      "note": "ARK Tcase; PROCHOT/TjMax not read (MSR access not permitted)"
+    },
+    "thermal_features": {
+      "state": "known",
+      "flags": [
+        "dtherm",
+        "pln",
+        "pts"
+      ],
+      "refs": [
+        "S-CPUINFO"
+      ]
+    },
+    "power_domains": {
+      "state": "known",
+      "rapl_powercap_domains": [
+        "package-0",
+        "dram (package-0)",
+        "package-1",
+        "dram (package-1)"
+      ],
+      "refs": [
+        "S-RAPL"
+      ],
+      "note": "core/uncore subdomains not exposed via powercap"
+    },
+    "resource_director": {
+      "state": "known",
+      "flags": [
+        "rdt_a",
+        "cat_l3",
+        "cdp_l3",
+        "mba",
+        "cqm"
+      ],
+      "refs": [
+        "S-CPUINFO"
+      ]
+    }
+  },
+  "memory": {
+    "total_installed_memory": {
+      "state": "known",
+      "kernel_memtotal_gib": 187.51,
+      "edac_dimm_total_gib": 192.0,
+      "refs": [
+        "S-NODE",
+        "S-EDAC"
+      ],
+      "note": "kernel MemTotal is lower than installed capacity by firmware/kernel reservations"
+    },
+    "per_numa_node_kernel_memtotal_gib": {
+      "state": "known",
+      "value": {
+        "0": 93.09,
+        "1": 94.42
+      },
+      "refs": [
+        "S-NODE"
+      ]
+    },
+    "controllers": {
+      "state": "known",
+      "value": "2 sockets x 2 integrated memory controllers x 3 channels = 12 channels (EDAC); vendor spec: 6 channels per processor",
+      "refs": [
+        "S-EDAC",
+        "X-ARK-6248"
+      ]
+    },
+    "channel_population": {
+      "state": "known",
+      "value": [
+        {
+          "mc": "mc0",
+          "controller": "Skylake Socket#0 IMC#0",
+          "location": "channel 0 slot 0",
+          "size_mib": 32768,
+          "type_reported": "Unbuffered-DDR4",
+          "device_width": "x4",
+          "edac_mode": "SECDED"
+        },
+        {
+          "mc": "mc0",
+          "controller": "Skylake Socket#0 IMC#0",
+          "location": "channel 1 slot 0",
+          "size_mib": 8192,
+          "type_reported": "Unbuffered-DDR4",
+          "device_width": "x4",
+          "edac_mode": "SECDED"
+        },
+        {
+          "mc": "mc0",
+          "controller": "Skylake Socket#0 IMC#0",
+          "location": "channel 2 slot 0",
+          "size_mib": 8192,
+          "type_reported": "Unbuffered-DDR4",
+          "device_width": "x4",
+          "edac_mode": "SECDED"
+        },
+        {
+          "mc": "mc1",
+          "controller": "Skylake Socket#0 IMC#1",
+          "location": "channel 0 slot 0",
+          "size_mib": 32768,
+          "type_reported": "Unbuffered-DDR4",
+          "device_width": "x4",
+          "edac_mode": "SECDED"
+        },
+        {
+          "mc": "mc1",
+          "controller": "Skylake Socket#0 IMC#1",
+          "location": "channel 1 slot 0",
+          "size_mib": 8192,
+          "type_reported": "Unbuffered-DDR4",
+          "device_width": "x4",
+          "edac_mode": "SECDED"
+        },
+        {
+          "mc": "mc1",
+          "controller": "Skylake Socket#0 IMC#1",
+          "location": "channel 2 slot 0",
+          "size_mib": 8192,
+          "type_reported": "Unbuffered-DDR4",
+          "device_width": "x4",
+          "edac_mode": "SECDED"
+        },
+        {
+          "mc": "mc2",
+          "controller": "Skylake Socket#1 IMC#0",
+          "location": "channel 0 slot 0",
+          "size_mib": 32768,
+          "type_reported": "Unbuffered-DDR4",
+          "device_width": "x4",
+          "edac_mode": "SECDED"
+        },
+        {
+          "mc": "mc2",
+          "controller": "Skylake Socket#1 IMC#0",
+          "location": "channel 1 slot 0",
+          "size_mib": 8192,
+          "type_reported": "Unbuffered-DDR4",
+          "device_width": "x4",
+          "edac_mode": "SECDED"
+        },
+        {
+          "mc": "mc2",
+          "controller": "Skylake Socket#1 IMC#0",
+          "location": "channel 2 slot 0",
+          "size_mib": 8192,
+          "type_reported": "Unbuffered-DDR4",
+          "device_width": "x4",
+          "edac_mode": "SECDED"
+        },
+        {
+          "mc": "mc3",
+          "controller": "Skylake Socket#1 IMC#1",
+          "location": "channel 0 slot 0",
+          "size_mib": 32768,
+          "type_reported": "Unbuffered-DDR4",
+          "device_width": "x4",
+          "edac_mode": "SECDED"
+        },
+        {
+          "mc": "mc3",
+          "controller": "Skylake Socket#1 IMC#1",
+          "location": "channel 1 slot 0",
+          "size_mib": 8192,
+          "type_reported": "Unbuffered-DDR4",
+          "device_width": "x4",
+          "edac_mode": "SECDED"
+        },
+        {
+          "mc": "mc3",
+          "controller": "Skylake Socket#1 IMC#1",
+          "location": "channel 2 slot 0",
+          "size_mib": 8192,
+          "type_reported": "Unbuffered-DDR4",
+          "device_width": "x4",
+          "edac_mode": "SECDED"
+        }
+      ],
+      "per_imc_pattern_mib": [
+        32768,
+        8192,
+        8192
+      ],
+      "uniform_across_imcs": true,
+      "refs": [
+        "S-EDAC"
+      ],
+      "note": "12 channels each with one DIMM (slot 0); 32/8/8 GiB per IMC is the EDAC-reported capacity pattern. DIMM type reported by EDAC only; not confirmed against SMBIOS."
+    },
+    "dimm_identity": {
+      "state": "unavailable",
+      "reason": "part numbers/serials/rank/speed need SMBIOS Type 17 (root)",
+      "refs": []
+    },
+    "configured_speed": {
+      "state": "unknown",
+      "reason": "not observable without SMBIOS/MSR access; processor supports up to DDR4-2933 (vendor)",
+      "refs": [
+        "X-ARK-6248"
+      ]
+    },
+    "documented_max_bandwidth": {
+      "state": "known",
+      "per_socket_gb_s": 140.8,
+      "basis": "DDR4-2933 x 8 bytes x 6 channels (vendor maximum, not configured speed; actual speed unknown)",
+      "refs": [
+        "D-MEMBW",
+        "X-ARK-6248"
+      ]
+    }
+  },
+  "numa": {
+    "node_count": {
+      "state": "known",
+      "value": 2,
+      "refs": [
+        "S-NODE"
+      ]
+    },
+    "nodes": {
+      "0": {
+        "cpulist": "0-19,40-59",
+        "mem_total_gib": 93.09
+      },
+      "1": {
+        "cpulist": "20-39,60-79",
+        "mem_total_gib": 94.42
+      }
+    },
+    "distance_matrix": {
+      "state": "known",
+      "value": [
+        [
+          10,
+          21
+        ],
+        [
+          21,
+          10
+        ]
+      ],
+      "refs": [
+        "S-NODE",
+        "D-ACPI"
+      ]
+    },
+    "socket_node_relationship": {
+      "state": "known",
+      "value": "node0 = socket 0 (CPUs 0-19,40-59); node1 = socket 1 (CPUs 20-39,60-79); 1:1",
+      "refs": [
+        "S-CPUSYS",
+        "S-NODE"
+      ]
+    },
+    "memoryless_nodes": {
+      "state": "known",
+      "value": [],
+      "refs": [
+        "S-NODE"
+      ]
+    },
+    "srat": {
+      "enabled_cpu_affinity_entries": 80,
+      "cpus_per_domain": {
+        "0": 40,
+        "1": 40
+      },
+      "enabled_memory_ranges": [
+        {
+          "domain": 0,
+          "base": "0x0",
+          "length_gib": 2.0
+        },
+        {
+          "domain": 0,
+          "base": "0x100000000",
+          "length_gib": 45.0
+        },
+        {
+          "domain": 0,
+          "base": "0xc40000000",
+          "length_gib": 48.0
+        },
+        {
+          "domain": 1,
+          "base": "0x1840000000",
+          "length_gib": 48.0
+        },
+        {
+          "domain": 1,
+          "base": "0x2440000000",
+          "length_gib": 48.0
+        }
+      ],
+      "memory_gib_per_domain": {
+        "0": 95.0,
+        "1": 96.0
+      }
+    },
+    "slit": {
+      "localities": 2,
+      "matrix": [
+        [
+          10,
+          21
+        ],
+        [
+          21,
+          10
+        ]
+      ]
+    }
+  },
+  "pci": {
+    "segments": {
+      "state": "known",
+      "value": [
+        "0000"
+      ],
+      "mcfg": {
+        "entries": [
+          {
+            "base": "0x80000000",
+            "segment": 0,
+            "start_bus": 0,
+            "end_bus": 255
+          }
+        ]
+      },
+      "refs": [
+        "S-PCI",
+        "D-ACPI"
+      ]
+    },
+    "root_buses": {
+      "state": "known",
+      "kernel_visible_roots": {
+        "00": {
+          "device_count": 36,
+          "numa_node": "0"
+        },
+        "17": {
+          "device_count": 70,
+          "numa_node": "0"
+        },
+        "3a": {
+          "device_count": 29,
+          "numa_node": "0"
+        },
+        "5d": {
+          "device_count": 24,
+          "numa_node": "0"
+        },
+        "80": {
+          "device_count": 14,
+          "numa_node": "1"
+        },
+        "85": {
+          "device_count": 70,
+          "numa_node": "1"
+        },
+        "ae": {
+          "device_count": 33,
+          "numa_node": "1"
+        },
+        "d7": {
+          "device_count": 26,
+          "numa_node": "1"
+        }
+      },
+      "refs": [
+        "S-PCI"
+      ]
+    },
+    "device_count": 302,
+    "hierarchy_tree": {
+      "state": "known",
+      "ref": "sources: lspci -tvnn -D (retained in work/facts.json as pci_vv_tree)",
+      "refs": [
+        "S-PCI"
+      ]
+    },
+    "major_endpoints": [
+      {
+        "address": "0000:00:11.5",
+        "description": "SATA controller [0106]: Intel Corporation C620 Series Chipset Family SSATA Controller (AHCI) [8086:a1d2] (rev 09)",
+        "numa_node": 0,
+        "driver_bound": "ahci",
+        "link_capability": "None xNone",
+        "link_current": "None xNone"
+      },
+      {
+        "address": "0000:00:14.0",
+        "description": "USB controller [0c03]: Intel Corporation C620 Series Chipset Family USB 3.0 xHCI Controller [8086:a1af] (rev 09)",
+        "numa_node": 0,
+        "driver_bound": "xhci_hcd",
+        "link_capability": "None xNone",
+        "link_current": "None xNone"
+      },
+      {
+        "address": "0000:00:17.0",
+        "description": "SATA controller [0106]: Intel Corporation C620 Series Chipset Family SATA Controller (AHCI) [8086:a182] (rev 09)",
+        "numa_node": 0,
+        "driver_bound": "ahci",
+        "link_capability": "None xNone",
+        "link_current": "None xNone"
+      },
+      {
+        "address": "0000:01:00.0",
+        "description": "Ethernet controller [0200]: Intel Corporation I210 Gigabit Network Connection [8086:1533] (rev 03)",
+        "numa_node": 0,
+        "driver_bound": "igb",
+        "link_capability": "2.5 GT/s PCIe x1",
+        "link_current": "2.5 GT/s PCIe x1"
+      },
+      {
+        "address": "0000:02:00.0",
+        "description": "Ethernet controller [0200]: Intel Corporation I210 Gigabit Network Connection [8086:1533] (rev 03)",
+        "numa_node": 0,
+        "driver_bound": "igb",
+        "link_capability": "2.5 GT/s PCIe x1",
+        "link_current": "2.5 GT/s PCIe x1"
+      },
+      {
+        "address": "0000:04:00.0",
+        "description": "VGA compatible controller [0300]: ASPEED Technology, Inc. ASPEED Graphics Family [1a03:2000] (rev 41)",
+        "numa_node": 0,
+        "driver_bound": "ast",
+        "link_capability": "None xNone",
+        "link_current": "None xNone"
+      },
+      {
+        "address": "0000:5e:00.0",
+        "description": "Non-Volatile memory controller [0108]: MAXIO Technology (Hangzhou) Ltd. NVMe SSD Controller MAP1202 (DRAM-less) [1e4b:1202] (rev 01)",
+        "numa_node": 0,
+        "driver_bound": "nvme",
+        "link_capability": "8.0 GT/s PCIe x4",
+        "link_current": "8.0 GT/s PCIe x4"
+      },
+      {
+        "address": "0000:b1:00.0",
+        "description": "VGA compatible controller [0300]: Advanced Micro Devices, Inc. [AMD/ATI] Vega 20 [Radeon Pro VII/Radeon Instinct MI50] [1002:66a1] (rev 06)",
+        "numa_node": 1,
+        "driver_bound": "amdgpu",
+        "link_capability": "16.0 GT/s PCIe x16",
+        "link_current": "16.0 GT/s PCIe x16"
+      },
+      {
+        "address": "0000:da:00.0",
+        "description": "VGA compatible controller [0300]: Advanced Micro Devices, Inc. [AMD/ATI] Vega 20 [Radeon Pro VII/Radeon Instinct MI50] [1002:66a1] (rev 06)",
+        "numa_node": 1,
+        "driver_bound": "amdgpu",
+        "link_capability": "16.0 GT/s PCIe x16",
+        "link_current": "16.0 GT/s PCIe x16"
+      }
+    ],
+    "paths_to_major_endpoints": {
+      "0000:b1:00.0": [
+        "0000:ae:00.0",
+        "0000:af:00.0",
+        "0000:b0:00.0",
+        "0000:b1:00.0"
+      ],
+      "0000:da:00.0": [
+        "0000:d7:00.0",
+        "0000:d8:00.0",
+        "0000:d9:00.0",
+        "0000:da:00.0"
+      ],
+      "0000:5e:00.0": [
+        "0000:5d:00.0",
+        "0000:5e:00.0"
+      ]
+    },
+    "links_capability_vs_current": [
+      {
+        "address": "0000:ae:00.0",
+        "max": "8.0 GT/s PCIe x16",
+        "current": "8.0 GT/s PCIe x16",
+        "numa_node": 1
+      },
+      {
+        "address": "0000:af:00.0",
+        "max": "16.0 GT/s PCIe x16",
+        "current": "8.0 GT/s PCIe x16",
+        "numa_node": 1
+      },
+      {
+        "address": "0000:b0:00.0",
+        "max": "16.0 GT/s PCIe x16",
+        "current": "16.0 GT/s PCIe x16",
+        "numa_node": 1
+      },
+      {
+        "address": "0000:b1:00.0",
+        "max": "16.0 GT/s PCIe x16",
+        "current": "16.0 GT/s PCIe x16",
+        "numa_node": 1
+      },
+      {
+        "address": "0000:d7:00.0",
+        "max": "8.0 GT/s PCIe x16",
+        "current": "8.0 GT/s PCIe x16",
+        "numa_node": 1
+      },
+      {
+        "address": "0000:d8:00.0",
+        "max": "16.0 GT/s PCIe x16",
+        "current": "8.0 GT/s PCIe x16",
+        "numa_node": 1
+      },
+      {
+        "address": "0000:d9:00.0",
+        "max": "16.0 GT/s PCIe x16",
+        "current": "16.0 GT/s PCIe x16",
+        "numa_node": 1
+      },
+      {
+        "address": "0000:da:00.0",
+        "max": "16.0 GT/s PCIe x16",
+        "current": "16.0 GT/s PCIe x16",
+        "numa_node": 1
+      },
+      {
+        "address": "0000:5d:00.0",
+        "max": "8.0 GT/s PCIe x4",
+        "current": "8.0 GT/s PCIe x4",
+        "numa_node": 0
+      },
+      {
+        "address": "0000:5e:00.0",
+        "max": "8.0 GT/s PCIe x4",
+        "current": "8.0 GT/s PCIe x4",
+        "numa_node": 0
+      },
+      {
+        "address": "0000:00:1c.0",
+        "max": "8.0 GT/s PCIe x1",
+        "current": "2.5 GT/s PCIe x1",
+        "numa_node": 0
+      },
+      {
+        "address": "0000:00:1c.1",
+        "max": "8.0 GT/s PCIe x1",
+        "current": "2.5 GT/s PCIe x1",
+        "numa_node": 0
+      },
+      {
+        "address": "0000:00:1c.5",
+        "max": "2.5 GT/s PCIe x1",
+        "current": "2.5 GT/s PCIe x1",
+        "numa_node": 0
+      },
+      {
+        "address": "0000:01:00.0",
+        "max": "2.5 GT/s PCIe x1",
+        "current": "2.5 GT/s PCIe x1",
+        "numa_node": 0
+      },
+      {
+        "address": "0000:02:00.0",
+        "max": "2.5 GT/s PCIe x1",
+        "current": "2.5 GT/s PCIe x1",
+        "numa_node": 0
+      }
+    ],
+    "link_state_note": "Observation only; sysfs max/current speed/width. Endpoint & bridge capability registers not decoded (unprivileged). Link state at collection time may be power-managed (idle).",
+    "gpus": [
+      {
+        "address": "0000:b1:00.0",
+        "description": "VGA compatible controller [0300]: Advanced Micro Devices, Inc. [AMD/ATI] Vega 20 [Radeon Pro VII/Radeon Instinct MI50] [1002:66a1] (rev 06)",
+        "numa_node": 1,
+        "driver_bound": "amdgpu"
+      },
+      {
+        "address": "0000:da:00.0",
+        "description": "VGA compatible controller [0300]: Advanced Micro Devices, Inc. [AMD/ATI] Vega 20 [Radeon Pro VII/Radeon Instinct MI50] [1002:66a1] (rev 06)",
+        "numa_node": 1,
+        "driver_bound": "amdgpu"
+      }
+    ],
+    "gpu_notes": "Two AMD Vega 20 [Radeon Pro VII / Instinct MI50] accelerators (1002:66a1), each behind an AMD PCIe switch (upstream 14a0 / downstream 14a1) on a Skylake-E root port (ae:00.0 / d7:00.0), both on NUMA node 1.",
+    "storage": [
+      {
+        "address": "0000:5e:00.0",
+        "description": "Non-Volatile memory controller [0108]: MAXIO Technology (Hangzhou) Ltd. NVMe SSD Controller MAP1202 (DRAM-less) [1e4b:1202] (rev 01)",
+        "numa_node": 0
+      },
+      {
+        "address": "0000:00:11.5",
+        "description": "SATA controller [0106]: Intel Corporation C620 Series Chipset Family SSATA Controller (AHCI) [8086:a1d2] (rev 09)"
+      },
+      {
+        "address": "0000:00:17.0",
+        "description": "SATA controller [0106]: Intel Corporation C620 Series Chipset Family SATA Controller (AHCI) [8086:a182] (rev 09)"
+      }
+    ],
+    "network": [
+      {
+        "address": "0000:01:00.0",
+        "description": "Ethernet controller [0200]: Intel Corporation I210 Gigabit Network Connection [8086:1533] (rev 03)",
+        "numa_node": 0
+      },
+      {
+        "address": "0000:02:00.0",
+        "description": "Ethernet controller [0200]: Intel Corporation I210 Gigabit Network Connection [8086:1533] (rev 03)",
+        "numa_node": 0
+      }
+    ],
+    "usb_external_io": [
+      {
+        "address": "0000:00:14.0",
+        "description": "USB controller [0c03]: Intel Corporation C620 Series Chipset Family USB 3.0 xHCI Controller [8086:a1af] (rev 09)"
+      }
+    ],
+    "numa_locality_counts": {
+      "node0": 159,
+      "node1": 143
+    },
+    "bar_resources": {
+      "state": "not_collected",
+      "reason": "not required to describe platform identity; resource files readable but not enumerated"
+    },
+    "acpi_ownership_note": "No ACPI semantic ownership inferred from PCI proximity."
+  },
+  "firmware": {
+    "bios_vendor": {
+      "state": "known",
+      "value": "American Megatrends Inc.",
+      "refs": [
+        "S-DMI"
+      ]
+    },
+    "bios_version": {
+      "state": "known",
+      "value": "5.14",
+      "refs": [
+        "S-DMI"
+      ]
+    },
+    "bios_date": {
+      "state": "known",
+      "value": "10/19/2024",
+      "refs": [
+        "S-DMI"
+      ]
+    },
+    "uefi_present": {
+      "state": "known",
+      "value": true,
+      "refs": [
+        "S-EFI"
+      ]
+    },
+    "acpi_fadt_revision": {
+      "state": "known",
+      "value": 6,
+      "refs": [
+        "S-ACPI-CAP"
+      ]
+    },
+    "smbios_memory_devices": {
+      "state": "unavailable",
+      "reason": "dmidecode / /sys/firmware/dmi/tables require root; not available to this run",
+      "refs": []
+    }
+  },
+  "acpi": {
+    "capture_source": "repository ./ACPI/*.aml (supplied capture); live /sys/firmware/acpi/tables files are root-only so hashes could not be compared, only names and sizes",
+    "table_count": 34,
+    "live_table_names_and_sizes_match_capture": true,
+    "tables": [
+      {
+        "file": "APIC.aml",
+        "signature": "APIC",
+        "length": 3166,
+        "revision": 3,
+        "oem_id": "ALASKA",
+        "oem_table_id": "A M I \u0000\u0000",
+        "oem_revision": "0x0",
+        "compiler": "INTL 0x20091013",
+        "sha256": "8adc567bcd6ae1a3135e00a76a78b1762c35dcb8713f67aca287d3ff6ab0ca7e"
+      },
+      {
+        "file": "BERT.aml",
+        "signature": "BERT",
+        "length": 48,
+        "revision": 1,
+        "oem_id": "ALASKA",
+        "oem_table_id": "A M I \u0000\u0000",
+        "oem_revision": "0x1",
+        "compiler": "INTL 0x1",
+        "sha256": "c114a98a09c68b029a121e3228ea6375f876d04141d0903417ea9b83bd510a89"
+      },
+      {
+        "file": "BGRT.aml",
+        "signature": "BGRT",
+        "length": 56,
+        "revision": 1,
+        "oem_id": "ALASKA",
+        "oem_table_id": "A M I \u0000\u0000",
+        "oem_revision": "0x1072009",
+        "compiler": "AMI  0x10013",
+        "sha256": "07da8331a7462c71812d0c28a06db1dfee5c32737955372ed895bf7899a79a2a"
+      },
+      {
+        "file": "DMAR.aml",
+        "signature": "DMAR",
+        "length": 576,
+        "revision": 1,
+        "oem_id": "ALASKA",
+        "oem_table_id": "A M I \u0000\u0000",
+        "oem_revision": "0x1",
+        "compiler": "INTL 0x20091013",
+        "sha256": "ef4c6a187fe2c7838fd77c3e086f6ee527ed9fe4e685450e3dbed4f1ffddb097"
+      },
+      {
+        "file": "DSDT.aml",
+        "signature": "DSDT",
+        "length": 1663052,
+        "revision": 2,
+        "oem_id": "ALASKA",
+        "oem_table_id": "A M I \u0000\u0000",
+        "oem_revision": "0x1072009",
+        "compiler": "INTL 0x20091013",
+        "sha256": "a612e6dcc7e2c682a1a8369c64bc889bfe0914145f2db9a44d50da8ae910d934"
+      },
+      {
+        "file": "EINJ.aml",
+        "signature": "EINJ",
+        "length": 336,
+        "revision": 1,
+        "oem_id": "ALASKA",
+        "oem_table_id": "A M I \u0000\u0000",
+        "oem_revision": "0x1",
+        "compiler": "INTL 0x1",
+        "sha256": "2a3713d91a016dcadd43312f8f22359da5dd5e0c374f68927581172c2fea6d9a"
+      },
+      {
+        "file": "ERST.aml",
+        "signature": "ERST",
+        "length": 560,
+        "revision": 1,
+        "oem_id": "ALASKA",
+        "oem_table_id": "A M I \u0000\u0000",
+        "oem_revision": "0x1",
+        "compiler": "INTL 0x1",
+        "sha256": "c47545c25f9e599b466eda8553c1c1fa5509eb4d274f581e0a6b29c3b19664a6"
+      },
+      {
+        "file": "FACP.aml",
+        "signature": "FACP",
+        "length": 276,
+        "revision": 6,
+        "oem_id": "ALASKA",
+        "oem_table_id": "A M I \u0000\u0000",
+        "oem_revision": "0x1072009",
+        "compiler": "INTL 0x20091013",
+        "sha256": "6a534f4439ee98b2504338479e7534951741882b61dc2d343dfcf13ff94531af"
+      },
+      {
+        "file": "FACS.aml",
+        "signature": "FACS",
+        "length": 64,
+        "revision": 248,
+        "oem_id": "\u0011j\u0000\u0000\u0000\u0000",
+        "oem_table_id": "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000",
+        "oem_revision": "0x0",
+        "compiler": "\u0000\u0000\u0000\u0000 0x2",
+        "sha256": "21f2e1dc4bbfe1b056b3e00e44367cfbe4142a8352db34dec2c468261821ada6"
+      },
+      {
+        "file": "FIDT.aml",
+        "signature": "FIDT",
+        "length": 156,
+        "revision": 1,
+        "oem_id": "ALASKA",
+        "oem_table_id": "A M I\u0000\u0000\u0000",
+        "oem_revision": "0x1072009",
+        "compiler": "AMI  0x10013",
+        "sha256": "3f5e85af0fd5c2bc10f00ffc9317da496f7d1335023daf57ce98d67ab93c16e9"
+      },
+      {
+        "file": "FPDT.aml",
+        "signature": "FPDT",
+        "length": 68,
+        "revision": 1,
+        "oem_id": "ALASKA",
+        "oem_table_id": "A M I \u0000\u0000",
+        "oem_revision": "0x1072009",
+        "compiler": "AMI  0x10013",
+        "sha256": "8f100718a6f2f43fadc7140ac2e98baac876a811a73683ae874ef2e7456b161c"
+      },
+      {
+        "file": "HEST.aml",
+        "signature": "HEST",
+        "length": 168,
+        "revision": 1,
+        "oem_id": "ALASKA",
+        "oem_table_id": "A M I \u0000\u0000",
+        "oem_revision": "0x1",
+        "compiler": "INTL 0x1",
+        "sha256": "8936444394bd04079a27d6dad0669aaf93fd035e36ac0a3209ca043cb505bfb8"
+      },
+      {
+        "file": "HPET.aml",
+        "signature": "HPET",
+        "length": 56,
+        "revision": 1,
+        "oem_id": "ALASKA",
+        "oem_table_id": "A M I \u0000\u0000",
+        "oem_revision": "0x1",
+        "compiler": "INTL 0x20091013",
+        "sha256": "077cb8748f2758eb71725ee418add3f4e28c43b234acdc9ef27d9395d17b55ee"
+      },
+      {
+        "file": "MCFG.aml",
+        "signature": "MCFG",
+        "length": 60,
+        "revision": 1,
+        "oem_id": "ALASKA",
+        "oem_table_id": "A M I\u0000\u0000\u0000",
+        "oem_revision": "0x1072009",
+        "compiler": "MSFT 0x97",
+        "sha256": "11fb59634ee12e13042e959fe144ba7ecb2d10a6f0efb31de2f762816a87d333"
+      },
+      {
+        "file": "MIGT.aml",
+        "signature": "MIGT",
+        "length": 64,
+        "revision": 1,
+        "oem_id": "ALASKA",
+        "oem_table_id": "A M I \u0000\u0000",
+        "oem_revision": "0x0",
+        "compiler": "INTL 0x20091013",
+        "sha256": "ae78b6bae673635e99c3b1e47e8c2467d8eec4bfe0c80027130a192b26889ef3"
+      },
+      {
+        "file": "MSCT.aml",
+        "signature": "MSCT",
+        "length": 100,
+        "revision": 1,
+        "oem_id": "ALASKA",
+        "oem_table_id": "A M I \u0000\u0000",
+        "oem_revision": "0x1",
+        "compiler": "INTL 0x20091013",
+        "sha256": "ab481ae67a1005e6fc1e4af240d5f9158a0d450709ca67ab2997e4babfed521c"
+      },
+      {
+        "file": "OEM1.aml",
+        "signature": "OEM1",
+        "length": 86388,
+        "revision": 2,
+        "oem_id": "INTEL\u0000",
+        "oem_table_id": "CPU EIST",
+        "oem_revision": "0x3000",
+        "compiler": "INTL 0x20140828",
+        "sha256": "312c68888c680f3bc7ff8a69aa6dc3eb58b7e128322eebaff2e89b8d77373485"
+      },
+      {
+        "file": "OEM2.aml",
+        "signature": "OEM2",
+        "length": 93780,
+        "revision": 2,
+        "oem_id": "INTEL\u0000",
+        "oem_table_id": "CPU  HWP",
+        "oem_revision": "0x3000",
+        "compiler": "INTL 0x20140828",
+        "sha256": "52d810e18d7e9bc9390172ba81ca459e5cf29c3860d65d289dc987768f98eb04"
+      },
+      {
+        "file": "OEM4.aml",
+        "signature": "OEM4",
+        "length": 332788,
+        "revision": 2,
+        "oem_id": "INTEL\u0000",
+        "oem_table_id": "CPU  CST",
+        "oem_revision": "0x3000",
+        "compiler": "INTL 0x20140828",
+        "sha256": "033045600f768f9e938182cb2fa95668b5b177c74d41b4965b79d2ef07381c5e"
+      },
+      {
+        "file": "PCAT.aml",
+        "signature": "PCAT",
+        "length": 136,
+        "revision": 2,
+        "oem_id": "ALASKA",
+        "oem_table_id": "A M I \u0000\u0000",
+        "oem_revision": "0x2",
+        "compiler": "INTL 0x20091013",
+        "sha256": "23661512db657265e126248699da736e89967c21f2cc8d687157021e9555eab9"
+      },
+      {
+        "file": "PCCT.aml",
+        "signature": "PCCT",
+        "length": 110,
+        "revision": 1,
+        "oem_id": "ALASKA",
+        "oem_table_id": "A M I \u0000\u0000",
+        "oem_revision": "0x2",
+        "compiler": "INTL 0x20091013",
+        "sha256": "7fcfec629d7adcda3b46973fd3ed34094c9a0ff2bb143a480a5c7a2bec203fdb"
+      },
+      {
+        "file": "RASF.aml",
+        "signature": "RASF",
+        "length": 48,
+        "revision": 1,
+        "oem_id": "ALASKA",
+        "oem_table_id": "A M I \u0000\u0000",
+        "oem_revision": "0x1",
+        "compiler": "INTL 0x20091013",
+        "sha256": "f6e29b2da057018d0734e52ae456756d87f08053b4a95825e209780a60b3caac"
+      },
+      {
+        "file": "SLIT.aml",
+        "signature": "SLIT",
+        "length": 300,
+        "revision": 1,
+        "oem_id": "ALASKA",
+        "oem_table_id": "A M I \u0000\u0000",
+        "oem_revision": "0x1",
+        "compiler": "INTL 0x20091013",
+        "sha256": "d5b47c9f64f972f27f24575dd5a64477b13f66ee23150ee2426c870bdc9c46d5"
+      },
+      {
+        "file": "SPCR.aml",
+        "signature": "SPCR",
+        "length": 80,
+        "revision": 2,
+        "oem_id": "A M I\u0000",
+        "oem_table_id": "APTIO V\u0000",
+        "oem_revision": "0x1072009",
+        "compiler": "AMI. 0x5000e",
+        "sha256": "2d6cf1ee63380c7d07b12eb482849916f86ea71f1b27b19b40f470ba4bf76460"
+      },
+      {
+        "file": "SPMI.aml",
+        "signature": "SPMI",
+        "length": 65,
+        "revision": 5,
+        "oem_id": "ALASKA",
+        "oem_table_id": "A M I \u0000\u0000",
+        "oem_revision": "0x0",
+        "compiler": "AMI. 0x0",
+        "sha256": "156991cd8ccca0d8b96f135e2d40dfd8ccb1e91e58e64ab0007922d7f54d5206"
+      },
+      {
+        "file": "SRAT.aml",
+        "signature": "SRAT",
+        "length": 5808,
+        "revision": 3,
+        "oem_id": "ALASKA",
+        "oem_table_id": "A M I \u0000\u0000",
+        "oem_revision": "0x2",
+        "compiler": "INTL 0x20091013",
+        "sha256": "1e91359067d11156e97646a40a0cb544ebd9435f8057d6d96c5d2ed411f5e63c"
+      },
+      {
+        "file": "SSDT1.aml",
+        "signature": "SSDT",
+        "length": 1132,
+        "revision": 2,
+        "oem_id": "INTEL\u0000",
+        "oem_table_id": "ADDRXLAT",
+        "oem_revision": "0x1",
+        "compiler": "INTL 0x20140828",
+        "sha256": "cc0e0e2f75ba800fa28a6847feab33efd937a381e5e4e21dd5928c4b5472b88c"
+      },
+      {
+        "file": "SSDT2.aml",
+        "signature": "SSDT",
+        "length": 105728,
+        "revision": 2,
+        "oem_id": "INTEL\u0000",
+        "oem_table_id": "SSDT  PM",
+        "oem_revision": "0x4000",
+        "compiler": "INTL 0x20140828",
+        "sha256": "c7ea2544e987f32dd007b1e4ed0e736e70096647ca28f575fbb6bb1a095a31a6"
+      },
+      {
+        "file": "SSDT3.aml",
+        "signature": "SSDT",
+        "length": 1627,
+        "revision": 2,
+        "oem_id": "ALASKA",
+        "oem_table_id": "A M I \u0000\u0000",
+        "oem_revision": "0x0",
+        "compiler": "INTL 0x20091013",
+        "sha256": "7e69037d040f4596e2019f8bffd77cbf2635c19a6c15bbc3b2c4ac7c2994d6e5"
+      },
+      {
+        "file": "SSDT4.aml",
+        "signature": "SSDT",
+        "length": 6990,
+        "revision": 2,
+        "oem_id": "INTEL\u0000",
+        "oem_table_id": "SpsNm",
+        "oem_revision": "0x2",
+        "compiler": "INTL 0x20140828",
+        "sha256": "ee805e03f38d849e37900eb8f89b7d905e3dc65761eb1fb5d9001448f7e63e18"
+      },
+      {
+        "file": "SVOS.aml",
+        "signature": "SVOS",
+        "length": 50,
+        "revision": 1,
+        "oem_id": "ALASKA",
+        "oem_table_id": "A M I \u0000\u0000",
+        "oem_revision": "0x0",
+        "compiler": "INTL 0x20091013",
+        "sha256": "4ba81b82af76a666413386039a54ea30fef962708676fb95c4df3de244e8dd37"
+      },
+      {
+        "file": "VFCT.aml",
+        "signature": "VFCT",
+        "length": 119968,
+        "revision": 1,
+        "oem_id": "ALASKA",
+        "oem_table_id": "A M I \u0000\u0000",
+        "oem_revision": "0x1",
+        "compiler": "AMD\u0000 0x31504f47",
+        "sha256": "9f33208708a8e8333213e8b6be89b9584e143b0422631da91fc606a1a526548a"
+      },
+      {
+        "file": "WDDT.aml",
+        "signature": "WDDT",
+        "length": 64,
+        "revision": 1,
+        "oem_id": "ALASKA",
+        "oem_table_id": "A M I \u0000\u0000",
+        "oem_revision": "0x0",
+        "compiler": "INTL 0x20091013",
+        "sha256": "31d7251969357ba206d4d6811576fa05d37e47ed0cd16ba4b252d96ee91e5bfe"
+      },
+      {
+        "file": "WSMT.aml",
+        "signature": "WSMT",
+        "length": 40,
+        "revision": 1,
+        "oem_id": "ALASKA",
+        "oem_table_id": "A M I \u0000\u0000",
+        "oem_revision": "0x1072009",
+        "compiler": "AMI  0x10013",
+        "sha256": "397ff541a0a051c219a6268237477db7cbcc65e9002a0280c0a593524b2a072e"
+      }
+    ],
+    "aml_bearing_tables": [
+      "DSDT.aml",
+      "SSDT1.aml",
+      "SSDT2.aml",
+      "SSDT3.aml",
+      "SSDT4.aml"
+    ],
+    "aml_disassembly": {
+      "tool": "iasl 20260930",
+      "result": "each of DSDT, OEM1, OEM2, OEM4, SSDT1-4 disassembled standalone with zero error lines",
+      "refs": [
+        "D-IASL"
+      ]
+    },
+    "aml_inventory": {
+      "dsdt_pci_host_bridges_PNP0A08": 24,
+      "dsdt_processor_objects": 112,
+      "oem2_cpc_methods": 112,
+      "oem_table_ids": {
+        "OEM1": "CPU EIST",
+        "OEM2": "CPU  HWP",
+        "OEM4": "CPU  CST",
+        "SSDT2": "SSDT  PM",
+        "SSDT1": "ADDRXLAT",
+        "SSDT4": "SpsNm"
+      },
+      "refs": [
+        "D-IASL"
+      ],
+      "note": "Existence inventory only; no semantic evaluation."
+    },
+    "madt": {
+      "counts": {
+        "lapic_enabled": 80,
+        "lapic_disabled": 32,
+        "ioapic": 9,
+        "type127": 24,
+        "type2": 2,
+        "type4": 1,
+        "x2apic_disabled": 112,
+        "type10": 1
+      },
+      "enabled_apic_ids": 80,
+      "flags": "0x1"
+    },
+    "mcfg": {
+      "entries": [
+        {
+          "base": "0x80000000",
+          "segment": 0,
+          "start_bus": 0,
+          "end_bus": 255
+        }
+      ]
+    },
+    "hpet": {
+      "address": "0xfed00000",
+      "event_timer_block_id": "0x8086a701"
+    },
+    "dmar_summary": {
+      "drhd_count": 8,
+      "subtable_counts": {
+        "0": 8,
+        "1": 1,
+        "2": 2,
+        "3": 8
+      }
+    },
+    "srat_summary": {
+      "enabled_cpu_affinity_entries": 80,
+      "cpus_per_domain": {
+        "0": 40,
+        "1": 40
+      },
+      "enabled_memory_ranges": [
+        {
+          "domain": 0,
+          "base": "0x0",
+          "length_gib": 2.0
+        },
+        {
+          "domain": 0,
+          "base": "0x100000000",
+          "length_gib": 45.0
+        },
+        {
+          "domain": 0,
+          "base": "0xc40000000",
+          "length_gib": 48.0
+        },
+        {
+          "domain": 1,
+          "base": "0x1840000000",
+          "length_gib": 48.0
+        },
+        {
+          "domain": 1,
+          "base": "0x2440000000",
+          "length_gib": 48.0
+        }
+      ],
+      "memory_gib_per_domain": {
+        "0": 95.0,
+        "1": 96.0
+      }
+    },
+    "slit_summary": {
+      "localities": 2,
+      "matrix": [
+        [
+          10,
+          21
+        ],
+        [
+          21,
+          10
+        ]
+      ]
+    },
+    "crosschecks": {
+      "cpu_numa_kernel_vs_srat_mismatches": [],
+      "kernel_cpus": 80,
+      "srat_enabled_entries": 80,
+      "slit_vs_kernel_distance_equal": true,
+      "srat_mem_gib_vs_kernel_memtotal_gib": {
+        "0": [
+          95.0,
+          93.09297180175781
+        ],
+        "1": [
+          96.0,
+          94.42178726196289
+        ]
+      },
+      "apic_ids_firmware_not_in_kernel": [],
+      "apic_ids_kernel_not_in_firmware": []
+    }
+  },
+  "iommu": {
+    "firmware_dmar": {
+      "state": "known",
+      "present": true,
+      "host_address_width": 46,
+      "flags": "0x1",
+      "subtable_type_counts": {
+        "0": 8,
+        "1": 1,
+        "2": 2,
+        "3": 8
+      },
+      "drhd": [
+        {
+          "segment": 0,
+          "base": "0xbd3fc000",
+          "include_pci_all": false
+        },
+        {
+          "segment": 0,
+          "base": "0xbd7fc000",
+          "include_pci_all": false
+        },
+        {
+          "segment": 0,
+          "base": "0xd07fc000",
+          "include_pci_all": false
+        },
+        {
+          "segment": 0,
+          "base": "0xfbffc000",
+          "include_pci_all": false
+        },
+        {
+          "segment": 0,
+          "base": "0xb7ffc000",
+          "include_pci_all": false
+        },
+        {
+          "segment": 0,
+          "base": "0xba7fc000",
+          "include_pci_all": false
+        },
+        {
+          "segment": 0,
+          "base": "0xbcffc000",
+          "include_pci_all": false
+        },
+        {
+          "segment": 0,
+          "base": "0x943fc000",
+          "include_pci_all": true
+        }
+      ],
+      "refs": [
+        "D-ACPI"
+      ],
+      "note": "Flags 0x1 = INTR_REMAP supported per ACPI DMAR encoding bit 0"
+    },
+    "kernel_visible": {
+      "state": "known",
+      "instances": 0,
+      "iommu_groups": 0,
+      "cmdline_iommu_params": [],
+      "refs": [
+        "S-IOMMU"
+      ]
+    },
+    "capability_registers": {
+      "state": "unavailable",
+      "reason": "DRHD capability/extended-capability registers not read (MMIO / root)"
+    }
+  },
+  "contradictions": [
+    {
+      "id": "contradiction-001",
+      "subject": "IOMMU/VT-d: firmware description vs kernel-visible state",
+      "claim_a": {
+        "value": "DMAR present with 8 DRHD units and INTR_REMAP flag set",
+        "source_refs": [
+          "D-ACPI",
+          "S-ACPI-CAP"
+        ]
+      },
+      "claim_b": {
+        "value": "No IOMMU instances in /sys/class/iommu and zero IOMMU groups; no iommu parameters on command line",
+        "source_refs": [
+          "S-IOMMU"
+        ]
+      },
+      "resolution": "unresolved",
+      "note": "Cause not established in Step 1; kernel log unreadable (dmesg restricted)."
+    },
+    {
+      "id": "contradiction-002",
+      "subject": "PCI root count: AML host bridges vs kernel-visible root buses",
+      "claim_a": {
+        "value": "DSDT declares 24 PNP0A08 host bridges (PC00-PC23)",
+        "source_refs": [
+          "D-IASL"
+        ]
+      },
+      "claim_b": {
+        "value": "Kernel exposes 8 PCI root buses (00,17,3a,5d,80,85,ae,d7) in a single segment",
+        "source_refs": [
+          "S-PCI"
+        ]
+      },
+      "resolution": "unresolved",
+      "note": "Recorded as a structural difference only; not classified as a defect."
+    },
+    {
+      "id": "contradiction-003",
+      "subject": "Minimum CPU performance: cpufreq minimum vs CPPC lowest_perf",
+      "claim_a": {
+        "value": "cpuinfo_min_freq = 1000000 kHz (1000 MHz)",
+        "source_refs": [
+          "S-CPUSYS"
+        ]
+      },
+      "claim_b": {
+        "value": "acpi_cppc lowest_perf = 7 (\u2248700 MHz at 100 MHz ratio)",
+        "source_refs": [
+          "S-CPUSYS"
+        ]
+      },
+      "resolution": "unresolved"
+    },
+    {
+      "id": "contradiction-004",
+      "subject": "Enabled logical CPUs vs AML/MADT declared processor slots",
+      "claim_a": {
+        "value": "80 CPUs online; SRAT/MADT enabled APIC entries = 80",
+        "source_refs": [
+          "S-CPUSYS",
+          "D-ACPI"
+        ]
+      },
+      "claim_b": {
+        "value": "DSDT declares 112 Processor objects; MADT lists 112 lapic + 112 x2apic entries (32 lapic disabled, all x2apic entries disabled)",
+        "source_refs": [
+          "D-ACPI",
+          "D-IASL"
+        ]
+      },
+      "resolution": "unresolved",
+      "note": "Informational: firmware describes a larger capacity than populated; not a kernel/firmware disagreement on enabled CPUs (all 80 enabled CPUs match between kernel, MADT and SRAT)."
+    }
+  ],
+  "unknowns": [
+    {
+      "field": "cpu.frequency_capability.turbo_by_active_core_count",
+      "state": "unknown",
+      "reason": "Intel ARK page gives only max single-core turbo; turbo-ratio-limit MSR not readable (no root); no authoritative per-active-core table retrieved",
+      "attempted_sources": [
+        "X-ARK-6248",
+        "MSR (not permitted)"
+      ]
+    },
+    {
+      "field": "cpu.frequency_capability.documented_all_core_turbo",
+      "state": "unknown",
+      "reason": "Not on retrieved page",
+      "attempted_sources": [
+        "X-ARK-6248"
+      ]
+    },
+    {
+      "field": "cpu.frequency_capability.avx_frequency_behavior",
+      "state": "unknown",
+      "reason": "No authoritative AVX2/AVX-512 frequency table retrieved",
+      "attempted_sources": [
+        "X-ARK-6248"
+      ]
+    },
+    {
+      "field": "memory.dimm_identity / configured_speed",
+      "state": "unavailable",
+      "reason": "SMBIOS Type 17 requires root",
+      "attempted_sources": [
+        "dmidecode (password required)"
+      ]
+    },
+    {
+      "field": "pci.endpoint_capability_registers (decoded)",
+      "state": "unavailable",
+      "reason": "lspci -vv hides capability registers for non-root; sysfs speed/width used instead",
+      "attempted_sources": [
+        "lspci -vvnn"
+      ]
+    },
+    {
+      "field": "iommu.drhd_capability_registers",
+      "state": "unavailable",
+      "reason": "MMIO/root access",
+      "attempted_sources": []
+    },
+    {
+      "field": "cpu.socket_interconnect.upi_link_state",
+      "state": "unavailable",
+      "reason": "Not observable from OS without MSR/uncore access",
+      "attempted_sources": []
+    },
+    {
+      "field": "cpu.thermal_limit.tjmax",
+      "state": "unavailable",
+      "reason": "MSR 0x1A2 not readable",
+      "attempted_sources": []
+    },
+    {
+      "field": "acpi.live_vs_captured_hashes",
+      "state": "unavailable",
+      "reason": "/sys/firmware/acpi/tables files are root-only; only sizes/names compared",
+      "attempted_sources": [
+        "/sys/firmware/acpi/tables"
+      ]
+    },
+    {
+      "field": "pci.bar_resources",
+      "state": "not_collected",
+      "reason": "Not needed for platform identity",
+      "attempted_sources": []
+    },
+    {
+      "field": "firmware.kernel_boot_log_facts",
+      "state": "unavailable",
+      "reason": "dmesg restricted",
+      "attempted_sources": [
+        "dmesg"
+      ]
+    }
+  ],
+  "limitations": [
+    "Run was unprivileged (uid 1000): no MSR, SMBIOS table, PCI capability decode, MMIO, or kernel log access.",
+    "ACPI analysis used the repository-supplied capture in ./ACPI; hashes were not verified against live firmware tables (root-only), only file names/sizes matched.",
+    "Intel ARK page was retrieved as unlabeled markdown; only unambiguous values were used.",
+    "Link current state is a point-in-time observation and may reflect link power management.",
+    "No stress/workload tests were run; no target policy was changed."
+  ],
+  "evidence_refs": [
+    "S-DMI",
+    "S-CPUINFO",
+    "S-LSCPU",
+    "S-CPUSYS",
+    "S-NODE",
+    "S-EDAC",
+    "S-PCI",
+    "S-IOMMU",
+    "S-RAPL",
+    "S-EFI",
+    "S-ACPI-CAP",
+    "D-ACPI",
+    "D-IASL",
+    "D-COLLECT",
+    "D-MEMBW",
+    "X-ARK-6248",
+    "M-INFER"
+  ]
+}

@@ -1,0 +1,151 @@
+{
+ "srat": {
+  "enabled_cpu_affinity_entries": 80,
+  "cpus_per_domain": {
+   "0": 40,
+   "1": 40
+  },
+  "enabled_memory_ranges": [
+   {
+    "domain": 0,
+    "base": "0x0",
+    "length_gib": 2.0
+   },
+   {
+    "domain": 0,
+    "base": "0x100000000",
+    "length_gib": 45.0
+   },
+   {
+    "domain": 0,
+    "base": "0xc40000000",
+    "length_gib": 48.0
+   },
+   {
+    "domain": 1,
+    "base": "0x1840000000",
+    "length_gib": 48.0
+   },
+   {
+    "domain": 1,
+    "base": "0x2440000000",
+    "length_gib": 48.0
+   }
+  ],
+  "memory_gib_per_domain": {
+   "0": 95.0,
+   "1": 96.0
+  }
+ },
+ "slit": {
+  "localities": 2,
+  "matrix": [
+   [
+    10,
+    21
+   ],
+   [
+    21,
+    10
+   ]
+  ]
+ },
+ "madt": {
+  "counts": {
+   "lapic_enabled": 80,
+   "lapic_disabled": 32,
+   "ioapic": 9,
+   "type127": 24,
+   "type2": 2,
+   "type4": 1,
+   "x2apic_disabled": 112,
+   "type10": 1
+  },
+  "enabled_apic_ids": 80,
+  "flags": "0x1"
+ },
+ "mcfg": {
+  "entries": [
+   {
+    "base": "0x80000000",
+    "segment": 0,
+    "start_bus": 0,
+    "end_bus": 255
+   }
+  ]
+ },
+ "dmar": {
+  "host_address_width": 46,
+  "flags": "0x1",
+  "subtable_type_counts": {
+   "0": 8,
+   "1": 1,
+   "2": 2,
+   "3": 8
+  },
+  "drhd": [
+   {
+    "segment": 0,
+    "base": "0xbd3fc000",
+    "include_pci_all": false
+   },
+   {
+    "segment": 0,
+    "base": "0xbd7fc000",
+    "include_pci_all": false
+   },
+   {
+    "segment": 0,
+    "base": "0xd07fc000",
+    "include_pci_all": false
+   },
+   {
+    "segment": 0,
+    "base": "0xfbffc000",
+    "include_pci_all": false
+   },
+   {
+    "segment": 0,
+    "base": "0xb7ffc000",
+    "include_pci_all": false
+   },
+   {
+    "segment": 0,
+    "base": "0xba7fc000",
+    "include_pci_all": false
+   },
+   {
+    "segment": 0,
+    "base": "0xbcffc000",
+    "include_pci_all": false
+   },
+   {
+    "segment": 0,
+    "base": "0x943fc000",
+    "include_pci_all": true
+   }
+  ]
+ },
+ "hpet": {
+  "address": "0xfed00000",
+  "event_timer_block_id": "0x8086a701"
+ },
+ "crosscheck": {
+  "cpu_numa_kernel_vs_srat_mismatches": [],
+  "kernel_cpus": 80,
+  "srat_enabled_entries": 80,
+  "slit_vs_kernel_distance_equal": true,
+  "srat_mem_gib_vs_kernel_memtotal_gib": {
+   "0": [
+    95.0,
+    93.09297180175781
+   ],
+   "1": [
+    96.0,
+    94.42178726196289
+   ]
+  },
+  "apic_ids_firmware_not_in_kernel": [],
+  "apic_ids_kernel_not_in_firmware": []
+ }
+}
