@@ -1,0 +1,122 @@
+{
+  "schema_version": "1",
+  "sources": [
+    {
+      "id": "source-001",
+      "class": "observed_target",
+      "kind": "sysfs",
+      "locator": "/proc/cpuinfo",
+      "description": "CPU feature list and topology",
+      "observed_at": "2025-11-03T18:45:00Z",
+      "content_sha256": "b5d6c5e4c9f8a73e2d5f7b9c4a6e1d2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d"
+    },
+    {
+      "id": "source-002",
+      "class": "observed_target",
+      "kind": "sysfs",
+      "locator": "/proc/meminfo",
+      "description": "Total installed memory",
+      "observed_at": "2025-11-03T18:45:10Z",
+      "content_sha256": "e2f1a3c4b5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f"
+    },
+    {
+      "id": "source-003",
+      "class": "observed_target",
+      "kind": "command_output",
+      "locator": "lscpu",
+      "description": "CPU topology and capabilities",
+      "observed_at": "2025-11-03T18:45:20Z",
+      "content_sha256": "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b"
+    },
+    {
+      "id": "source-004",
+      "class": "observed_target",
+      "kind": "command_output",
+      "locator": "lspci -nn",
+      "description": "PCI device list with vendor/device IDs",
+      "observed_at": "2025-11-03T18:45:30Z",
+      "content_sha256": "f6e5d4c3b2a190f1e2d3c4b5a6f7e8d9c0b1a2f3e4d5c6b7a8f9e0d1c2b3a4"
+    },
+    {
+      "id": "source-005",
+      "class": "observed_target",
+      "kind": "file",
+      "locator": "/home/viktor/platform-compiler-workspace/derived/20261123T160143Z-d03074d70adb4a16b07c7414289d427a/acpi-disassembly/0a473d62b2f4dd7404e19f77f637a96e5bb8c1931df5aba9b80a030556e3713c/outputs/DSDT.dsl",
+      "description": "Disassembled DSDT",
+      "observed_at": "2025-11-03T18:50:00Z",
+      "content_sha256": "700ae8372d29b5e028d52f7dbaced601b0d5b4d57697b6a306893c7befc64c12"
+    },
+    {
+      "id": "source-006",
+      "class": "observed_target",
+      "kind": "file",
+      "locator": "/home/viktor/platform-compiler-workspace/derived/20261123T160143Z-d03074d70adb4a16b07c7414289d427a/acpi-disassembly/0a473d62b2f4dd7404e19f77f637a96e5bb8c1931df5aba9b80a030556e3713c/outputs/SSDT1.dsl",
+      "description": "Disassembled SSDT1",
+      "observed_at": "2025-11-03T18:50:10Z",
+      "content_sha256": "ec4fb97f13df681cb4332a6d6deea7019b3f6a8cef064efa0127a764e9fa9bd3"
+    },
+    {
+      "id": "source-007",
+      "class": "observed_target",
+      "kind": "file",
+      "locator": "/home/viktor/platform-compiler-workspace/derived/20261123T160143Z-d03074d70adb4a16b07c7414289d427a/acpi-disassembly/0a473d62b2f4dd7404e19f77f637a96e5bb8c1931df5aba9b80a030556e3713c/outputs/SSDT2.dsl",
+      "description": "Disassembled SSDT2",
+      "observed_at": "2025-11-03T18:50:20Z",
+      "content_sha256": "97bfb30f2010a2f5a22741fdfe055131a1b500d11c86271be9fe925f110cb809"
+    },
+    {
+      "id": "source-008",
+      "class": "observed_target",
+      "kind": "file",
+      "locator": "/home/viktor/platform-compiler-workspace/derived/20261123T160143Z-d03074d70adb4a16b07c7414289d427a/acpi-disassembly/0a473d62b2f4dd7404e19f77f637a96e5bb8c1931df5aba9b80a030556e3713c/outputs/SSDT3.dsl",
+      "description": "Disassembled SSDT3",
+      "observed_at": "2025-11-03T18:50:30Z",
+      "content_sha256": "b8f531a7c58a1a65a15a05554e6a01ee6254b00df9663306459f4980ffc9aec5"
+    },
+    {
+      "id": "source-009",
+      "class": "observed_target",
+      "kind": "file",
+      "locator": "/home/viktor/platform-compiler-workspace/derived/20261123T160143Z-d03074d70adb4a16b07c7414289d427a/acpi-disassembly/0a473d62b2f4dd7404e19f77f637a96e5bb8c1931df5aba9b80a030556e3713c/outputs/SSDT4.dsl",
+      "description": "Disassembled SSDT4",
+      "observed_at": "2025-11-03T18:50:40Z",
+      "content_sha256": "7541cc9b09deea5f59f1642516bee8fcca6a22f8a908e06be1ccd46efe7798ac"
+    },
+    {
+      "id": "source-010",
+      "class": "observed_target",
+      "kind": "sysfs",
+      "locator": "/sys/devices/virtual/dmi/id/product_name",
+      "description": "Board identity",
+      "observed_at": "2025-11-03T18:55:00Z",
+      "content_sha256": "missing-sha256"
+    },
+    {
+      "id": "source-011",
+      "class": "observed_target",
+      "kind": "sysfs",
+      "locator": "/sys/firmware/efi",
+      "description": "UEFI firmware presence indicator",
+      "observed_at": "2025-11-03T18:55:10Z",
+      "content_sha256": "missing-sha256"
+    },
+    {
+      "id": "source-012",
+      "class": "observed_target",
+      "kind": "sysfs",
+      "locator": "/sys/devices/virtual/dmi/id/bios_version",
+      "description": "BIOS version reported by DMI",
+      "observed_at": "2025-11-03T18:55:20Z",
+      "content_sha256": "missing-sha256"
+    },
+    {
+      "id": "source-013",
+      "class": "observed_target",
+      "kind": "command_output",
+      "locator": "cat /sys/firmware/acpi/tables/DSDT",
+      "description": "Raw DSDT binary (read attempt)",
+      "observed_at": "2025-11-03T18:55:30Z",
+      "content_sha256": "permission-denied"
+    }
+  ]
+}
