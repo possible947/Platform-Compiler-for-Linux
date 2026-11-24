@@ -1,0 +1,193 @@
+{
+  "schema_version": "platform-specification/1",
+  "evidence": [
+    {
+      "id": "EVID-001",
+      "class": "observed_target",
+      "description": "/proc/cpuinfo — CPU identity, flags, core/thread count, model",
+      "source": "kernel 7.3.4-300.fc45.x86_64",
+      "integrity": "direct observation"
+    },
+    {
+      "id": "EVID-002",
+      "class": "observed_target",
+      "description": "/sys/devices/system/cpu/*/topology/ — physical_package_id, core_id, numa_node mapping",
+      "source": "kernel 7.3.4",
+      "integrity": "direct observation"
+    },
+    {
+      "id": "EVID-003",
+      "class": "observed_target",
+      "description": "/sys/devices/system/node/*/ — NUMA node CPU lists, distance matrix, memory info",
+      "source": "kernel 7.3.4",
+      "integrity": "direct observation"
+    },
+    {
+      "id": "EVID-004",
+      "class": "observed_target",
+      "description": "lspci -nn -D — full PCI device inventory with vendor/device IDs",
+      "source": "lspci (Linux PCI Utilities)",
+      "integrity": "direct observation"
+    },
+    {
+      "id": "EVID-005",
+      "class": "observed_target",
+      "description": "lspci -vvv — detailed PCI device information for key endpoints",
+      "source": "lspci",
+      "integrity": "direct observation"
+    },
+    {
+      "id": "EVID-006",
+      "class": "observed_target",
+      "description": "/sys/firmware/acpi/tables/* — full ACPI table inventory with sizes",
+      "source": "kernel ACPI subsystem",
+      "integrity": "direct observation"
+    },
+    {
+      "id": "EVID-007",
+      "class": "deterministic_derived",
+      "description": "ACPI table headers (signature, revision, OEM ID, OEM table ID, length) parsed from binary captures",
+      "source": "hex dump of /home/viktor/LLM/Projects/Platform-Compiler-for-Linux/ACPI/*.aml",
+      "integrity": "deterministic derivation"
+    },
+    {
+      "id": "EVID-008",
+      "class": "observed_target",
+      "description": "DMI fields from /sys/class/dmi/id/ — board, BIOS, chassis identity",
+      "source": "kernel DMI sysfs interface",
+      "integrity": "direct observation"
+    },
+    {
+      "id": "EVID-009",
+      "class": "observed_target",
+      "description": "/sys/devices/system/cpu/cpu*/cpuidle/state* — available C-states",
+      "source": "kernel cpuidle subsystem",
+      "integrity": "direct observation"
+    },
+    {
+      "id": "EVID-010",
+      "class": "observed_target",
+      "description": "/sys/devices/system/cpu/intel_pstate/* — HWP and intel_pstate status",
+      "source": "kernel intel_pstate driver",
+      "integrity": "direct observation"
+    },
+    {
+      "id": "EVID-011",
+      "class": "observed_target",
+      "description": "/boot/config-$(uname -r) — kernel config for IOMMU, ACPI, NUMA features",
+      "source": "kernel source/config",
+      "integrity": "direct observation"
+    },
+    {
+      "id": "EVID-012",
+      "class": "observed_target",
+      "description": "/proc/cmdline — kernel command line",
+      "source": "kernel boot parameters",
+      "integrity": "direct observation"
+    },
+    {
+      "id": "EVID-013",
+      "class": "deterministic_derived",
+      "description": "NUMA distance matrix derived from /sys/devices/system/node/*/distance",
+      "source": "kernel sysfs",
+      "integrity": "deterministic derivation",
+      "derived_value": "10 21 / 21 10"
+    },
+    {
+      "id": "EVID-014",
+      "class": "deterministic_derived",
+      "description": "ACPI DMAR IOMMU unit enumeration from DMAR.aml binary",
+      "source": "IOMMU unit entries per socket",
+      "integrity": "deterministic derivation"
+    },
+    {
+      "id": "EVID-015",
+      "class": "observed_target",
+      "description": "ACPI table captures in /home/viktor/LLM/Projects/Platform-Compiler-for-Linux/ACPI/",
+      "source": "acpidump captures",
+      "integrity": "direct observation"
+    }
+  ],
+  "external_sources": [
+    {
+      "id": "SRC-001",
+      "class": "external_authoritative",
+      "publisher": "Intel Corporation",
+      "title": "Intel Xeon Gold 6248 Datasheet (613190)",
+      "url": "Intel ARK / Intel datasheet PDF",
+      "used_for": "CPU model identification, architecture (Cascade Lake-SP), core/thread count, base frequency, TDP"
+    },
+    {
+      "id": "SRC-002",
+      "class": "external_authoritative",
+      "publisher": "Intel Corporation",
+      "title": "Intel 64 and IA-32 Architectures SDM (Vol 3)",
+      "url": "Intel SDM",
+      "used_for": "CPUID leaves, cache topology interpretation, AVX/AVX2/AVX-512 support"
+    },
+    {
+      "id": "SRC-003",
+      "class": "external_authoritative",
+      "publisher": "Intel Corporation",
+      "title": "Intel Sky Lake-SP (Xeon Scalable 1st Gen) Platform Architecture",
+      "url": "Intel Whitepaper/ARK",
+      "used_for": "Platform/chipset identification, UPI capability, memory controller topology"
+    },
+    {
+      "id": "SRC-004",
+      "class": "external_authoritative",
+      "publisher": "Intel Corporation",
+      "title": "Intel C620 Series Chipset Family Datasheet",
+      "url": "Intel Datasheet",
+      "used_for": "Chipset feature set, I/O topology, PCIe lanes, SATA/USB/MEI"
+    },
+    {
+      "id": "SRC-005",
+      "class": "external_secondary",
+      "publisher": "AMD",
+      "title": "AMD Instinct MI50 / Radeon Pro VII Product Brief",
+      "url": "AMD Website",
+      "used_for": "GPU identification, Vega 20 (GFX906) capabilities"
+    },
+    {
+      "id": "SRC-006",
+      "class": "external_authoritative",
+      "publisher": "UEFI Forum",
+      "title": "ACPI Specification (version 6.5)",
+      "url": "uefi.acpi.info",
+      "used_for": "ACPI table format interpretation"
+    },
+    {
+      "id": "SRC-007",
+      "class": "external_authoritative",
+      "publisher": "Kernel.org",
+      "title": "Linux kernel documentation (nodemem.rst, numaq.rst)",
+      "url": "kernel.org",
+      "used_for": "NUMA, IOMMU, cpufreq subsystem interpretation"
+    },
+    {
+      "id": "SRC-008",
+      "class": "external_secondary",
+      "publisher": "PCI-SIG",
+      "title": "PCI Express Base Specification (Gen3/Gen4)",
+      "url": "pci-sig.org",
+      "used_for": "PCIe link capability reference values"
+    },
+    {
+      "id": "SRC-009",
+      "class": "external_authoritative",
+      "publisher": "Intel Corporation",
+      "title": "Intel VT-d Specification",
+      "url": "Intel VT-d docs",
+      "used_for": "IOMMU capability, scalability mode"
+    },
+    {
+      "id": "SRC-010",
+      "class": "external_secondary",
+      "publisher": "Intel ARK",
+      "title": "Intel Xeon Gold 6248 Product Specifications",
+      "url": "ark.intel.com",
+      "used_for": "Base frequency confirmation, TDP, core count, microarchitecture"
+    }
+  ]
+}
