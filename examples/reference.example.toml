@@ -1,7 +1,0 @@
-[knowledge_sources.darwin_dumped]
-enabled = true
-type = "reference_platform_repository"
-repository = "possible947/DarwinDumped"
-local_path = "/var/lib/platform-compiler/references/DarwinDumped"
-index_cache_path = "/var/cache/platform-compiler/darwindumped-index.json"
-network_runtime_access = false
