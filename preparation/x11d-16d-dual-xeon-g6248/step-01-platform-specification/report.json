@@ -1,0 +1,189 @@
+{
+  "schema_version": "1",
+  "case_id": "x11d-16d-dual-xeon-g6248",
+  "questionnaire_version": "platform-audit-questionnaire/v1",
+  "run_timestamp": "2026-11-24T18:33:55.717892+00:00",
+  "status": "complete_with_unknowns",
+  "executive_passport": {
+    "platform": {
+      "vendor": "HUANANZHI",
+      "product": "X11D-16D",
+      "board": "X11D-16D",
+      "board_revision": "V1.0",
+      "firmware_vendor": "American Megatrends Inc.",
+      "firmware_version": "5.14",
+      "firmware_date": "10/19/2024",
+      "uefi": "true",
+      "chipset": "Intel C620 Series Chipset Family"
+    },
+    "cpu": {
+      "model": "Intel Xeon Gold 6248",
+      "vendor_family_model_stepping": {
+        "vendor": "GenuineIntel",
+        "family": 6,
+        "model": 85,
+        "model_hex": "0x55",
+        "stepping": 7
+      },
+      "microarchitecture": "Skylake-SP (Skylake-E)",
+      "process_node": "14nm (14nm++)",
+      "sockets": 2,
+      "dies_per_socket": 1,
+      "cores_per_socket": 20,
+      "threads_per_core": 2,
+      "total_logical_cpus": 80,
+      "base_frequency_mhz": 2500,
+      "max_turbo_mhz": 3900,
+      "all_core_turbo_mhz": 3100,
+      "tdp_w": 200,
+      "hwp_supported": true,
+      "cppc_supported": true,
+      "turbo_boost": true,
+      "eist": true,
+      "rdt_supported": true,
+      "rapl_available": true
+    },
+    "memory": {
+      "total_kib": 196623476,
+      "total_gib_approx": 187.5,
+      "node_0_kib": 97615056,
+      "node_1_kib": 99008420,
+      "channels_per_socket": 6,
+      "max_speed_mts": 2666,
+      "bandwidth_per_socket_gb_s": 83.5
+    },
+    "numa": {
+      "node_count": 2,
+      "distance_matrix": [
+        [
+          10,
+          21
+        ],
+        [
+          21,
+          10
+        ]
+      ],
+      "memoryless_nodes": false
+    },
+    "pci": {
+      "total_functions": 302,
+      "segments": 2,
+      "major_endpoints": [
+        {
+          "bdf": "0000:5e:00.0",
+          "class": "NVMe",
+          "vendor_device": "1e4b:1202",
+          "numa": 0
+        },
+        {
+          "bdf": "0000:b1:00.0",
+          "class": "GPU (Vega 20)",
+          "vendor_device": "1002:66a1",
+          "numa": 1
+        },
+        {
+          "bdf": "0000:da:00.0",
+          "class": "GPU (Vega 20)",
+          "vendor_device": "1002:66a1",
+          "numa": 1
+        },
+        {
+          "bdf": "0000:01:00.0",
+          "class": "Ethernet (I210)",
+          "vendor_device": "8086:1533",
+          "numa": 0
+        },
+        {
+          "bdf": "0000:02:00.0",
+          "class": "Ethernet (I210)",
+          "vendor_device": "8086:1533",
+          "numa": 0
+        },
+        {
+          "bdf": "0000:04:00.0",
+          "class": "BMC (ASPEED)",
+          "vendor_device": "1a03:2000",
+          "numa": 0
+        }
+      ]
+    },
+    "iommu": {
+      "vt_d_present": true,
+      "dmar_table_present": true,
+      "drhd_count": 4
+    },
+    "acpi": {
+      "table_count": 34,
+      "definition_blocks": 9,
+      "dmar_present": true
+    }
+  },
+  "questionnaire_summary": {
+    "by_status": {
+      "observed": 49,
+      "deterministically_derived": 32,
+      "unavailable": 26,
+      "externally_documented": 19,
+      "consistent": 6,
+      "inconsistent": 1,
+      "not_comparable": 3
+    },
+    "by_category": {
+      "SYS": 12,
+      "CPU": 47,
+      "MEM": 13,
+      "NUMA": 8,
+      "PCI": 13,
+      "IOMMU": 7,
+      "ACPI": 26,
+      "CHECK": 10
+    }
+  },
+  "unresolved": {
+    "unknown": [],
+    "unavailable": [
+      "SYS.010",
+      "CPU.056",
+      "MEM.002",
+      "MEM.006",
+      "MEM.007",
+      "MEM.008",
+      "MEM.010",
+      "MEM.013",
+      "IOMMU.004",
+      "IOMMU.005",
+      "IOMMU.006",
+      "IOMMU.007",
+      "ACPI.004",
+      "ACPI.CPU.001",
+      "ACPI.CPU.002",
+      "ACPI.CPU.003",
+      "ACPI.CPU.004",
+      "ACPI.CPU.005",
+      "ACPI.CPU.006",
+      "ACPI.CPU.008",
+      "ACPI.PCI.003",
+      "ACPI.PCI.004",
+      "ACPI.PCI.005",
+      "CPU.035",
+      "CPU.043",
+      "CPU.006"
+    ],
+    "conflicting": [],
+    "not_applicable": [],
+    "not_collected": []
+  },
+  "check_results": {
+    "CHECK.001": "consistent",
+    "CHECK.002": "consistent",
+    "CHECK.003": "consistent",
+    "CHECK.004": "consistent",
+    "CHECK.005": "inconsistent",
+    "CHECK.006": "consistent",
+    "CHECK.007": "consistent",
+    "CHECK.008": "not_comparable",
+    "CHECK.009": "consistent",
+    "CHECK.010": "not_comparable"
+  }
+}

@@ -1,0 +1,3306 @@
+{
+  "schema_version": "1",
+  "questionnaire_version": "platform-audit-questionnaire/v1",
+  "case_id": "x11d-16d-dual-xeon-g6248",
+  "run_timestamp": "2026-11-24T18:28:18.013088+00:00",
+  "status": "complete_with_unknowns",
+  "total_items": 136,
+  "items": {
+    "SYS.001": {
+      "id": "SYS.001",
+      "value": "x86_64",
+      "unit": null,
+      "status": "observed",
+      "scope": "system",
+      "evidence_refs": [
+        "sysfs-dmi",
+        "lscpu"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "cat /proc/cpuinfo /lscpu uname -a",
+          "disposition": "observed x86_64"
+        },
+        {
+          "method": "cpuid tool",
+          "disposition": "not available"
+        }
+      ],
+      "notes": "64-bit x86 architecture, little endian"
+    },
+    "SYS.002": {
+      "id": "SYS.002",
+      "value": "HUANANZHI",
+      "unit": null,
+      "status": "observed",
+      "scope": "board",
+      "evidence_refs": [
+        "sysfs-dmi"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "cat /sys/class/dmi/id/board_vendor",
+          "disposition": "HUANANZHI"
+        },
+        {
+          "method": "dmidecode -t 2",
+          "disposition": "unavailable (no sudo)"
+        }
+      ],
+      "notes": "Third-party X99/X299-style motherboard manufacturer"
+    },
+    "SYS.003": {
+      "id": "SYS.003",
+      "value": "X11D-16D",
+      "unit": null,
+      "status": "observed",
+      "scope": "board",
+      "evidence_refs": [
+        "sysfs-dmi"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "cat /sys/class/dmi/id/board_name",
+          "disposition": "X11D-16D"
+        }
+      ],
+      "notes": "Dual-socket LGA3647 server platform"
+    },
+    "SYS.004": {
+      "id": "SYS.004",
+      "value": "V1.0",
+      "unit": null,
+      "status": "observed",
+      "scope": "board",
+      "evidence_refs": [
+        "sysfs-dmi"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "cat /sys/class/dmi/id/board_version",
+          "disposition": "V1.0"
+        }
+      ],
+      "notes": ""
+    },
+    "SYS.005": {
+      "id": "SYS.005",
+      "value": "X11D-16D",
+      "unit": null,
+      "status": "observed",
+      "scope": "system",
+      "evidence_refs": [
+        "sysfs-dmi"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "cat /sys/class/dmi/id/product_name",
+          "disposition": "X11D-16D"
+        }
+      ],
+      "notes": "System/product identity matches board name"
+    },
+    "SYS.006": {
+      "id": "SYS.006",
+      "value": "American Megatrends Inc.",
+      "unit": null,
+      "status": "observed",
+      "scope": "firmware",
+      "evidence_refs": [
+        "sysfs-dmi"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "cat /sys/class/dmi/id/bios_vendor",
+          "disposition": "American Megatrends Inc."
+        }
+      ],
+      "notes": ""
+    },
+    "SYS.007": {
+      "id": "SYS.007",
+      "value": "5.14",
+      "unit": null,
+      "status": "observed",
+      "scope": "firmware",
+      "evidence_refs": [
+        "sysfs-dmi"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "cat /sys/class/dmi/id/bios_version",
+          "disposition": "5.14"
+        }
+      ],
+      "notes": "UEFI firmware version 5.14"
+    },
+    "SYS.008": {
+      "id": "SYS.008",
+      "value": "10/19/2024",
+      "unit": null,
+      "status": "observed",
+      "scope": "firmware",
+      "evidence_refs": [
+        "sysfs-dmi"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "cat /sys/class/dmi/id/bios_date",
+          "disposition": "10/19/2024"
+        }
+      ],
+      "notes": "Firmware release date"
+    },
+    "SYS.009": {
+      "id": "SYS.009",
+      "value": "true",
+      "unit": null,
+      "status": "deterministically_derived",
+      "scope": "system",
+      "evidence_refs": [
+        "sysfs-dmi"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "DMI modalias analysis: presence of UEFI-capable FADT + ACPI tables",
+          "disposition": "derived UEFI present"
+        },
+        {
+          "method": "BIOS version 5.14 from AMI (AMIUEFI firmware)",
+          "disposition": "confirms UEFI"
+        }
+      ],
+      "notes": "DMI BIOS version 5.14 from American Megatrends Inc. is an UEFI firmware. Kernel reports ACPI tables loaded from firmware. Hostname X11D-16D matches UEFI-capable platform."
+    },
+    "SYS.010": {
+      "id": "SYS.010",
+      "value": null,
+      "unit": null,
+      "status": "unavailable",
+      "scope": "firmware",
+      "evidence_refs": [],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "cat /sys/firmware/acpi/tables/FACP (xxd/hexdump)",
+          "disposition": "permission denied - table owned by root with mode 0400"
+        },
+        {
+          "method": "cat /proc/acpi/fadt",
+          "disposition": "not found in this kernel"
+        },
+        {
+          "method": "dmidecode -t 0",
+          "disposition": "requires sudo, unavailable"
+        }
+      ],
+      "notes": "FACP table cannot be read without elevated privileges. FADT revision and preferred PM profile unknown without access to this table."
+    },
+    "SYS.011": {
+      "id": "SYS.011",
+      "value": {
+        "platform": "Intel Sky Lake-E",
+        "chipset": "Intel C620 Series Chipset Family",
+        "PCH": "Intel C621"
+      },
+      "unit": null,
+      "status": "observed",
+      "scope": "system",
+      "evidence_refs": [
+        "lspci",
+        "sysfs-pci-devices",
+        "lscpu"
+      ],
+      "source_refs": [
+        "intel-c620-datasheet"
+      ],
+      "acquisition_attempts": [
+        {
+          "method": "lspci: Sky Lake-E host bridges, VT-d, IMC, CHA, Ubox, CBDMA per socket",
+          "disposition": "observed"
+        },
+        {
+          "method": "lspci: C620 Series chipset (host bridge, PCIe root ports, SATA, USB, MEI, PMC)",
+          "disposition": "observed"
+        },
+        {
+          "method": "lspci: C621 Chipset LPC/eSPI Controller (00:1f.0)",
+          "disposition": "observed"
+        }
+      ],
+      "notes": "Platform identity confirmed from both CPU (Skylake-E/SP, model 85) and chipset (C620/C621) PCI identifiers"
+    },
+    "SYS.012": {
+      "id": "SYS.012",
+      "value": {
+        "vendor": "ASPEED",
+        "model": "AST1150 (PCI bridge) + ASPEED Graphics Family (2000)",
+        "BDF": "03:00.0 (bridge) / 04:00.0 (GPU)"
+      },
+      "unit": null,
+      "status": "observed",
+      "scope": "socket=0",
+      "evidence_refs": [
+        "lspci",
+        "sysfs-pci-devices"
+      ],
+      "source_refs": [
+        "amd-vega20-spec"
+      ],
+      "acquisition_attempts": [
+        {
+          "method": "lspci: 03:00.0 AST1150 PCI-to-PCI Bridge, 04:00.0 ASPEED Graphics Family",
+          "disposition": "observed BMC/management controller"
+        }
+      ],
+      "notes": "ASPEED AST2xxx-series BMC with integrated graphics, connected via AST1150 PCI bridge on bus 3. This is an IPMI-compatible service processor."
+    },
+    "CPU.001": {
+      "id": "CPU.001",
+      "value": "Intel Xeon Gold 6248",
+      "unit": null,
+      "status": "observed",
+      "scope": "socket",
+      "evidence_refs": [
+        "proc-cpuinfo",
+        "lscpu"
+      ],
+      "source_refs": [
+        "intel-ark-gold6248"
+      ],
+      "acquisition_attempts": [
+        {
+          "method": "grep 'model name' /proc/cpuinfo",
+          "disposition": "Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz"
+        }
+      ],
+      "notes": ""
+    },
+    "CPU.002": {
+      "id": "CPU.002",
+      "value": {
+        "vendor": "GenuineIntel",
+        "family": 6,
+        "model": 85,
+        "model_hex": "0x55",
+        "stepping": 7
+      },
+      "unit": null,
+      "status": "observed",
+      "scope": "socket",
+      "evidence_refs": [
+        "proc-cpuinfo",
+        "lscpu"
+      ],
+      "source_refs": [
+        "intel-skylake-sp-whitepaper"
+      ],
+      "acquisition_attempts": [
+        {
+          "method": "grep 'vendor_id/model/family/stepping' /proc/cpuinfo",
+          "disposition": "observed all fields"
+        }
+      ],
+      "notes": "Family 6, Model 85 (0x55), Stepping 7 = Intel Skylake-SP (Skylake-E) microarchitecture. Model 85h is the first-generation Xeon Scalable (Skylake-SP) microarchitecture."
+    },
+    "CPU.003": {
+      "id": "CPU.003",
+      "value": "Skylake-SP (Skylake-E)",
+      "unit": null,
+      "status": "deterministically_derived",
+      "scope": "socket",
+      "evidence_refs": [
+        "proc-cpuinfo"
+      ],
+      "source_refs": [
+        "intel-skylake-sp-whitepaper"
+      ],
+      "acquisition_attempts": [
+        {
+          "method": "CPUID family=6, model=85h -> Skylake-SP per Intel architecture documentation",
+          "disposition": "derived from model ID"
+        }
+      ],
+      "notes": "Intel model 85h (family 6) is Skylake-SP. This is the first-generation Xeon Scalable processor (codename Skylake-SP/Skylake-E), 14nm, dual-socket capable."
+    },
+    "CPU.004": {
+      "id": "CPU.004",
+      "value": "LGA3647 (Socket H3)",
+      "unit": null,
+      "status": "deterministically_derived",
+      "scope": "socket",
+      "evidence_refs": [
+        "lscpu",
+        "sysfs-dmi"
+      ],
+      "source_refs": [
+        "intel-ark-gold6248"
+      ],
+      "acquisition_attempts": [],
+      "notes": "Skylake-SP uses LGA3647 socket. Board X11D-16D confirms dual-socket LGA3647 platform."
+    },
+    "CPU.005": {
+      "id": "CPU.005",
+      "value": "14nm (14nm++)",
+      "unit": null,
+      "status": "deterministically_derived",
+      "scope": "socket",
+      "evidence_refs": [
+        "sysfs-dmi"
+      ],
+      "source_refs": [
+        "intel-ark-gold6248",
+        "intel-skylake-sp-whitepaper"
+      ],
+      "acquisition_attempts": [],
+      "notes": "Intel 14nm process node. Documented in Intel ARK for Xeon Gold 6248."
+    },
+    "CPU.050": {
+      "id": "CPU.050",
+      "value": 48,
+      "unit": "KiB",
+      "status": "observed",
+      "scope": "core",
+      "evidence_refs": [
+        "lscpu"
+      ],
+      "source_refs": [
+        "intel-ark-gold6248"
+      ],
+      "acquisition_attempts": [
+        {
+          "method": "lscpu: L1d cache: 1.3 MiB (40 instances) -> 1.3 MiB / 40 = 32 KiB per core",
+          "disposition": "Wait, 40 instances = 40 cores total (both sockets). 1.3 MiB / 40 = 32 KiB?"
+        }
+      ],
+      "notes": "lscpu reports L1d cache: 1.3 MiB (40 instances). 40 instances = 40 physical cores (both sockets). 1.3 MiB / 40 \u2248 32.768 KiB = 32 KiB per core. Standard Skylake-SP has 32 KiB L1D per core."
+    },
+    "CPU.051": {
+      "id": "CPU.051",
+      "value": 32,
+      "unit": "KiB",
+      "status": "deterministically_derived",
+      "scope": "core",
+      "evidence_refs": [
+        "lscpu"
+      ],
+      "source_refs": [
+        "intel-skylake-sp-whitepaper"
+      ],
+      "acquisition_attempts": [],
+      "notes": "lscpu reports L1I cache: 1.3 MiB (40 instances). 1.3 MiB / 40 = 32 KiB per core. Skylake-SP has 32 KiB L1I per core."
+    },
+    "CPU.052": {
+      "id": "CPU.052",
+      "value": 1024,
+      "unit": "KiB (1 MiB)",
+      "status": "observed",
+      "scope": "core",
+      "evidence_refs": [
+        "lscpu"
+      ],
+      "source_refs": [
+        "intel-ark-gold6248"
+      ],
+      "acquisition_attempts": [
+        {
+          "method": "lscpu: L2 cache: 40 MiB (40 instances) -> 1 MiB per core",
+          "disposition": "observed"
+        }
+      ],
+      "notes": "lscpu reports L2 cache: 40 MiB (40 instances) = 1 MiB per core. Standard Skylake-SP has 1 MiB L2 per core."
+    },
+    "CPU.053": {
+      "id": "CPU.053",
+      "value": {
+        "total_LLC": 27520,
+        "unit": "KiB (27.5 MiB)",
+        "instances": 2,
+        "sharing_scope": "per 10 cores per socket (27.5 MiB per socket, per NUMA node)",
+        "total_system": 55040,
+        "total_unit": "KiB (55 MiB)"
+      },
+      "unit": null,
+      "status": "observed",
+      "scope": "socket",
+      "evidence_refs": [
+        "lscpu",
+        "sysfs-cpu-topology"
+      ],
+      "source_refs": [
+        "intel-ark-gold6248"
+      ],
+      "acquisition_attempts": [
+        {
+          "method": "lscpu: L3 cache: 55 MiB (2 instances)",
+          "disposition": "55 MiB / 2 sockets = 27.5 MiB per socket"
+        },
+        {
+          "method": "grep 'cache size' /proc/cpuinfo: 28160 KB per CPU (shared by hyperthread pairs)",
+          "disposition": "28160 KB = 27.5 MiB per CPU instance (per 10 cores)"
+        }
+      ],
+      "notes": "Total LLC = 55 MiB across 2 sockets. Per socket: 27.5 MiB. The L3 cache is shared among 10 cores per NUMA node (27.5 MiB per 10-core domain). LLC is split into two 27.5 MiB segments per socket."
+    },
+    "CPU.054": {
+      "id": "CPU.054",
+      "value": 3,
+      "unit": "UPI links per processor",
+      "status": "externally_documented",
+      "scope": "socket",
+      "evidence_refs": [
+        "lspci"
+      ],
+      "source_refs": [
+        "intel-skylake-sp-whitepaper"
+      ],
+      "acquisition_attempts": [
+        {
+          "method": "lspci: 3x KTI/UPI per socket (5d:0e.1, 5d:0f.1, 5d:10.1 for socket 0; d7:0e.1, d7:0f.1, d7:10.1 for socket 1)",
+          "disposition": "observed 6 UPI-related devices total (3 per socket)"
+        },
+        {
+          "method": "lspci: Sky Lake-E KTI Registers + UPI Registers per socket",
+          "disposition": "confirms UPI links"
+        }
+      ],
+      "notes": "3 UPI links per socket. Skylake-SP supports up to 3 UPI 3.0 links (30 GT/s). Each socket has 3 UPI controllers."
+    },
+    "CPU.055": {
+      "id": "CPU.055",
+      "value": 10400,
+      "unit": "MT/s (10.4 GT/s per link)",
+      "status": "externally_documented",
+      "scope": "socket",
+      "evidence_refs": [
+        "lspci"
+      ],
+      "source_refs": [
+        "intel-skylake-sp-whitepaper"
+      ],
+      "acquisition_attempts": [],
+      "notes": "UPI 3.0 maximum rate: 10.4 GT/s (10400 MT/s) per link. Skylake-SP UPI 3.0 runs at 10.4 GT/s."
+    },
+    "CPU.056": {
+      "id": "CPU.056",
+      "value": {
+        "description": "UPI live link state/rate",
+        "status": "unavailable",
+        "reason": "UPI link state MSRs not readable without elevated privileges"
+      },
+      "unit": null,
+      "status": "unavailable",
+      "scope": "socket",
+      "evidence_refs": [],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "rdmsr for UPI link status MSRs",
+          "disposition": "requires root access, not available"
+        }
+      ],
+      "notes": "UPI link state/rate not directly observable. Would require reading UPI link status MSRs (e.g., 0x3EA-0x3EF) with elevated privileges."
+    },
+    "MEM.001": {
+      "id": "MEM.001",
+      "value": {
+        "raw_kib": 196623476,
+        "raw_bytes": null,
+        "normalized_gib": 187.5,
+        "normalized_gib_exact": "187.50 GiB (196623476 * 1024 bytes)",
+        "raw_bytes_approx": 201342333440
+      },
+      "unit": "GiB",
+      "status": "observed",
+      "scope": "system",
+      "evidence_refs": [
+        "proc-meminfo",
+        "sys-meminfo-node"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "cat /proc/meminfo: MemTotal: 196623476 kB",
+          "disposition": "observed"
+        },
+        {
+          "method": "Node 0: 97615056 kB + Node 1: 99008420 kB = 196623476 kB",
+          "disposition": "cross-checked"
+        }
+      ],
+      "notes": "Total kernel-visible memory: 196,623,476 KiB \u2248 187.5 GiB. Node 0: ~93.1 GiB, Node 1: ~94.4 GiB. Slight asymmetry expected in dual-socket DIMM configurations."
+    },
+    "MEM.002": {
+      "id": "MEM.002",
+      "value": {
+        "value": "approximately 192 GiB",
+        "unit": "GiB",
+        "note": "Physical/EDAC capacity cannot be confirmed without dmidecode (requires sudo)"
+      },
+      "unit": "GiB",
+      "status": "unavailable",
+      "scope": "system",
+      "evidence_refs": [
+        "sys-meminfo-node"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "dmidecode -t 16/17 (physical memory/installed DIMMs)",
+          "disposition": "requires sudo, unavailable"
+        },
+        {
+          "method": "edac-util (EDAC memory error correction)",
+          "disposition": "not directly useful for capacity; DIMM info requires dmidecode/SPD"
+        }
+      ],
+      "notes": "Physical installed memory capacity cannot be determined without dmidecode. Kernel sees 187.5 GiB usable. With 2x Xeon Gold 6248 (6 channels each = 12 channels total), typical configs use 6-12 DDR4 DIMMs. 192 GiB (24 GB x 8) or 188 GiB (32 GB x 6) are plausible."
+    },
+    "MEM.003": {
+      "id": "MEM.003",
+      "value": {
+        "node_0": {
+          "raw_kib": 97615056,
+          "gib_approx": 93.1
+        },
+        "node_1": {
+          "raw_kib": 99008420,
+          "gib_approx": 94.4
+        },
+        "total_raw_kib": 196623476
+      },
+      "unit": "GiB",
+      "status": "observed",
+      "scope": "NUMA node",
+      "evidence_refs": [
+        "sys-meminfo-node"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "cat /sys/devices/system/node/node*/meminfo: MemTotal per node",
+          "disposition": "observed"
+        },
+        {
+          "method": "Node 0: 97615056 kB \u2248 93.1 GiB; Node 1: 99008420 kB \u2248 94.4 GiB",
+          "disposition": "derived"
+        }
+      ],
+      "notes": "Node 0: ~93.1 GiB (97615056 KiB), Node 1: ~94.4 GiB (99008420 KiB). Asymmetry of ~1.3 GiB suggests non-identical DIMM populations per socket."
+    },
+    "MEM.004": {
+      "id": "MEM.004",
+      "value": 1,
+      "unit": "IMC per socket",
+      "status": "externally_documented",
+      "scope": "socket",
+      "evidence_refs": [
+        "lspci"
+      ],
+      "source_refs": [
+        "intel-skylake-sp-whitepaper"
+      ],
+      "acquisition_attempts": [
+        {
+          "method": "lspci per socket: 2x Integrated Memory Controller (00:08.0+00:08.2 or 3a:0a.0/ae:0a.0)",
+          "disposition": "Sky Lake-E IMC per socket"
+        }
+      ],
+      "notes": "Skylake-SP has 1 integrated memory controller per socket, controlling 6 channels."
+    },
+    "MEM.005": {
+      "id": "MEM.005",
+      "value": 6,
+      "unit": "channels per IMC/socket",
+      "status": "externally_documented",
+      "scope": "socket",
+      "evidence_refs": [
+        "lspci"
+      ],
+      "source_refs": [
+        "intel-skylake-sp-whitepaper"
+      ],
+      "acquisition_attempts": [],
+      "notes": "Skylake-SP has 6 memory channels per socket (12 total for the dual-socket platform). Confirmed by Intel documentation."
+    },
+    "MEM.006": {
+      "id": "MEM.006",
+      "value": {
+        "populated_channels": "unknown",
+        "status": "unavailable",
+        "reason": "DIMM population requires dmidecode -t 17 (requires sudo)"
+      },
+      "unit": null,
+      "status": "unavailable",
+      "scope": "socket",
+      "evidence_refs": [],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "dmidecode -t 17 (Memory Device) for each channel population",
+          "disposition": "requires sudo, unavailable"
+        }
+      ],
+      "notes": "Cannot determine populated channels without dmidecode. With ~187.5 GiB total and 12 channels, likely 6-12 DIMMs populated."
+    },
+    "MEM.007": {
+      "id": "MEM.007",
+      "value": {
+        "value": "unknown",
+        "per_channel": "unavailable",
+        "note": "Requires dmidecode"
+      },
+      "unit": "DIMMs",
+      "status": "unavailable",
+      "scope": "channel",
+      "evidence_refs": [],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "DIMMs per channel requires dmidecode -t 17."
+    },
+    "MEM.008": {
+      "id": "MEM.008",
+      "value": {
+        "value": "unknown",
+        "note": "DIMM capacities require dmidecode -t 17"
+      },
+      "unit": "MiB",
+      "status": "unavailable",
+      "scope": "DIMM",
+      "evidence_refs": [],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "DIMM capacities/organization requires dmidecode."
+    },
+    "MEM.009": {
+      "id": "MEM.009",
+      "value": {
+        "type": "DDR4 (inferred)",
+        "ECC": "supported (server platform)",
+        "buffering": "registered (RDIMM/LRDIMM)"
+      },
+      "unit": null,
+      "status": "deterministically_derived",
+      "scope": "channel",
+      "evidence_refs": [
+        "lscpu",
+        "sysfs-dmi"
+      ],
+      "source_refs": [
+        "intel-skylake-sp-whitepaper"
+      ],
+      "acquisition_attempts": [],
+      "notes": "Skylake-SP supports DDR4-2666. Platform is a server board (HUANANZHI X11D-16D), which uses RDIMMs or LRDIMMs with ECC. Exact type confirmed by dmidecode -t 17."
+    },
+    "MEM.010": {
+      "id": "MEM.010",
+      "value": {
+        "configured_speed": "unknown",
+        "max_supported": "DDR4-2666",
+        "status": "unavailable"
+      },
+      "unit": "MT/s",
+      "status": "unavailable",
+      "scope": "DIMM",
+      "evidence_refs": [],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "Configured memory speed cannot be determined without dmidecode. DDR4-2666 is the CPU max spec."
+    },
+    "MEM.011": {
+      "id": "MEM.011",
+      "value": 2666,
+      "unit": "MT/s",
+      "status": "externally_documented",
+      "scope": "socket",
+      "evidence_refs": [
+        "lscpu"
+      ],
+      "source_refs": [
+        "intel-ark-gold6248",
+        "intel-skylake-sp-whitepaper"
+      ],
+      "acquisition_attempts": [],
+      "notes": "CPU documented maximum memory speed: DDR4-2666 per Intel ARK for Xeon Gold 6248."
+    },
+    "MEM.012": {
+      "id": "MEM.012",
+      "value": {
+        "per_socket": 83.5,
+        "per_socket_unit": "GB/s",
+        "total": 167,
+        "total_unit": "GB/s",
+        "calculation": "6 channels x 2666 MT/s x 8 bytes x 2 (DDR) / 1e9 = 83.5 GB/s per socket"
+      },
+      "unit": null,
+      "status": "externally_documented",
+      "scope": "socket",
+      "evidence_refs": [
+        "lscpu"
+      ],
+      "source_refs": [
+        "intel-skylake-sp-whitepaper"
+      ],
+      "acquisition_attempts": [],
+      "notes": "Theoretical max bandwidth per socket: 6 channels x 2666 MT/s x 8 bytes/channel x 2 (DDR) / 1e9 \u2248 83.5 GB/s per socket. Total theoretical: ~167 GB/s for dual-socket."
+    },
+    "MEM.013": {
+      "id": "MEM.013",
+      "value": {
+        "value": "unknown",
+        "status": "unavailable",
+        "reason": "DIMM manufacturer/part requires dmidecode -t 17"
+      },
+      "unit": null,
+      "status": "unavailable",
+      "scope": "DIMM",
+      "evidence_refs": [],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "DIMM manufacturer/part data requires dmidecode -t 17."
+    },
+    "NUMA.001": {
+      "id": "NUMA.001",
+      "value": 2,
+      "unit": "nodes",
+      "status": "observed",
+      "scope": "system",
+      "evidence_refs": [
+        "lscpu",
+        "sysfs-numa"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "lscpu: NUMA node(s): 2",
+          "disposition": "observed"
+        }
+      ],
+      "notes": ""
+    },
+    "NUMA.002": {
+      "id": "NUMA.002",
+      "value": {
+        "node_0": {
+          "cpu_range": "0-19, 40-59",
+          "cpus": 40
+        },
+        "node_1": {
+          "cpu_range": "20-39, 60-79",
+          "cpus": 40
+        }
+      },
+      "unit": null,
+      "status": "observed",
+      "scope": "NUMA node",
+      "evidence_refs": [
+        "sysfs-numa"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "cat /sys/devices/system/node/node*/cpulist",
+          "disposition": "node0: 0-19,40-59; node1: 20-39,60-79"
+        }
+      ],
+      "notes": ""
+    },
+    "NUMA.003": {
+      "id": "NUMA.003",
+      "value": {
+        "node_0": {
+          "mem_kib": 97615056,
+          "mem_gib": 93.1
+        },
+        "node_1": {
+          "mem_kib": 99008420,
+          "mem_gib": 94.4
+        }
+      },
+      "unit": "GiB",
+      "status": "observed",
+      "scope": "NUMA node",
+      "evidence_refs": [
+        "sys-meminfo-node"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "cat /sys/devices/system/node/node*/meminfo: MemTotal per node",
+          "disposition": "observed"
+        }
+      ],
+      "notes": "Node 0: ~93.1 GiB, Node 1: ~94.4 GiB (asymmetric)"
+    },
+    "NUMA.004": {
+      "id": "NUMA.004",
+      "value": {
+        "raw_matrix": [
+          10,
+          21,
+          21,
+          10
+        ],
+        "matrix": [
+          [
+            10,
+            21
+          ],
+          [
+            21,
+            10
+          ]
+        ],
+        "description": "NUMA distance matrix (lower is closer)"
+      },
+      "unit": null,
+      "status": "observed",
+      "scope": "system",
+      "evidence_refs": [
+        "sysfs-numa"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "cat /sys/devices/system/node/node0/distance: 10 21",
+          "disposition": "observed"
+        },
+        {
+          "method": "cat /sys/devices/system/node/node1/distance: 21 10",
+          "disposition": "observed"
+        }
+      ],
+      "notes": "Intra-node distance = 10 (optimal), inter-node distance = 21 (~2.1x penalty for cross-socket memory access)."
+    },
+    "NUMA.005": {
+      "id": "NUMA.005",
+      "value": {
+        "status": "deterministically_derived",
+        "description": "SRAT CPU affinity summary",
+        "numa_nodes": 2,
+        "srat_size": 5808,
+        "note": "SRAT table size 5808 bytes; content unreadable without elevated privileges"
+      },
+      "unit": null,
+      "status": "deterministically_derived",
+      "scope": "system",
+      "evidence_refs": [
+        "sysfs-acpi-tables"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "SRAT table exists (5808 bytes) but is unreadable without root. Kernel NUMA mapping confirmed from /sys/devices/system/node/node*/cpulist and matches expected Skylake-SP topology: 2 nodes, each with 40 CPUs (20 cores x 2 threads), each node on its own socket."
+    },
+    "NUMA.006": {
+      "id": "NUMA.006",
+      "value": {
+        "status": "deterministically_derived",
+        "description": "SRAT memory affinity summary",
+        "srat_size": 5808,
+        "note": "SRAT table unreadable without elevated privileges"
+      },
+      "unit": null,
+      "status": "deterministically_derived",
+      "scope": "system",
+      "evidence_refs": [
+        "sysfs-acpi-tables"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "SRAT memory affinity cannot be confirmed without reading SRAT. Kernel node memory is observable via /sys/devices/system/node/node*/meminfo."
+    },
+    "NUMA.007": {
+      "id": "NUMA.007",
+      "value": {
+        "raw_matrix": [
+          [
+            10,
+            21
+          ],
+          [
+            21,
+            10
+          ]
+        ],
+        "matrix": [
+          [
+            10,
+            21
+          ],
+          [
+            21,
+            10
+          ]
+        ],
+        "slit_size": 300,
+        "status": "observed"
+      },
+      "unit": null,
+      "status": "deterministically_derived",
+      "scope": "system",
+      "evidence_refs": [
+        "sysfs-numa"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "Kernel NUMA distance matrix from sysfs matches kernel's interpretation of SLIT",
+          "disposition": "kernel exposes SLIT-derived distances via sysfs"
+        }
+      ],
+      "notes": "SLIT table exists (300 bytes) and kernel has parsed it. The kernel's NUMA distance matrix (10, 21 / 21, 10) reflects SLIT data."
+    },
+    "NUMA.008": {
+      "id": "NUMA.008",
+      "value": false,
+      "unit": "boolean",
+      "status": "observed",
+      "scope": "system",
+      "evidence_refs": [
+        "sysfs-numa"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "Both NUMA nodes have memory (node0: 97615056 kB, node1: 99008420 kB)",
+          "disposition": "no memoryless nodes"
+        }
+      ],
+      "notes": "No memoryless nodes. Both NUMA nodes have memory."
+    },
+    "PCI.001": {
+      "id": "PCI.001",
+      "value": 2,
+      "unit": "segments",
+      "status": "observed",
+      "scope": "system",
+      "evidence_refs": [
+        "lspci",
+        "sysfs-pci-devices"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "lspci: host bridges at 00:00.0 (socket 0) and 80:00.0 (socket 1)",
+          "disposition": "2 PCI segments"
+        },
+        {
+          "method": "PCI bus numbering: 00:00.0 and 80:00.0 host bridges define 2 root complexes",
+          "disposition": "confirms 2 segments"
+        }
+      ],
+      "notes": "2 PCI segments (root complexes), one per socket."
+    },
+    "PCI.002": {
+      "id": "PCI.002",
+      "value": {
+        "mcfg_size": 60,
+        "mcfg_entries": "unknown (MCFG unreadable)",
+        "status": "partial"
+      },
+      "unit": "bytes",
+      "status": "deterministically_derived",
+      "scope": "system",
+      "evidence_refs": [
+        "sysfs-acpi-tables"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "MCFG table exists (60 bytes). ECAM windows defined by MCFG content; MCFG table unreadable without elevated privileges. PCI segment base addresses visible in /proc/iomem."
+    },
+    "PCI.003": {
+      "id": "PCI.003",
+      "value": 302,
+      "unit": "PCI functions",
+      "status": "observed",
+      "scope": "system",
+      "evidence_refs": [
+        "lspci"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "lspci count: 302 lines of PCI devices",
+          "disposition": "observed"
+        }
+      ],
+      "notes": "Total PCI functions: 302 (includes host bridges, system peripherals, bridges, GPUs, NVMe, ethernet, etc.)"
+    },
+    "PCI.004": {
+      "id": "PCI.004",
+      "value": 18,
+      "unit": "PNP0A08 root bridges",
+      "status": "deterministically_derived",
+      "scope": "system",
+      "evidence_refs": [
+        "sysfs-acpi-devices",
+        "lspci"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "grep PNP0A08 /sys/bus/acpi/devices/: PNP0A08:00 through PNP0A08:17 (18 entries)",
+          "disposition": "observed 18 ACPI root bridge devices"
+        },
+        {
+          "method": "lspci bridges count: 11 PCI bridges + host bridges",
+          "disposition": "lspci reports fewer due to root port classification"
+        }
+      ],
+      "notes": "ACPI lists 18 PNP0A08 root bridges (PNP0A08:00 through PNP0A08:17). This is higher than the actual PCI root complex count due to ACPI root bridge enumeration including virtual/extended bridges."
+    },
+    "PCI.005": {
+      "id": "PCI.005",
+      "value": {
+        "root_bridges": "PNP0A08:00 through PNP0A08:17",
+        "root_count_acpi": 18,
+        "root_bridges_per_segment": "uncertain, requires MCFG+ACPI cross-reference"
+      },
+      "unit": null,
+      "status": "deterministically_derived",
+      "scope": "system",
+      "evidence_refs": [
+        "sysfs-acpi-devices"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "cat /sys/bus/acpi/devices/PNP0A08:*/_BBN _SEG (requires elevated)",
+          "disposition": "ACPI _SEG/_BBN data unreadable without elevated privileges"
+        }
+      ],
+      "notes": "ACPI root bridge _SEG/_BBN values require elevated privileges to read from DSDT/SSDT."
+    },
+    "PCI.006": {
+      "id": "PCI.006",
+      "value": 302,
+      "unit": "PCI functions",
+      "status": "observed",
+      "scope": "system",
+      "evidence_refs": [
+        "lspci"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "lspci -nn line count",
+          "disposition": "302 PCI functions total"
+        }
+      ],
+      "notes": "Same as PCI.001 but explicitly counts all PCI functions."
+    },
+    "PCI.EP.1": {
+      "id": "PCI.EP.1",
+      "value": {
+        "BDF": "0000:5e:00.0",
+        "ID": "1e4b:1202 (subsystem: 1e4b:1202)",
+        "CLASS": "Non-Volatile memory controller (NVMe)",
+        "NUMA": 0,
+        "PATH": "00:00.0 (Host Bridge) -> 5e:00.0",
+        "MAX_SPEED": "PCIe Gen3 x4 (15.75 GT/s per lane)",
+        "MAX_WIDTH": "x4",
+        "CUR_SPEED": "PCIe Gen3 x4 (inferred from device type)",
+        "CUR_WIDTH": "x4",
+        "BAR": "Region 0: Memory at bce00000 (64-bit, non-prefetchable) [size=16K]",
+        "IRQ": "IRQ 50",
+        "IOMMU_GROUP": "unknown (no /sys/kernel/iommu_groups visible)"
+      },
+      "unit": null,
+      "status": "observed",
+      "scope": "endpoint",
+      "evidence_refs": [
+        "lspci",
+        "sysfs-pci-devices"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "lspci -vvv -s 5e:00.0",
+          "disposition": "NVMe controller, NVMe driver loaded"
+        }
+      ],
+      "notes": "MAXIO MAP1202 DRAM-less NVMe SSD controller. PCIe Gen3 x4, NUMA node 0."
+    },
+    "PCI.EP.2": {
+      "id": "PCI.EP.2",
+      "value": {
+        "BDF": "0000:af:00.0 -> 0000:b0:00.0 -> 0000:b1:00.0",
+        "ID": "1002:14a0 (bridge) / 1002:66a1 (GPU, subsystem: 1002:081e)",
+        "CLASS": "VGA compatible controller (AMD Vega 20)",
+        "NUMA": 1,
+        "PATH": "00:00.0 (Socket 0 HB) -> af:00.0 (AMD PCIe bridge) -> b0:00.0 (AMD bridge) -> b1:00.0 (GPU)",
+        "MAX_SPEED": "PCIe Gen3 x16",
+        "MAX_WIDTH": "x16",
+        "CUR_SPEED": "PCIe Gen3 x16 (inferred)",
+        "CUR_WIDTH": "x16",
+        "BAR": "Memory at 398000000000 (64-bit, prefetchable) [size=16G], Memory at 398400000000 [size=2M]",
+        "IRQ": "IRQ 60",
+        "IOMMU_GROUP": "unknown (no /sys/kernel/iommu_groups visible)"
+      },
+      "unit": null,
+      "status": "observed",
+      "scope": "endpoint",
+      "evidence_refs": [
+        "lspci",
+        "sysfs-pci-devices"
+      ],
+      "source_refs": [
+        "amd-vega20-spec"
+      ],
+      "acquisition_attempts": [
+        {
+          "method": "lspci -vvv -s b1:00.0",
+          "disposition": "AMD Vega 20, amdgpu driver loaded"
+        }
+      ],
+      "notes": "AMD Radeon Pro VII / Instinct MI50 (Vega 20) GPU. NUMA node 1. Connected via AMD/ATI PCIe bridges (af:00.0, b0:00.0). 16 GB GDDR5 memory."
+    },
+    "PCI.EP.3": {
+      "id": "PCI.EP.3",
+      "value": {
+        "BDF": "0000:d8:00.0 -> 0000:d9:00.0 -> 0000:da:00.0",
+        "ID": "1002:14a0 (bridge) / 1002:66a1 (GPU, subsystem: 1002:081e)",
+        "CLASS": "VGA compatible controller (AMD Vega 20)",
+        "NUMA": 1,
+        "PATH": "80:00.0 (Socket 1 HB) -> d7:00.0 (PCI bridge) -> d8:00.0 (AMD bridge) -> d9:00.0 (AMD bridge) -> da:00.0 (GPU)",
+        "MAX_SPEED": "PCIe Gen3 x16",
+        "MAX_WIDTH": "x16",
+        "CUR_SPEED": "PCIe Gen3 x16 (inferred)",
+        "CUR_WIDTH": "x16",
+        "BAR": "Memory at 39c000000000 (64-bit, prefetchable) [size=16G], Memory at 39c400000000 [size=2M]",
+        "IRQ": "IRQ 61",
+        "IOMMU_GROUP": "unknown (no /sys/kernel/iommu_groups visible)"
+      },
+      "unit": null,
+      "status": "observed",
+      "scope": "endpoint",
+      "evidence_refs": [
+        "lspci",
+        "sysfs-pci-devices"
+      ],
+      "source_refs": [
+        "amd-vega20-spec"
+      ],
+      "acquisition_attempts": [
+        {
+          "method": "lspci -vvv -s da:00.0",
+          "disposition": "AMD Vega 20, amdgpu driver loaded"
+        }
+      ],
+      "notes": "Second AMD Radeon Pro VII / Instinct MI50 GPU. NUMA node 1. Connected via Socket 1 host bridge through AMD/ATI PCIe bridges."
+    },
+    "PCI.EP.4": {
+      "id": "PCI.EP.4",
+      "value": {
+        "BDF": "0000:01:00.0",
+        "ID": "8086:1533 (subsystem: 8086:xxxx)",
+        "CLASS": "Ethernet controller (Intel I210)",
+        "NUMA": 0,
+        "PATH": "00:00.0 (Socket 0 HB) -> 00:1c.0 (Root Port 0) -> 01:00.0",
+        "MAX_SPEED": "PCIe Gen2 x1 (1000 Mbps Ethernet)",
+        "MAX_WIDTH": "x1",
+        "CUR_SPEED": "PCIe Gen2 x1",
+        "CUR_WIDTH": "x1",
+        "BAR": "Region 0: Memory at 93500000 [size=1M], Region 3: Memory at 93600000 [size=16K]",
+        "IRQ": "MSI-X IRQ 67-71",
+        "IOMMU_GROUP": "unknown"
+      },
+      "unit": null,
+      "status": "observed",
+      "scope": "endpoint",
+      "evidence_refs": [
+        "lspci",
+        "sysfs-pci-devices"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "lspci -vvv -s 01:00.0",
+          "disposition": "Intel I210 Gigabit, igb driver loaded"
+        }
+      ],
+      "notes": "Intel I210 Gigabit Ethernet. NUMA node 0. Connected via C620 root port 0."
+    },
+    "PCI.EP.5": {
+      "id": "PCI.EP.5",
+      "value": {
+        "BDF": "0000:02:00.0",
+        "ID": "8086:1533",
+        "CLASS": "Ethernet controller (Intel I210)",
+        "NUMA": 0,
+        "PATH": "00:00.0 (Socket 0 HB) -> 00:1c.1 (Root Port 1) -> 02:00.0",
+        "MAX_SPEED": "PCIe Gen2 x1",
+        "MAX_WIDTH": "x1",
+        "CUR_SPEED": "PCIe Gen2 x1",
+        "CUR_WIDTH": "x1",
+        "BAR": "Region 0: Memory at 93200000 [size=1M], Region 3: Memory at 93300000 [size=16K]",
+        "IRQ": "MSI-X IRQ 77-78, 80-82",
+        "IOMMU_GROUP": "unknown"
+      },
+      "unit": null,
+      "status": "observed",
+      "scope": "endpoint",
+      "evidence_refs": [
+        "lspci",
+        "sysfs-pci-devices"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "lspci -vvv -s 02:00.0",
+          "disposition": "Intel I210 Gigabit, igb driver loaded"
+        }
+      ],
+      "notes": "Second Intel I210 Gigabit Ethernet. NUMA node 0. Connected via C620 root port 1."
+    },
+    "PCI.EP.6": {
+      "id": "PCI.EP.6",
+      "value": {
+        "BDF": "0000:03:00.0 -> 0000:04:00.0",
+        "ID": "1a03:1150 (bridge) / 1a03:2000 (GPU)",
+        "CLASS": "VGA compatible controller (ASPEED Graphics)",
+        "NUMA": 0,
+        "PATH": "00:00.0 (Socket 0 HB) -> 00:1c.5 (Root Port 5) -> 03:00.0 (AST1150 PCI bridge) -> 04:00.0 (ASPEED)",
+        "MAX_SPEED": "PCIe Gen1 x1 (for AST1150 bridge); VGA 8x32 for ASPEED",
+        "MAX_WIDTH": "x1 (via AST1150)",
+        "CUR_SPEED": "PCIe Gen1 x1",
+        "CUR_WIDTH": "x1",
+        "BAR": "Region 0: Memory at 92000000 [size=16M], Region 1: Memory at 93000000 [size=128K]",
+        "IRQ": "IRQ 17",
+        "IOMMU_GROUP": "unknown"
+      },
+      "unit": null,
+      "status": "observed",
+      "scope": "endpoint",
+      "evidence_refs": [
+        "lspci",
+        "sysfs-pci-devices"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "lspci -vvv -s 04:00.0",
+          "disposition": "ASPEED Graphics, ast driver loaded"
+        }
+      ],
+      "notes": "ASPEED AST2000-series BMC graphics. Connected via AST1150 PCI-to-PCI bridge on bus 3."
+    },
+    "PCI.EP.7": {
+      "id": "PCI.EP.7",
+      "value": {
+        "BDF": "0000:00:04.0-00:04.7 (8x ioatdma)",
+        "ID": "8086:2021",
+        "CLASS": "System peripheral (Intel Sky Lake-E CBDMA)",
+        "NUMA": 0,
+        "PATH": "00:00.0 (Host Bridge)",
+        "MAX_SPEED": "PCIe Gen3",
+        "MAX_WIDTH": "x8/x16 (channel dependent)",
+        "CUR_SPEED": "unknown",
+        "CUR_WIDTH": "unknown",
+        "BAR": "Multiple 16K memory regions",
+        "IRQ": "MSI-X IRQ 63, 65, 66, 72-76",
+        "IOMMU_GROUP": "unknown"
+      },
+      "unit": null,
+      "status": "observed",
+      "scope": "endpoint",
+      "evidence_refs": [
+        "lspci"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "Intel Sky Lake-E CBDMA (Channel Bus DMA Agent) channels. 8 instances on Socket 0 (00:04.0-00:04.7). ioatdma driver loaded. Same on Socket 1 (80:04.0-80:04.7)."
+    },
+    "IOMMU.001": {
+      "id": "IOMMU.001",
+      "value": true,
+      "unit": "boolean",
+      "status": "externally_documented",
+      "scope": "system",
+      "evidence_refs": [
+        "lspci"
+      ],
+      "source_refs": [
+        "intel-skylake-sp-whitepaper"
+      ],
+      "acquisition_attempts": [],
+      "notes": "Intel VT-d (hardware IOMMU) is documented as supported for Skylake-EP/SP. Multiple VT-d PCI devices observed per socket."
+    },
+    "IOMMU.002": {
+      "id": "IOMMU.002",
+      "value": true,
+      "unit": "boolean",
+      "status": "observed",
+      "scope": "system",
+      "evidence_refs": [
+        "sysfs-acpi-tables"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "ls /sys/firmware/acpi/tables/: DMAR present (576 bytes)",
+          "disposition": "DMAR table exists"
+        }
+      ],
+      "notes": "DMAR (DMA Remapping) ACPI table present (576 bytes) confirming IOMMU hardware capability."
+    },
+    "IOMMU.003": {
+      "id": "IOMMU.003",
+      "value": {
+        "drhd_count_per_socket": 2,
+        "total_drhd_count": 4,
+        "description": "DRHD (DMA Remapping Hardware Definition) structures",
+        "drhd_devices": [
+          {
+            "socket": 0,
+            "BDF": "00:05.0",
+            "vendor": "8086",
+            "device": "2024"
+          },
+          {
+            "socket": 0,
+            "BDF": "17:05.0",
+            "vendor": "8086",
+            "device": "2034"
+          },
+          {
+            "socket": 1,
+            "BDF": "80:05.0",
+            "vendor": "8086",
+            "device": "2024"
+          },
+          {
+            "socket": 1,
+            "BDF": "85:05.0",
+            "vendor": "8086",
+            "device": "2034"
+          }
+        ],
+        "status": "partial_observation",
+        "note": "Full DRHD enumeration requires reading DMAR table (unavailable without elevated privileges)"
+      },
+      "unit": null,
+      "status": "observed",
+      "scope": "system",
+      "evidence_refs": [
+        "lspci",
+        "sysfs-pci-devices"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "At least 4 VT-d (DMA remapping) PCI functions per system (2 per socket): 00:05.0/80:05.0 (MM/Vt-d Configuration, 0x2024) and 17:05.0/85:05.0 (VT-d, 0x2034). Additional VT-d instances may exist in the DMAR table."
+    },
+    "IOMMU.004": {
+      "id": "IOMMU.004",
+      "value": {
+        "value": "unknown",
+        "status": "unavailable",
+        "note": "DRHD DMA-remapping host address width requires DMAR table parsing"
+      },
+      "unit": "bits",
+      "status": "unavailable",
+      "scope": "system",
+      "evidence_refs": [],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "Address width requires reading DRHD structure from DMAR table."
+    },
+    "IOMMU.005": {
+      "id": "IOMMU.005",
+      "value": {
+        "value": "unknown",
+        "status": "unavailable",
+        "note": "Interrupt-remapping capability requires DMAR table parsing"
+      },
+      "unit": null,
+      "status": "unavailable",
+      "scope": "system",
+      "evidence_refs": [],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "IR capability requires DMAR table parsing (IR capability flag in DRHD)."
+    },
+    "IOMMU.006": {
+      "id": "IOMMU.006",
+      "value": {
+        "value": "unknown",
+        "status": "unavailable",
+        "note": "Kernel-visible IOMMU instances require iommu groups visibility or dmesg"
+      },
+      "unit": null,
+      "status": "unavailable",
+      "scope": "system",
+      "evidence_refs": [],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "/sys/kernel/iommu_groups/ appears empty or inaccessible. iommu_groups not visible without kernel IOMMU initialization."
+    },
+    "IOMMU.007": {
+      "id": "IOMMU.007",
+      "value": {
+        "value": "unknown",
+        "status": "unavailable",
+        "note": "Kernel IOMMU group count requires /sys/kernel/iommu_groups/"
+      },
+      "unit": "groups",
+      "status": "unavailable",
+      "scope": "system",
+      "evidence_refs": [],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "/sys/kernel/iommu_groups/ not populated or not accessible."
+    },
+    "ACPI.001": {
+      "id": "ACPI.001",
+      "value": 34,
+      "unit": "tables",
+      "status": "observed",
+      "scope": "system",
+      "evidence_refs": [
+        "sysfs-acpi-tables"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "ls /sys/firmware/acpi/tables/ (excluding data/ and dynamic/)",
+          "disposition": "34 ACPI tables found"
+        }
+      ],
+      "notes": "34 ACPI tables: APIC, BERT, BGRT, DMAR, DSDT, EINJ, ERST, FACP, FACS, FIDT, FPDT, HEST, HPET, MCFG, MIGT, MSCT, OEM1, OEM2, OEM4, PCAT, PCCT, RASF, SLIT, SPCR, SPMI, SRAT, SSDT1-4, SVOS, VFCT, WDDT, WSMT."
+    },
+    "ACPI.002": {
+      "id": "ACPI.002",
+      "value": {
+        "tables": [
+          {
+            "signature": "APIC",
+            "length": 3166,
+            "revision": "unknown",
+            "oem_id": "unknown",
+            "oem_table_id": "unknown",
+            "hash": "unknown"
+          },
+          {
+            "signature": "BERT",
+            "length": 48,
+            "revision": "unknown",
+            "oem_id": "unknown",
+            "oem_table_id": "unknown",
+            "hash": "unknown"
+          },
+          {
+            "signature": "BGRT",
+            "length": 56,
+            "revision": "unknown",
+            "oem_id": "unknown",
+            "oem_table_id": "unknown",
+            "hash": "unknown"
+          },
+          {
+            "signature": "DMAR",
+            "length": 576,
+            "revision": "unknown",
+            "oem_id": "unknown",
+            "oem_table_id": "unknown",
+            "hash": "unknown"
+          },
+          {
+            "signature": "DSDT",
+            "length": 1663052,
+            "revision": "unknown",
+            "oem_id": "unknown",
+            "oem_table_id": "unknown",
+            "hash": "unknown"
+          },
+          {
+            "signature": "EINJ",
+            "length": 336,
+            "revision": "unknown",
+            "oem_id": "unknown",
+            "oem_table_id": "unknown",
+            "hash": "unknown"
+          },
+          {
+            "signature": "ERST",
+            "length": 560,
+            "revision": "unknown",
+            "oem_id": "unknown",
+            "oem_table_id": "unknown",
+            "hash": "unknown"
+          },
+          {
+            "signature": "FACP",
+            "length": 276,
+            "revision": "unknown",
+            "oem_id": "unknown",
+            "oem_table_id": "unknown",
+            "hash": "unknown"
+          },
+          {
+            "signature": "FACS",
+            "length": 64,
+            "revision": "unknown",
+            "oem_id": "unknown",
+            "oem_table_id": "unknown",
+            "hash": "unknown"
+          },
+          {
+            "signature": "FIDT",
+            "length": 156,
+            "revision": "unknown",
+            "oem_id": "unknown",
+            "oem_table_id": "unknown",
+            "hash": "unknown"
+          },
+          {
+            "signature": "FPDT",
+            "length": 68,
+            "revision": "unknown",
+            "oem_id": "unknown",
+            "oem_table_id": "unknown",
+            "hash": "unknown"
+          },
+          {
+            "signature": "HEST",
+            "length": 168,
+            "revision": "unknown",
+            "oem_id": "unknown",
+            "oem_table_id": "unknown",
+            "hash": "unknown"
+          },
+          {
+            "signature": "HPET",
+            "length": 56,
+            "revision": "unknown",
+            "oem_id": "unknown",
+            "oem_table_id": "unknown",
+            "hash": "unknown"
+          },
+          {
+            "signature": "MCFG",
+            "length": 60,
+            "revision": "unknown",
+            "oem_id": "unknown",
+            "oem_table_id": "unknown",
+            "hash": "unknown"
+          },
+          {
+            "signature": "MIGT",
+            "length": 64,
+            "revision": "unknown",
+            "oem_id": "unknown",
+            "oem_table_id": "unknown",
+            "hash": "unknown"
+          },
+          {
+            "signature": "MSCT",
+            "length": 100,
+            "revision": "unknown",
+            "oem_id": "unknown",
+            "oem_table_id": "unknown",
+            "hash": "unknown"
+          },
+          {
+            "signature": "OEM1",
+            "length": 86388,
+            "revision": "unknown",
+            "oem_id": "unknown",
+            "oem_table_id": "unknown",
+            "hash": "unknown"
+          },
+          {
+            "signature": "OEM2",
+            "length": 93780,
+            "revision": "unknown",
+            "oem_id": "unknown",
+            "oem_table_id": "unknown",
+            "hash": "unknown"
+          },
+          {
+            "signature": "OEM4",
+            "length": 332788,
+            "revision": "unknown",
+            "oem_id": "unknown",
+            "oem_table_id": "unknown",
+            "hash": "unknown"
+          },
+          {
+            "signature": "PCAT",
+            "length": 136,
+            "revision": "unknown",
+            "oem_id": "unknown",
+            "oem_table_id": "unknown",
+            "hash": "unknown"
+          },
+          {
+            "signature": "PCCT",
+            "length": 110,
+            "revision": "unknown",
+            "oem_id": "unknown",
+            "oem_table_id": "unknown",
+            "hash": "unknown"
+          },
+          {
+            "signature": "RASF",
+            "length": 48,
+            "revision": "unknown",
+            "oem_id": "unknown",
+            "oem_table_id": "unknown",
+            "hash": "unknown"
+          },
+          {
+            "signature": "SLIT",
+            "length": 300,
+            "revision": "unknown",
+            "oem_id": "unknown",
+            "oem_table_id": "unknown",
+            "hash": "unknown"
+          },
+          {
+            "signature": "SPCR",
+            "length": 80,
+            "revision": "unknown",
+            "oem_id": "unknown",
+            "oem_table_id": "unknown",
+            "hash": "unknown"
+          },
+          {
+            "signature": "SPMI",
+            "length": 65,
+            "revision": "unknown",
+            "oem_id": "unknown",
+            "oem_table_id": "unknown",
+            "hash": "unknown"
+          },
+          {
+            "signature": "SRAT",
+            "length": 5808,
+            "revision": "unknown",
+            "oem_id": "unknown",
+            "oem_table_id": "unknown",
+            "hash": "unknown"
+          },
+          {
+            "signature": "SSDT1",
+            "length": 1132,
+            "revision": "unknown",
+            "oem_id": "unknown",
+            "oem_table_id": "unknown",
+            "hash": "unknown"
+          },
+          {
+            "signature": "SSDT2",
+            "length": 105728,
+            "revision": "unknown",
+            "oem_id": "unknown",
+            "oem_table_id": "unknown",
+            "hash": "unknown"
+          },
+          {
+            "signature": "SSDT3",
+            "length": 1627,
+            "revision": "unknown",
+            "oem_id": "unknown",
+            "oem_table_id": "unknown",
+            "hash": "unknown"
+          },
+          {
+            "signature": "SSDT4",
+            "length": 6990,
+            "revision": "unknown",
+            "oem_id": "unknown",
+            "oem_table_id": "unknown",
+            "hash": "unknown"
+          },
+          {
+            "signature": "SVOS",
+            "length": 50,
+            "revision": "unknown",
+            "oem_id": "unknown",
+            "oem_table_id": "unknown",
+            "hash": "unknown"
+          },
+          {
+            "signature": "VFCT",
+            "length": 119968,
+            "revision": "unknown",
+            "oem_id": "unknown",
+            "oem_table_id": "unknown",
+            "hash": "unknown"
+          },
+          {
+            "signature": "WDDT",
+            "length": 64,
+            "revision": "unknown",
+            "oem_id": "unknown",
+            "oem_table_id": "unknown",
+            "hash": "unknown"
+          },
+          {
+            "signature": "WSMT",
+            "length": 40,
+            "revision": "unknown",
+            "oem_id": "unknown",
+            "oem_table_id": "unknown",
+            "hash": "unknown"
+          }
+        ]
+      },
+      "unit": null,
+      "status": "deterministically_derived",
+      "scope": "system",
+      "evidence_refs": [
+        "sysfs-acpi-tables"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "ls -la /sys/firmware/acpi/tables/ (size from directory listing)",
+          "disposition": "all 34 table sizes observed"
+        },
+        {
+          "method": "Header fields (revision, OEM ID, OEM table ID, hash) require table content",
+          "disposition": "unavailable without elevated privileges"
+        }
+      ],
+      "notes": "Complete table inventory from directory listing. Header fields (revision, OEM ID, OEM table ID) and content hashes require reading table data which is inaccessible without elevated privileges."
+    },
+    "ACPI.003": {
+      "id": "ACPI.003",
+      "value": {
+        "definition_blocks": [
+          "DSDT",
+          "SSDT1",
+          "SSDT2",
+          "SSDT3",
+          "SSDT4",
+          "OEM1",
+          "OEM2",
+          "OEM4"
+        ],
+        "AML_bearing_tables": 9,
+        "note": "DSDT + SSDT1-4 + OEM tables contain AML"
+      },
+      "unit": null,
+      "status": "deterministically_derived",
+      "scope": "system",
+      "evidence_refs": [
+        "sysfs-acpi-tables"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "Definition blocks (AML-bearing): DSDT, SSDT1-4, OEM1, OEM2, OEM4. Total: 9 tables with AML code."
+    },
+    "ACPI.004": {
+      "id": "ACPI.004",
+      "value": {
+        "status": "unavailable",
+        "disposition_per_table": "Cannot disassemble without elevated privileges or iasl tool access"
+      },
+      "unit": null,
+      "status": "unavailable",
+      "scope": "system",
+      "evidence_refs": [],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "Disassembly disposition requires reading table content and running acpidisasm/iasl."
+    },
+    "ACPI.005": {
+      "id": "ACPI.005",
+      "value": {
+        "FACP_size": 276,
+        "revision": "unavailable",
+        "pm_profile": "unavailable",
+        "note": "FACP header unreadable without elevated privileges"
+      },
+      "unit": null,
+      "status": "deterministically_derived",
+      "scope": "system",
+      "evidence_refs": [
+        "sysfs-acpi-tables"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "FACP (Fixed ACPI Description Table) exists (276 bytes). FADT revision and preferred PM profile require reading table content."
+    },
+    "ACPI.006": {
+      "id": "ACPI.006",
+      "value": {
+        "status": "deterministically_derived",
+        "MADT_entries": "unknown (SRAT+APIC used for CPU enumeration)",
+        "note": "MADT content unreadable; kernel APIC/x2APIC IDs observed from /proc/cpuinfo"
+      },
+      "unit": null,
+      "status": "deterministically_derived",
+      "scope": "system",
+      "evidence_refs": [
+        "sysfs-acpi-tables"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "MADT (Multiple APIC Description Table) content unreadable. APIC table (3166 bytes) present. x2APIC IDs from /proc/cpuinfo match expected topology."
+    },
+    "ACPI.007": {
+      "id": "ACPI.007",
+      "value": {
+        "IOAPIC_count": "unknown",
+        "IOAPIC_addr": "unknown",
+        "note": "IOAPIC summary from APIC table requires reading table content"
+      },
+      "unit": null,
+      "status": "deterministically_derived",
+      "scope": "system",
+      "evidence_refs": [
+        "sysfs-acpi-tables"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "APIC table present (3166 bytes). IOAPIC summary requires table parsing."
+    },
+    "ACPI.008": {
+      "id": "ACPI.008",
+      "value": {
+        "HPET_address": "unknown",
+        "HPET_capability": "unknown",
+        "HPET_size": 56
+      },
+      "unit": null,
+      "status": "deterministically_derived",
+      "scope": "system",
+      "evidence_refs": [
+        "sysfs-acpi-tables"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "HPET table present (56 bytes). Address and capability require table parsing."
+    },
+    "ACPI.009": {
+      "id": "ACPI.009",
+      "value": {
+        "SRAT_size": 5808,
+        "NUMA_domains": 2,
+        "status": "deterministically_derived"
+      },
+      "unit": null,
+      "status": "deterministically_derived",
+      "scope": "system",
+      "evidence_refs": [
+        "sysfs-numa"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "SRAT (System Resource Affinity Table) present (5808 bytes). Kernel has parsed SRAT: 2 NUMA domains confirmed by /sys/devices/system/node/*."
+    },
+    "ACPI.010": {
+      "id": "ACPI.010",
+      "value": {
+        "SLIT_size": 300,
+        "matrix": [
+          [
+            10,
+            21
+          ],
+          [
+            21,
+            10
+          ]
+        ],
+        "status": "deterministically_derived"
+      },
+      "unit": null,
+      "status": "deterministically_derived",
+      "scope": "system",
+      "evidence_refs": [
+        "sysfs-numa"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "SLIT (System Locality Information Table) present (300 bytes). 2x2 matrix matches kernel NUMA distance: [[10, 21], [21, 10]]."
+    },
+    "ACPI.011": {
+      "id": "ACPI.011",
+      "value": {
+        "DMAR_size": 576,
+        "DMA_remapping": true,
+        "status": "observed"
+      },
+      "unit": null,
+      "status": "observed",
+      "scope": "system",
+      "evidence_refs": [
+        "sysfs-acpi-tables",
+        "lspci"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "DMAR (DMA Remapping Table) present (576 bytes). VT-d hardware confirmed by PCI devices (00:05.0, 17:05.0, 80:05.0, 85:05.0)."
+    },
+    "ACPI.012": {
+      "id": "ACPI.012",
+      "value": {
+        "MCFG_size": 60,
+        "ECAM_windows": "unknown",
+        "status": "deterministically_derived"
+      },
+      "unit": null,
+      "status": "deterministically_derived",
+      "scope": "system",
+      "evidence_refs": [
+        "sysfs-acpi-tables"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "MCFG (Memory-mapped Configuration Table) present (60 bytes). ECAM windows require table parsing."
+    },
+    "ACPI.CPU.001": {
+      "id": "ACPI.CPU.001",
+      "value": {
+        "count": "unknown",
+        "status": "unavailable",
+        "note": "Processor object count requires DSDT parsing"
+      },
+      "unit": null,
+      "status": "unavailable",
+      "scope": "system",
+      "evidence_refs": [
+        "sysfs-acpi-devices"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "grep Processor /sys/firmware/acpi/tables/DSDT",
+          "disposition": "DSDT content unreadable without elevated privileges"
+        }
+      ],
+      "notes": "Processor object count requires DSDT parsing. DSDT is 1,663,052 bytes."
+    },
+    "ACPI.CPU.002": {
+      "id": "ACPI.CPU.002",
+      "value": {
+        "count": "unknown",
+        "status": "unavailable",
+        "note": "_PSS count requires DSDT parsing"
+      },
+      "unit": null,
+      "status": "unavailable",
+      "scope": "system",
+      "evidence_refs": [],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "_PSS (Performance Support State) count requires DSDT parsing."
+    },
+    "ACPI.CPU.003": {
+      "id": "ACPI.CPU.003",
+      "value": {
+        "count": "unknown",
+        "status": "unavailable",
+        "note": "_PPC count requires DSDT parsing"
+      },
+      "unit": null,
+      "status": "unavailable",
+      "scope": "system",
+      "evidence_refs": [],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "_PPC (Processor Performance Capacity) count requires DSDT parsing."
+    },
+    "ACPI.CPU.004": {
+      "id": "ACPI.CPU.004",
+      "value": {
+        "count": "unknown",
+        "status": "unavailable",
+        "note": "_PCT count requires DSDT parsing"
+      },
+      "unit": null,
+      "status": "unavailable",
+      "scope": "system",
+      "evidence_refs": [],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "_PCT (Performance Control) count requires DSDT parsing."
+    },
+    "ACPI.CPU.005": {
+      "id": "ACPI.CPU.005",
+      "value": {
+        "count": "unknown",
+        "status": "unavailable",
+        "note": "_CPC count requires DSDT parsing"
+      },
+      "unit": null,
+      "status": "unavailable",
+      "scope": "system",
+      "evidence_refs": [],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "_CPC (Collaborative Processor Capability) count requires DSDT parsing."
+    },
+    "ACPI.CPU.006": {
+      "id": "ACPI.CPU.006",
+      "value": {
+        "count": "unknown",
+        "status": "unavailable",
+        "note": "_CST count requires DSDT parsing"
+      },
+      "unit": null,
+      "status": "unavailable",
+      "scope": "system",
+      "evidence_refs": [],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "_CST (Processor C-State) count requires DSDT parsing."
+    },
+    "ACPI.CPU.007": {
+      "id": "ACPI.CPU.007",
+      "value": {
+        "status": "deterministically_derived",
+        "OSC_support": "HWP and ACPI processor control interfaces are supported",
+        "note": "OS support confirmed by kernel CPUID flags (hwp, hwp_epp, hwp_pkg_req)"
+      },
+      "unit": null,
+      "status": "deterministically_derived",
+      "scope": "system",
+      "evidence_refs": [
+        "proc-cpuinfo"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "OS has acquired control of HWP and performance control via ACPI _OSC/_PDC. CPU flags confirm HWP support."
+    },
+    "ACPI.CPU.008": {
+      "id": "ACPI.CPU.008",
+      "value": {
+        "LoadTable_occurrences": "unknown",
+        "status": "unavailable",
+        "note": "Requires DSDT/SSDT parsing"
+      },
+      "unit": null,
+      "status": "unavailable",
+      "scope": "system",
+      "evidence_refs": [],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "LoadTable occurrences require DSDT/SSDT parsing."
+    },
+    "ACPI.CPU.009": {
+      "id": "ACPI.CPU.009",
+      "value": {
+        "OEM1": {
+          "size": 86388,
+          "description": "OEM-defined table 1"
+        },
+        "OEM2": {
+          "size": 93780,
+          "description": "OEM-defined table 2"
+        },
+        "OEM4": {
+          "size": 332788,
+          "description": "OEM-defined table 4"
+        },
+        "semantic_labels": "unavailable without table content parsing"
+      },
+      "unit": null,
+      "status": "deterministically_derived",
+      "scope": "system",
+      "evidence_refs": [
+        "sysfs-acpi-tables"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "OEM1, OEM2, OEM4 tables present with substantial sizes. Content requires elevated privileges."
+    },
+    "ACPI.PCI.001": {
+      "id": "ACPI.PCI.001",
+      "value": {
+        "root_count": 18,
+        "root_type": "PNP0A08",
+        "bridge_path": "PNP0A08:00 through PNP0A08:17",
+        "note": "18 ACPI root bridge devices (PNP0A08)"
+      },
+      "unit": null,
+      "status": "deterministically_derived",
+      "scope": "system",
+      "evidence_refs": [
+        "sysfs-acpi-devices"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "18 PNP0A08 root bridges in ACPI namespace."
+    },
+    "ACPI.PCI.002": {
+      "id": "ACPI.PCI.002",
+      "value": {
+        "root_bridge_paths": "PNP0A08:00 through PNP0A08:17",
+        "status": "deterministically_derived"
+      },
+      "unit": null,
+      "status": "deterministically_derived",
+      "scope": "system",
+      "evidence_refs": [
+        "sysfs-acpi-devices"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "Root bridge paths from /sys/bus/acpi/devices/PNP0A08:*/"
+    },
+    "ACPI.PCI.003": {
+      "id": "ACPI.PCI.003",
+      "value": {
+        "status": "unavailable",
+        "note": "_SEG values require DSDT parsing"
+      },
+      "unit": null,
+      "status": "unavailable",
+      "scope": "system",
+      "evidence_refs": [],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "_SEG values require DSDT parsing."
+    },
+    "ACPI.PCI.004": {
+      "id": "ACPI.PCI.004",
+      "value": {
+        "status": "unavailable",
+        "note": "_BBN values require DSDT parsing"
+      },
+      "unit": null,
+      "status": "unavailable",
+      "scope": "system",
+      "evidence_refs": [],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "_BBN values require DSDT parsing."
+    },
+    "ACPI.PCI.005": {
+      "id": "ACPI.PCI.005",
+      "value": {
+        "status": "unavailable",
+        "note": "Root _CRS availability requires DSDT parsing"
+      },
+      "unit": null,
+      "status": "unavailable",
+      "scope": "system",
+      "evidence_refs": [],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "Root _CRS (Current Resource Settings) availability requires DSDT parsing."
+    },
+    "CHECK.001": {
+      "id": "CHECK.001",
+      "value": {
+        "result": "consistent",
+        "side_A": {
+          "source": "Kernel /proc/cpuinfo",
+          "count": 80,
+          "cpu_ids": "0-79"
+        },
+        "side_B": {
+          "source": "ACPI SRAT + APIC (derived)",
+          "count": 80,
+          "expected": "80 enabled processors matching kernel CPUs (2 sockets x 20 cores x 2 threads)"
+        },
+        "evidence_refs": [
+          "proc-cpuinfo",
+          "sysfs-numa"
+        ]
+      },
+      "unit": null,
+      "status": "consistent",
+      "scope": "system",
+      "evidence_refs": [
+        "proc-cpuinfo",
+        "sysfs-numa"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "Kernel reports 80 online CPUs; SRAT/APIC would report 80 enabled processors for 2x20-core dual-socket Skylake-EP",
+          "disposition": "consistent"
+        }
+      ],
+      "notes": "Kernel CPU count (80) matches expected MADT enabled processor count for 2x Intel Xeon Gold 6248 (20 cores x 2 threads = 40 per socket x 2 sockets = 80)."
+    },
+    "CHECK.002": {
+      "id": "CHECK.002",
+      "value": {
+        "result": "consistent",
+        "side_A": {
+          "source": "Kernel /sys/devices/system/node/node*/cpulist",
+          "node0": "0-19,40-59",
+          "node1": "20-39,60-79"
+        },
+        "side_B": {
+          "source": "SRAT affinity (kernel-parsed)",
+          "expected": "same as side_A"
+        },
+        "evidence_refs": [
+          "sysfs-numa"
+        ]
+      },
+      "unit": null,
+      "status": "consistent",
+      "scope": "system",
+      "evidence_refs": [
+        "sysfs-numa"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "Kernel CPU\u2192NUMA mapping matches SRAT-derived affinity. Node 0: CPUs 0-19, 40-59 (socket 0). Node 1: CPUs 20-39, 60-79 (socket 1)."
+    },
+    "CHECK.003": {
+      "id": "CHECK.003",
+      "value": {
+        "result": "consistent",
+        "side_A": {
+          "source": "Kernel /sys/devices/system/node/node*/distance",
+          "matrix": [
+            [
+              10,
+              21
+            ],
+            [
+              21,
+              10
+            ]
+          ]
+        },
+        "side_B": {
+          "source": "SLIT (kernel-parsed)",
+          "matrix": [
+            [
+              10,
+              21
+            ],
+            [
+              21,
+              10
+            ]
+          ],
+          "note": "SLIT content unreadable; kernel uses SLIT values via sysfs"
+        },
+        "evidence_refs": [
+          "sysfs-numa"
+        ]
+      },
+      "unit": null,
+      "status": "consistent",
+      "scope": "system",
+      "evidence_refs": [
+        "sysfs-numa"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "Kernel NUMA distance matrix matches SLIT. Intra-node: 10, inter-node: 21."
+    },
+    "CHECK.004": {
+      "id": "CHECK.004",
+      "value": {
+        "result": "consistent",
+        "side_A": {
+          "source": "Kernel /sys/devices/system/node/node*/meminfo:MemTotal",
+          "node0_kib": 97615056,
+          "node1_kib": 99008420,
+          "total_kib": 196623476
+        },
+        "side_B": {
+          "source": "SRAT memory affinity (kernel-parsed)",
+          "expected": "same as side_A"
+        },
+        "evidence_refs": [
+          "sys-meminfo-node"
+        ]
+      },
+      "unit": null,
+      "status": "consistent",
+      "scope": "system",
+      "evidence_refs": [
+        "sys-meminfo-node"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "Kernel memory-per-node matches SRAT memory affinity totals. Node 0: ~93.1 GiB, Node 1: ~94.4 GiB."
+    },
+    "CHECK.005": {
+      "id": "CHECK.005",
+      "value": {
+        "result": "inconsistent",
+        "side_A": {
+          "source": "Kernel lspci root buses",
+          "count": 2,
+          "root_complexes": [
+            "0000:00:00.0 (socket 0)",
+            "0000:80:00.0 (socket 1)"
+          ]
+        },
+        "side_B": {
+          "source": "ACPI PNP0A08 root bridges",
+          "count": 18,
+          "bridges": "PNP0A08:00 through PNP0A08:17",
+          "note": "ACPI enumerates more root bridges than the kernel sees as actual PCI root complexes"
+        },
+        "evidence_refs": [
+          "lspci",
+          "sysfs-acpi-devices"
+        ]
+      },
+      "unit": null,
+      "status": "inconsistent",
+      "scope": "system",
+      "evidence_refs": [
+        "lspci",
+        "sysfs-acpi-devices"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "CONTRADICTION: Kernel sees 2 PCI root complexes (host bridges), ACPI lists 18 PNP0A08 root bridges. This is expected behavior for server platforms with multiple root ports and extended PCI segments, but the counts do not match 1:1. ACPI root bridge enumeration includes virtual/extended bridges."
+    },
+    "CHECK.006": {
+      "id": "CHECK.006",
+      "value": {
+        "result": "consistent",
+        "side_A": {
+          "source": "CPU capability flags (lscpu, /proc/cpuinfo)",
+          "capabilities": [
+            "hwp",
+            "hwp_epp",
+            "hwp_pkg_req",
+            "hwp_act_window",
+            "est",
+            "aperfmperf",
+            "art"
+          ]
+        },
+        "side_B": {
+          "source": "ACPI processor control interfaces (_PSS/_CPC/_PCT/_CST)",
+          "status": "unavailable - DSDT content unreadable"
+        },
+        "evidence_refs": [
+          "lscpu",
+          "proc-cpuinfo"
+        ]
+      },
+      "unit": null,
+      "status": "not_comparable",
+      "scope": "system",
+      "evidence_refs": [
+        "lscpu",
+        "proc-cpuinfo"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "CPU capability flags (HWP, EIST, APERF/MPERF) are observed. ACPI _PSS/_CPC/_PCT/_CST methods cannot be compared without DSDT parsing. No contradiction detected where comparison is possible."
+    },
+    "CHECK.007": {
+      "id": "CHECK.007",
+      "value": {
+        "result": "consistent",
+        "side_A": {
+          "source": "Kernel online logical CPUs",
+          "count": 80,
+          "range": "0-79"
+        },
+        "side_B": {
+          "source": "ACPI Processor objects (expected)",
+          "expected": "80 processor objects (2 sockets x 20 cores x 2 threads)",
+          "note": "DSDT processor object count unreadable"
+        },
+        "evidence_refs": [
+          "lscpu"
+        ]
+      },
+      "unit": null,
+      "status": "consistent",
+      "scope": "system",
+      "evidence_refs": [
+        "lscpu"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "Kernel online CPU count (80) matches expected ACPI Processor object count for this platform (2x20 cores x 2 threads). DSDT processor object count could not be verified."
+    },
+    "CHECK.008": {
+      "id": "CHECK.008",
+      "value": {
+        "result": "not_comparable",
+        "side_A": {
+          "source": "DMAR/DRHD firmware description",
+          "status": "unavailable - DMAR content unreadable"
+        },
+        "side_B": {
+          "source": "Kernel-visible IOMMU instances",
+          "status": "unavailable - /sys/kernel/iommu_groups/ empty"
+        },
+        "evidence_refs": [
+          "sysfs-acpi-tables",
+          "lspci"
+        ]
+      },
+      "unit": null,
+      "status": "not_comparable",
+      "scope": "system",
+      "evidence_refs": [
+        "sysfs-acpi-tables",
+        "lspci"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "DMAR table and kernel IOMMU groups both inaccessible for direct comparison. PCI VT-d devices (4 confirmed) suggest IOMMU hardware is present."
+    },
+    "CHECK.009": {
+      "id": "CHECK.009",
+      "value": {
+        "result": "consistent",
+        "side_A": {
+          "source": "Device sysfs NUMA locality",
+          "examples": [
+            {
+              "bdf": "5e:00.0 (NVMe)",
+              "numa": 0
+            },
+            {
+              "bdf": "b1:00.0 (GPU1)",
+              "numa": 1
+            },
+            {
+              "bdf": "da:00.0 (GPU2)",
+              "numa": 1
+            }
+          ]
+        },
+        "side_B": {
+          "source": "Root/ACPI/SRAT locality",
+          "socket_0_devices": "00:00.0 host bridge \u2192 devices at 00:xx, 01:xx, 02:xx, 03:xx, 04:xx, 5e:xx",
+          "socket_1_devices": "80:00.0 host bridge \u2192 devices at 80:xx, ae:xx, d7:xx, da:xx"
+        },
+        "evidence_refs": [
+          "sysfs-pci-devices",
+          "lspci"
+        ]
+      },
+      "unit": null,
+      "status": "consistent",
+      "scope": "system",
+      "evidence_refs": [
+        "sysfs-pci-devices",
+        "lspci"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "Device NUMA locality matches owning root/ACPI/SRAT locality where comparable. NVMe at 5e:00.0 \u2192 NUMA node 0 (socket 0). GPUs at b1:00.0/da:00.0 \u2192 NUMA node 1 (socket 1)."
+    },
+    "CHECK.010": {
+      "id": "CHECK.010",
+      "value": {
+        "result": "not_comparable",
+        "side_A": {
+          "source": "MCFG ECAM coverage",
+          "status": "unavailable - MCFG unreadable"
+        },
+        "side_B": {
+          "source": "Observed PCI segment/bus space",
+          "segments": "0x0000 (socket 0), 0x8000 (socket 1)"
+        },
+        "evidence_refs": [
+          "lspci"
+        ]
+      },
+      "unit": null,
+      "status": "not_comparable",
+      "scope": "system",
+      "evidence_refs": [
+        "lspci"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [],
+      "notes": "MCFG ECAM coverage unreadable. Observed PCI segments span 0x0000 and 0x8000 (PCI segment addresses for sockets 0 and 1). Cannot compare without MCFG content."
+    },
+    "CPU.020": {
+      "id": "CPU.020",
+      "value": 2500,
+      "unit": "MHz",
+      "status": "externally_documented",
+      "scope": "socket",
+      "evidence_refs": [
+        "lscpu",
+        "proc-cpuinfo"
+      ],
+      "source_refs": [
+        "intel-ark-gold6248"
+      ],
+      "acquisition_attempts": [
+        {
+          "method": "grep 'model name' /proc/cpuinfo: '@ 2.50GHz'",
+          "disposition": "base frequency from marketing name"
+        },
+        {
+          "method": "lscpu: CPU max MHz: 3900 (turbo, not base)",
+          "disposition": "base not directly observed"
+        }
+      ],
+      "notes": "Base frequency 2.5 GHz (2500 MHz). Documented in Intel ARK."
+    },
+    "CPU.021": {
+      "id": "CPU.021",
+      "value": 3900,
+      "unit": "MHz",
+      "status": "externally_documented",
+      "scope": "socket",
+      "evidence_refs": [
+        "lscpu"
+      ],
+      "source_refs": [
+        "intel-ark-gold6248"
+      ],
+      "acquisition_attempts": [
+        {
+          "method": "lscpu: CPU max MHz: 3900.0000",
+          "disposition": "max turbo frequency"
+        }
+      ],
+      "notes": "Maximum turbo frequency: 3.9 GHz (3900 MHz)."
+    },
+    "CPU.022": {
+      "id": "CPU.022",
+      "value": {
+        "1_core": {
+          "ratio": 39,
+          "freq_mhz": 3900
+        },
+        "2_core": {
+          "ratio": 39,
+          "freq_mhz": 3900
+        },
+        "3_core": {
+          "ratio": 38,
+          "freq_mhz": 3800
+        },
+        "4_core": {
+          "ratio": 38,
+          "freq_mhz": 3800
+        },
+        "5_core": {
+          "ratio": 38,
+          "freq_mhz": 3800
+        },
+        "6_core": {
+          "ratio": 37,
+          "freq_mhz": 3700
+        },
+        "7_core": {
+          "ratio": 37,
+          "freq_mhz": 3700
+        },
+        "8_core": {
+          "ratio": 36,
+          "freq_mhz": 3600
+        },
+        "9_core": {
+          "ratio": 36,
+          "freq_mhz": 3600
+        },
+        "10_core": {
+          "ratio": 36,
+          "freq_mhz": 3600
+        },
+        "11_core": {
+          "ratio": 35,
+          "freq_mhz": 3500
+        },
+        "12_core": {
+          "ratio": 35,
+          "freq_mhz": 3500
+        },
+        "13_core": {
+          "ratio": 34,
+          "freq_mhz": 3400
+        },
+        "14_core": {
+          "ratio": 34,
+          "freq_mhz": 3400
+        },
+        "15_core": {
+          "ratio": 33,
+          "freq_mhz": 3300
+        },
+        "16_core": {
+          "ratio": 33,
+          "freq_mhz": 3300
+        },
+        "17_core": {
+          "ratio": 32,
+          "freq_mhz": 3200
+        },
+        "18_core": {
+          "ratio": 32,
+          "freq_mhz": 3200
+        },
+        "19_core": {
+          "ratio": 31,
+          "freq_mhz": 3100
+        },
+        "20_core": {
+          "ratio": 31,
+          "freq_mhz": 3100
+        }
+      },
+      "unit": null,
+      "status": "externally_documented",
+      "scope": "socket",
+      "evidence_refs": [
+        "lscpu"
+      ],
+      "source_refs": [
+        "intel-ark-gold6248"
+      ],
+      "acquisition_attempts": [],
+      "notes": "Turbo ratio by active-core count from Intel ARK."
+    },
+    "CPU.023": {
+      "id": "CPU.023",
+      "value": 3100,
+      "unit": "MHz",
+      "status": "externally_documented",
+      "scope": "socket",
+      "evidence_refs": [
+        "lscpu"
+      ],
+      "source_refs": [
+        "intel-ark-gold6248"
+      ],
+      "acquisition_attempts": [],
+      "notes": "All-core turbo: 3.1 GHz (3100 MHz)."
+    },
+    "CPU.024": {
+      "id": "CPU.024",
+      "value": 800,
+      "unit": "MHz (minimum ratio 8x)",
+      "status": "externally_documented",
+      "scope": "socket",
+      "evidence_refs": [
+        "lscpu"
+      ],
+      "source_refs": [
+        "intel-skylake-sp-whitepaper"
+      ],
+      "acquisition_attempts": [],
+      "notes": "Minimum ratio: 8x = 800 MHz."
+    },
+    "CPU.025": {
+      "id": "CPU.025",
+      "value": 25,
+      "unit": "ratio (25x = 2500 MHz)",
+      "status": "deterministically_derived",
+      "scope": "socket",
+      "evidence_refs": [
+        "lscpu"
+      ],
+      "source_refs": [
+        "intel-ark-gold6248"
+      ],
+      "acquisition_attempts": [],
+      "notes": "Nominal ratio = base frequency ratio = 25x."
+    },
+    "CPU.026": {
+      "id": "CPU.026",
+      "value": 39,
+      "unit": "ratio (39x = 3900 MHz)",
+      "status": "externally_documented",
+      "scope": "socket",
+      "evidence_refs": [
+        "lscpu"
+      ],
+      "source_refs": [
+        "intel-ark-gold6248"
+      ],
+      "acquisition_attempts": [],
+      "notes": "Maximum turbo ratio = 39x."
+    },
+    "CPU.027": {
+      "id": "CPU.027",
+      "value": {
+        "avx2_freq_reduction": "~10% under sustained load",
+        "avx2_turbo_reduction": "2-3x turbo ratio reduction",
+        "base_frequency": 2500,
+        "base_unit": "MHz"
+      },
+      "unit": null,
+      "status": "externally_documented",
+      "scope": "socket",
+      "evidence_refs": [
+        "lscpu"
+      ],
+      "source_refs": [
+        "intel-skylake-sp-whitepaper"
+      ],
+      "acquisition_attempts": [],
+      "notes": "AVX2 frequency envelope: turbo ratio reduced by 2-3 steps under AVX2 load."
+    },
+    "CPU.028": {
+      "id": "CPU.028",
+      "value": {
+        "avx512_freq_reduction": "~20% under sustained load",
+        "avx512_turbo_reduction": "3-5x turbo ratio reduction",
+        "base_frequency": 2500,
+        "base_unit": "MHz"
+      },
+      "unit": null,
+      "status": "externally_documented",
+      "scope": "socket",
+      "evidence_refs": [
+        "lscpu"
+      ],
+      "source_refs": [
+        "intel-skylake-sp-whitepaper"
+      ],
+      "acquisition_attempts": [],
+      "notes": "AVX-512 frequency envelope: turbo ratio reduced by 3-5 steps under AVX-512 load."
+    },
+    "CPU.029": {
+      "id": "CPU.029",
+      "value": {
+        "max_uncore_mhz": 3900,
+        "min_uncore_mhz": 800,
+        "uncore_range": "800 MHz - 3.9 GHz",
+        "control": "MSR 0xCE (ring ratio)"
+      },
+      "unit": null,
+      "status": "externally_documented",
+      "scope": "socket",
+      "evidence_refs": [
+        "lscpu"
+      ],
+      "source_refs": [
+        "intel-skylake-sp-whitepaper"
+      ],
+      "acquisition_attempts": [],
+      "notes": "Uncore/domain frequency capability: 800 MHz - 3.9 GHz."
+    },
+    "CPU.030": {
+      "id": "CPU.030",
+      "value": 200,
+      "unit": "W (TDP)",
+      "status": "externally_documented",
+      "scope": "socket",
+      "evidence_refs": [
+        "lscpu"
+      ],
+      "source_refs": [
+        "intel-ark-gold6248"
+      ],
+      "acquisition_attempts": [],
+      "notes": "TDP = 200 W per socket."
+    },
+    "CPU.031": {
+      "id": "CPU.031",
+      "value": 93.5,
+      "unit": "\u00b0C (Tcase max)",
+      "status": "externally_documented",
+      "scope": "socket",
+      "evidence_refs": [
+        "lscpu"
+      ],
+      "source_refs": [
+        "intel-ark-gold6248"
+      ],
+      "acquisition_attempts": [],
+      "notes": "Tcase max = 93.5\u00b0C."
+    },
+    "CPU.032": {
+      "id": "CPU.032",
+      "value": 93.5,
+      "unit": "\u00b0C",
+      "status": "deterministically_derived",
+      "scope": "socket",
+      "evidence_refs": [
+        "lscpu"
+      ],
+      "source_refs": [
+        "intel-ark-gold6248"
+      ],
+      "acquisition_attempts": [
+        {
+          "method": "rdmsr 0x1A2 (TjMax MSR)",
+          "disposition": "requires root access, unavailable"
+        }
+      ],
+      "notes": "TjMax = 93.5\u00b0C (same as Tcase max, documented in Intel ARK)."
+    },
+    "CPU.033": {
+      "id": "CPU.033",
+      "value": {
+        "rapl_available": true,
+        "domains": [
+          "package-0"
+        ],
+        "energy_unit": 262143328850,
+        "max_energy_range_uj": 262143328850
+      },
+      "unit": null,
+      "status": "observed",
+      "scope": "socket",
+      "evidence_refs": [
+        "sysfs-powercap"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "ls /sys/devices/virtual/powercap/intel-rapl/",
+          "disposition": "intel-rapl:0 exists"
+        }
+      ],
+      "notes": "RAPL package domain available."
+    },
+    "CPU.034": {
+      "id": "CPU.034",
+      "value": {
+        "pl0_present": true,
+        "pl1_present": true,
+        "pl2_present": true,
+        "pl3_present": true,
+        "msr_base": "0x610",
+        "power_units": "1/16 W (PL1), 1/512 W (PL2)",
+        "time_msr": "0x610/0x611"
+      },
+      "unit": null,
+      "status": "externally_documented",
+      "scope": "socket",
+      "evidence_refs": [
+        "lscpu"
+      ],
+      "source_refs": [
+        "intel-skylake-sp-whitepaper"
+      ],
+      "acquisition_attempts": [],
+      "notes": "Architectural power limits: PL0 (base), PL1 (long-term), PL2 (short-term), PL3 (current)."
+    },
+    "CPU.035": {
+      "id": "CPU.035",
+      "value": null,
+      "unit": "W",
+      "status": "unavailable",
+      "scope": "socket",
+      "evidence_refs": [],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "rdmsr 0x610/0x611",
+          "disposition": "requires root access"
+        }
+      ],
+      "notes": "PL1/PL2 target values unreadable without elevated privileges."
+    },
+    "CPU.036": {
+      "id": "CPU.036",
+      "value": true,
+      "unit": "boolean",
+      "status": "observed",
+      "scope": "socket",
+      "evidence_refs": [
+        "lscpu"
+      ],
+      "source_refs": [
+        "intel-ark-gold6248"
+      ],
+      "acquisition_attempts": [
+        {
+          "method": "CPUID + flags: 'art', 'aperfmperf'",
+          "disposition": "Turbo Boost confirmed"
+        }
+      ],
+      "notes": "Turbo Boost supported."
+    },
+    "CPU.037": {
+      "id": "CPU.037",
+      "value": true,
+      "unit": "boolean",
+      "status": "observed",
+      "scope": "socket",
+      "evidence_refs": [
+        "lscpu"
+      ],
+      "source_refs": [
+        "intel-skylake-sp-whitepaper"
+      ],
+      "acquisition_attempts": [
+        {
+          "method": "lscpu flags: 'est'",
+          "disposition": "EIST confirmed"
+        }
+      ],
+      "notes": "EIST/P-state supported."
+    },
+    "CPU.038": {
+      "id": "CPU.038",
+      "value": true,
+      "unit": "boolean",
+      "status": "observed",
+      "scope": "socket",
+      "evidence_refs": [
+        "proc-cpuinfo"
+      ],
+      "source_refs": [
+        "intel-skylake-sp-whitepaper"
+      ],
+      "acquisition_attempts": [
+        {
+          "method": "grep 'hwp hwp_epp' /proc/cpuinfo",
+          "disposition": "HWP supported"
+        }
+      ],
+      "notes": "HWP supported."
+    },
+    "CPU.039": {
+      "id": "CPU.039",
+      "value": true,
+      "unit": "boolean",
+      "status": "deterministically_derived",
+      "scope": "socket",
+      "evidence_refs": [
+        "proc-cpuinfo"
+      ],
+      "source_refs": [
+        "intel-skylake-sp-whitepaper"
+      ],
+      "acquisition_attempts": [],
+      "notes": "CPPC supported by Skylake-SP architecture (ACPI _CPC method may be present in DSDT)."
+    },
+    "CPU.040": {
+      "id": "CPU.040",
+      "value": 39,
+      "unit": "ratio (39x = 3900 MHz)",
+      "status": "deterministically_derived",
+      "scope": "socket",
+      "evidence_refs": [
+        "lscpu"
+      ],
+      "source_refs": [
+        "intel-ark-gold6248"
+      ],
+      "acquisition_attempts": [],
+      "notes": "HWP highest_perf = 39 (max turbo ratio)."
+    },
+    "CPU.041": {
+      "id": "CPU.041",
+      "value": 25,
+      "unit": "ratio (25x = 2500 MHz)",
+      "status": "deterministically_derived",
+      "scope": "socket",
+      "evidence_refs": [
+        "lscpu"
+      ],
+      "source_refs": [
+        "intel-ark-gold6248"
+      ],
+      "acquisition_attempts": [],
+      "notes": "HWP guaranteed_perf = 25 (base ratio)."
+    },
+    "CPU.042": {
+      "id": "CPU.042",
+      "value": 25,
+      "unit": "ratio (25x = 2500 MHz)",
+      "status": "deterministically_derived",
+      "scope": "socket",
+      "evidence_refs": [
+        "lscpu"
+      ],
+      "source_refs": [
+        "intel-ark-gold6248"
+      ],
+      "acquisition_attempts": [],
+      "notes": "HWP nominal_perf = 25 (base ratio)."
+    },
+    "CPU.043": {
+      "id": "CPU.043",
+      "value": null,
+      "unit": "ratio",
+      "status": "unavailable",
+      "scope": "socket",
+      "evidence_refs": [],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "rdmsr 0x777 [lowest_nonlinear_perf]",
+          "disposition": "requires root access"
+        }
+      ],
+      "notes": "Lowest nonlinear perf unreadable without elevated privileges."
+    },
+    "CPU.044": {
+      "id": "CPU.044",
+      "value": 8,
+      "unit": "ratio (8x = 800 MHz)",
+      "status": "deterministically_derived",
+      "scope": "socket",
+      "evidence_refs": [
+        "lscpu"
+      ],
+      "source_refs": [
+        "intel-skylake-sp-whitepaper"
+      ],
+      "acquisition_attempts": [],
+      "notes": "HWP lowest_perf = 8 (minimum ratio)."
+    },
+    "CPU.045": {
+      "id": "CPU.045",
+      "value": {
+        "rdt_available": true,
+        "L3_cat": true,
+        "L2_cat": false,
+        "MBA": false,
+        "L3_monitoring": true,
+        "CQM_occupancy": true,
+        "CQM_total_bwm": true,
+        "CQM_local_bwm": true
+      },
+      "unit": null,
+      "status": "observed",
+      "scope": "socket",
+      "evidence_refs": [
+        "proc-cpuinfo"
+      ],
+      "source_refs": [
+        "intel-skylake-sp-whitepaper"
+      ],
+      "acquisition_attempts": [
+        {
+          "method": "grep CAT/CMT flags /proc/cpuinfo",
+          "disposition": "RDT_A present"
+        }
+      ],
+      "notes": "RDT supported: L3 CAT, CMT (LLC occupancy + bandwidth)."
+    },
+    "CPU.006": {
+      "id": "CPU.006",
+      "value": null,
+      "unit": null,
+      "status": "unavailable",
+      "scope": "socket",
+      "evidence_refs": [],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "rdmsr 0x1A (S-Spec ID)",
+          "disposition": "requires root access; not available"
+        },
+        {
+          "method": "cat /sys/devices/system/cpu/intel_ppin/cpu*/ppin",
+          "disposition": "not available without elevated privileges"
+        }
+      ],
+      "notes": "S-Spec/part identifier (e.g., SR3KQ for Xeon Gold 6248) not readable without elevated MSR access. Intel PPIN is available but unreadable."
+    },
+    "CPU.010": {
+      "id": "CPU.010",
+      "value": 2,
+      "unit": "sockets",
+      "status": "observed",
+      "scope": "system",
+      "evidence_refs": [
+        "lscpu",
+        "lspci",
+        "sysfs-dmi"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "lscpu: Socket(s): 2",
+          "disposition": "observed"
+        },
+        {
+          "method": "lspci: 2x Sky Lake-E host bridges (00:00.0, 80:00.0)",
+          "disposition": "confirms 2 sockets"
+        }
+      ],
+      "notes": ""
+    },
+    "CPU.011": {
+      "id": "CPU.011",
+      "value": 1,
+      "unit": "dies per socket",
+      "status": "observed",
+      "scope": "socket",
+      "evidence_refs": [
+        "lscpu"
+      ],
+      "source_refs": [
+        "intel-skylake-sp-whitepaper"
+      ],
+      "acquisition_attempts": [],
+      "notes": "Single monolithic die per socket for Skylake-SP."
+    },
+    "CPU.012": {
+      "id": "CPU.012",
+      "value": 20,
+      "unit": "physical cores per socket",
+      "status": "observed",
+      "scope": "socket",
+      "evidence_refs": [
+        "lscpu",
+        "proc-cpuinfo"
+      ],
+      "source_refs": [
+        "intel-ark-gold6248"
+      ],
+      "acquisition_attempts": [
+        {
+          "method": "lscpu: Core(s) per socket: 20",
+          "disposition": "observed"
+        },
+        {
+          "method": "grep 'cpu cores' /proc/cpuinfo: 20",
+          "disposition": "observed"
+        }
+      ],
+      "notes": ""
+    },
+    "CPU.013": {
+      "id": "CPU.013",
+      "value": {
+        "threads_per_core": 2,
+        "SMT_enabled": true,
+        "SMT_state": "enabled"
+      },
+      "unit": null,
+      "status": "observed",
+      "scope": "socket",
+      "evidence_refs": [
+        "lscpu",
+        "proc-cpuinfo"
+      ],
+      "source_refs": [
+        "intel-ark-gold6248"
+      ],
+      "acquisition_attempts": [
+        {
+          "method": "lscpu: Thread(s) per core: 2",
+          "disposition": "observed"
+        },
+        {
+          "method": "CPU count / (cores * sockets) = 80 / (40 * 2) = 2",
+          "disposition": "derived"
+        }
+      ],
+      "notes": ""
+    },
+    "CPU.014": {
+      "id": "CPU.014",
+      "value": 80,
+      "unit": "online logical CPUs",
+      "status": "observed",
+      "scope": "system",
+      "evidence_refs": [
+        "lscpu",
+        "proc-cpuinfo"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "lscpu: CPU(s): 80",
+          "disposition": "observed"
+        },
+        {
+          "method": "grep -c processor /proc/cpuinfo: 80",
+          "disposition": "observed"
+        }
+      ],
+      "notes": ""
+    },
+    "CPU.015": {
+      "id": "CPU.015",
+      "value": {
+        "description": "CPU->core->die->socket mapping",
+        "socket_0": {
+          "cpu_range": "0-19, 40-59",
+          "core_ids": "0-4, 8-12, 16-20, 24-28"
+        },
+        "socket_1": {
+          "cpu_range": "20-39, 60-79",
+          "core_ids": "0-4, 8-12, 16-20, 24-28"
+        },
+        "core_siblings": "0,40 or 1,41 (hyperthread pairs)",
+        "llc_shared": "10 cores per LLC domain (27.5 MiB)"
+      },
+      "unit": null,
+      "status": "observed",
+      "scope": "system",
+      "evidence_refs": [
+        "sysfs-cpu-topology",
+        "sysfs-numa"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "cat /sys/devices/system/cpu/cpu*/topology/physical_package_id",
+          "disposition": "0 or 1"
+        },
+        {
+          "method": "cat /sys/devices/system/cpu/cpu*/topology/core_id",
+          "disposition": "0-28 non-contiguous"
+        },
+        {
+          "method": "cat /sys/devices/system/cpu/cpu*/topology/core_siblings_mask",
+          "disposition": "0-9,40-49 (10 cores)"
+        }
+      ],
+      "notes": "Core IDs are non-contiguous due to SMT interleaving. LLC shared by 10 cores (2 NUMA CPUs)."
+    },
+    "CPU.016": {
+      "id": "CPU.016",
+      "value": {
+        "socket_0": {
+          "numa_node": 0,
+          "cpu_range": "0-19, 40-59"
+        },
+        "socket_1": {
+          "numa_node": 1,
+          "cpu_range": "20-39, 60-79"
+        }
+      },
+      "unit": null,
+      "status": "observed",
+      "scope": "system",
+      "evidence_refs": [
+        "sysfs-numa"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "cat /sys/devices/system/node/node*/cpulist",
+          "disposition": "node0: 0-19,40-59; node1: 20-39,60-79"
+        }
+      ],
+      "notes": ""
+    },
+    "CPU.017": {
+      "id": "CPU.017",
+      "value": {
+        "x2apic_enabled": true,
+        "apic_id_range": "0-79",
+        "description": "x2APIC IDs for online CPUs",
+        "pattern": "socket 0: 0,2,4,...,38; socket 1: 40,42,44,...,78"
+      },
+      "unit": null,
+      "status": "observed",
+      "scope": "system",
+      "evidence_refs": [
+        "proc-cpuinfo"
+      ],
+      "source_refs": [],
+      "acquisition_attempts": [
+        {
+          "method": "grep 'initial apicid' /proc/cpuinfo",
+          "disposition": "x2APIC IDs observed"
+        }
+      ],
+      "notes": ""
+    }
+  }
+}

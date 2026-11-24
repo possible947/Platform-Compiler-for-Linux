@@ -1,0 +1,66 @@
+{
+  "schema_version": "1",
+  "case_id": "x11d-16d-dual-xeon-g6248",
+  "stage": "step-01-platform-specification",
+  "run_timestamp": "2026-11-24T18:41:29.593030+00:00",
+  "prompt_version": "platform-audit-prompt/v2",
+  "questionnaire_version": "platform-audit-questionnaire/v1",
+  "input_artifacts": [],
+  "model_identity": "unknown (run in pi harness)",
+  "timestamps": {
+    "start": "2026-11-24T18:41:29.593030+00:00",
+    "end": "2026-11-24T18:41:29.593030+00:00"
+  },
+  "execution": {
+    "privilege_level": "unprivileged (no sudo available)",
+    "network_access": "limited",
+    "tools_used": [
+      "lscpu",
+      "lspci (-nn, -vmmnn, -vvv)",
+      "dmidecode (unavailable - requires sudo)",
+      "acpidump (unavailable - requires sudo)",
+      "acpidisasm (unavailable)",
+      "cat/read sysfs (DMI, NUMA, CPU, PCI, ACPI, powercap)",
+      "grep, python3"
+    ],
+    "limitations": [
+      "DMI/SMBIOS tables unreadable without dmidecode + sudo",
+      "ACPI table content unreadable without elevated privileges",
+      "MSR registers unreadable without root access",
+      "IOMMU groups not visible (/sys/kernel/iommu_groups/ empty)",
+      "DIMM SPD data inaccessible without dmidecode",
+      "RAPL powercap only provides energy_unit, not max_energy_range constraint"
+    ]
+  },
+  "output_artifacts": {
+    "questionnaire.json": "/tmp/preparation/x11d-16d-dual-xeon-g6248/step-01-platform-specification/questionnaire.json",
+    "report.json": "/tmp/preparation/x11d-16d-dual-xeon-g6248/step-01-platform-specification/report.json",
+    "report.md": "/tmp/preparation/x11d-16d-dual-xeon-g6248/step-01-platform-specification/report.md",
+    "sources.json": "/tmp/preparation/x11d-16d-dual-xeon-g6248/step-01-platform-specification/sources.json"
+  },
+  "validation": {
+    "all_questionnaire_items_present": true,
+    "all_items_have_terminal_status": true,
+    "status_distribution": {
+      "observed": 49,
+      "deterministically_derived": 32,
+      "unavailable": 26,
+      "externally_documented": 19,
+      "consistent": 6,
+      "inconsistent": 1,
+      "not_comparable": 3
+    },
+    "total_items": 136
+  },
+  "terminal_review": {
+    "inconsistent_checks": [
+      "CHECK.005"
+    ],
+    "conflicting_values": [],
+    "required_unavailable": 25,
+    "inaccessible_external_sources": [],
+    "no_diagnosis_performed": true,
+    "no_tuning_performed": true,
+    "no_materialization_performed": true
+  }
+}

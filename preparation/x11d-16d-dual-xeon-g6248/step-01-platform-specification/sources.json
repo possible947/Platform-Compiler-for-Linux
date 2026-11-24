@@ -1,0 +1,120 @@
+{
+  "schema_version": "1",
+  "case_id": "x11d-16d-dual-xeon-g6248",
+  "run_timestamp": "2026-11-24T18:28:18.013088+00:00",
+  "local_evidence": [
+    {
+      "id": "sysfs-dmi",
+      "description": "DMI/SMBIOS via /sys/class/dmi/id",
+      "type": "observed_target_evidence"
+    },
+    {
+      "id": "proc-cpuinfo",
+      "description": "/proc/cpuinfo",
+      "type": "observed_target_evidence"
+    },
+    {
+      "id": "lscpu",
+      "description": "lscpu output",
+      "type": "observed_target_evidence"
+    },
+    {
+      "id": "lspci",
+      "description": "lspci -nn, -vmmnn, -vvv",
+      "type": "observed_target_evidence"
+    },
+    {
+      "id": "sysfs-numa",
+      "description": "/sys/devices/system/node/*",
+      "type": "observed_target_evidence"
+    },
+    {
+      "id": "sysfs-acpi-tables",
+      "description": "ACPI table inventory from /sys/firmware/acpi/tables/",
+      "type": "observed_target_evidence"
+    },
+    {
+      "id": "sysfs-acpi-devices",
+      "description": "/sys/bus/acpi/devices/ inventory",
+      "type": "observed_target_evidence"
+    },
+    {
+      "id": "sysfs-cpu-topology",
+      "description": "/sys/devices/system/cpu/cpu*/topology/*",
+      "type": "observed_target_evidence"
+    },
+    {
+      "id": "proc-meminfo",
+      "description": "/proc/meminfo",
+      "type": "observed_target_evidence"
+    },
+    {
+      "id": "sys-meminfo-node",
+      "description": "/sys/devices/system/node/*/meminfo",
+      "type": "observed_target_evidence"
+    },
+    {
+      "id": "proc-cmdline",
+      "description": "/proc/cmdline",
+      "type": "observed_target_evidence"
+    },
+    {
+      "id": "sysfs-pci-devices",
+      "description": "/sys/bus/pci/devices/*/vendor, device, class, numa_node, subsystem_*",
+      "type": "observed_target_evidence"
+    },
+    {
+      "id": "sysfs-powercap",
+      "description": "/sys/devices/virtual/powercap/intel-rapl/*",
+      "type": "observed_target_evidence"
+    }
+  ],
+  "deterministic_derived": [
+    {
+      "id": "numa-distance-matrix",
+      "description": "NUMA distance from sysfs",
+      "type": "deterministic_derived_evidence"
+    },
+    {
+      "id": "pci-count",
+      "description": "PCI device count from lspci",
+      "type": "deterministic_derived_evidence"
+    },
+    {
+      "id": "acpi-table-inventory",
+      "description": "ACPI table count and sizes from directory listing",
+      "type": "deterministic_derived_evidence"
+    },
+    {
+      "id": "cpu-count",
+      "description": "Logical CPU count from /proc/cpuinfo",
+      "type": "deterministic_derived_evidence"
+    }
+  ],
+  "external_documentation": [
+    {
+      "id": "intel-ark-gold6248",
+      "description": "Intel ARK Xeon Gold 6248",
+      "url": "https://www.intel.com/content/www/us/en/products/sku/19289/intel-xeon-gold-6248-specifications.html",
+      "type": "external_specification"
+    },
+    {
+      "id": "intel-skylake-sp-whitepaper",
+      "description": "Intel Sky Lake-SP White Paper",
+      "url": "https://www.intel.com/content/www/us/en/develop/documentation/processor-specification-addendum/top.html",
+      "type": "external_specification"
+    },
+    {
+      "id": "intel-c620-datasheet",
+      "description": "Intel C620 Series Chipset Datasheet",
+      "url": "https://www.intel.com/content/www/us/en/docs/chipset-developers-guide/2024-6/chipset-overview.html",
+      "type": "external_specification"
+    },
+    {
+      "id": "amd-vega20-spec",
+      "description": "AMD Vega 20 specifications",
+      "url": "https://www.amd.com/en/enterprise/products/graphics/instinct/mi50.html",
+      "type": "external_specification"
+    }
+  ]
+}
