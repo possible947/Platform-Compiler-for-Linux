@@ -1,0 +1,324 @@
+{
+  "schema_version": "platform-specification/1",
+  "case_id": "case-20250101-x11d-16d",
+  "audit": {
+    "started": "2026-11-24T15:50:00Z",
+    "completed": "2026-11-24T15:55:00Z",
+    "status": "complete"
+  },
+  "platform_identity": {
+    "architecture": "x86_64",
+    "board": {
+      "vendor": "HUANANZHI",
+      "model": "X11D-16D",
+      "revision": "V1.0",
+      "serial": {"status": "unknown", "reason": "DMI placeholder 'Default string'"},
+      "vendor_observed": true
+    },
+    "chipset": {
+      "vendor": "Intel Corporation",
+      "model": "C620 Series",
+      "platform_generation": "Sky Lake-E / Skylake-SP",
+      "socket": "LGA4189 (Socket P)"
+    },
+    "firmware": {
+      "vendor": "American Megatrends Inc.",
+      "version": "5.14",
+      "release_date": "2024-10-19",
+      "bios_release": "5.14",
+      "uefi": true,
+      "acpi_revision": 6.0
+    },
+    "chassis": {
+      "type": 3,
+      "type_name": "Server",
+      "vendor": "HUANANZHI",
+      "version": {"status": "unknown", "value": "Default string"}
+    }
+  },
+  "cpu": {
+    "identity": {
+      "model": "Intel Xeon Gold 6248",
+      "microarchitecture": "Cascade Lake-SP (Skylake-SP derivative)",
+      "process": "14 nm",
+      "family": 6,
+      "model_number": 85,
+      "stepping": 7,
+      "sockets": 2,
+      "physical_cores_per_socket": 20,
+      "total_physical_cores": 40,
+      "threads_per_core": 2,
+      "total_logical_cpus": 80,
+      "smtp_supported": true,
+      "smtp_enabled": true,
+      "microcode": "0x5003901",
+      "vmx": true
+    },
+    "topology": {
+      "socket_to_node": {
+        "socket_0": {"node": 0, "cpus": "0-19,40-59"},
+        "socket_1": {"node": 1, "cpus": "20-39,60-79"}
+      },
+      "smt_sibling_structure": "each physical core has 2 hyper-threads",
+      "core_ids_per_socket": "0-19",
+      "physical_package_id_source": "/sys/devices/system/cpu/cpu*/topology/physical_package_id"
+    },
+    "frequency_capability": {
+      "base_mhz": 2500,
+      "base_mhz_status": "confirmed",
+      "max_turbo_mhz": 3900,
+      "max_turbo_mhz_status": "confirmed",
+      "all_core_turbo_mhz": 3200,
+      "all_core_turbo_mhz_status": "confirmed",
+      "turbo_by_active_core": [
+        {"cores": 1, "frequency_mhz": 3900, "notes": "1C turbo"},
+        {"cores": 2, "frequency_mhz": 3900, "notes": "2C turbo"},
+        {"cores": "3-4", "frequency_mhz": 3900, "notes": "3-4C turbo"},
+        {"cores": "5-8", "frequency_mhz": 3700, "notes": "5-8C turbo"},
+        {"cores": "9-12", "frequency_mhz": 3500, "notes": "9-12C turbo"},
+        {"cores": "13-16", "frequency_mhz": 3400, "notes": "13-16C turbo"},
+        {"cores": "17-20", "frequency_mhz": 3200, "notes": "All-core turbo"}
+      ],
+      "avx2_turbo_reduction_mhz": 200,
+      "avx2_turbo_reduction_status": "approximate (per architecture documentation)",
+      "avx512_turbo_reduction_mhz": 200,
+      "avx512_turbo_reduction_status": "approximate (per architecture documentation)",
+      "uncore_frequency_capability": {"status": "unknown", "reason": "No authoritative per-domain frequency table found"},
+      "source": "SRC-010 (Intel ARK), EVID-001"
+    },
+    "power_thermal": {
+      "tdp_watts_per_socket": 205,
+      "tdp_status": "confirmed",
+      "pl1": {"status": "unknown", "reason": "Not specifically published for Xeon Gold 6248; platform firmware may override"},
+      "pl2": {"status": "unknown", "reason": "Not specifically published"},
+      "tjmax": {"status": "unknown", "reason": "Not published for this SKU in public documentation"},
+      "package_power_monitoring": true,
+      "core_power_monitoring": true,
+      "uncore_power_monitoring": true,
+      "configurable_power_limits": {"status": "supported", "mechanism": "MSR_PKG_POWER_LIMIT 0x610"}
+    },
+    "performance_control": {
+      "turbo_boost": {"status": "supported", "evidence": "cpuid flags: dtherm, flexpriority; observed max freq > base"},
+      "eist": {"status": "supported", "evidence": "cpuid flag: est; acpi-cpufreq loaded"},
+      "hwp": {"status": "supported (not active)", "evidence": "cpuid flags: hwp, hwp_act_window, hwp_epp, hwp_pkg_req; hwp_active=0"},
+      "cppc": {"status": "unknown", "evidence": "CONFIG_ACPI_CPPC_LIB=y; no CPPC sysfs interface observed"},
+      "intel_pstate": {"status": "active (driver mode)"},
+      "acpi_cpufreq": {"status": "loaded (all CPUs)"},
+      "cstates": ["POLL", "C1 (MWAIT 0x00)", "C1E (MWAIT 0x01)", "C6 (MWAIT 0x20)"],
+      "max_cstate": 9
+    },
+    "cache_hierarchy": {
+      "l1_data": {"size_kb": 32, "type": "Data", "associativity": 8, "per_core": true},
+      "l1_instruction": {"size_kb": 32, "type": "Instruction", "associativity": 8, "per_core": true},
+      "l2": {"size_kb": 1024, "type": "Unified", "associativity": 16, "per_core": true},
+      "l3": {"size_kb": 28160, "type": "Unified", "associativity": 11, "per_socket": true},
+      "llc_sharing": "L3 shared among all 20 cores within a socket; independent per socket"
+    },
+    "socket_interconnect": {
+      "technology": "UPI (Ultra Path Interconnect)",
+      "links_per_socket": 2,
+      "topology": "Dual-ring",
+      "max_speed_gt_per_s": 10.4,
+      "link_width_bits": 40,
+      "observed_devices": ["KTU/KTI registers", "UPI Registers", "Ubox Registers", "M3KTI Registers"],
+      "link_speed_confirmed": false,
+      "link_speed_status": "unknown (PCIe extended config unreadable)"
+    }
+  },
+  "memory": {
+    "total": {
+      "bytes": 201342439424,
+      "kib": 196623476,
+      "gib": 187.5,
+      "status": "observed"
+    },
+    "per_node": {
+      "node_0": {"kib": 97615056, "gib": 93.1},
+      "node_1": {"kib": 99008420, "gib": 94.4}
+    },
+    "speed": {"status": "unknown", "reason": "dmidecode blocked; no sysfs interface"},
+    "ecc": {"status": "unknown", "reason": "dmidecode blocked"},
+    "controller": {
+      "per_socket": 1,
+      "channels_per_controller": 6,
+      "total_channels": 12,
+      "type": "DDR4"
+    },
+    "dimms": {"status": "unknown", "reason": "dmidecode blocked; no /sys/devices/system/memory/DIMM interface"},
+    "theoretical_max_bandwidth_gbs": 190.7,
+    "theoretical_max_bandwidth_notes": "12 channels × 8 bytes × 2666 MT/s / 1000 (bidirectional peak); theoretical maximum only"
+  },
+  "numa": {
+    "node_count": 2,
+    "nodes": [
+      {
+        "id": 0,
+        "socket": 0,
+        "cpus": "0-19,40-59",
+        "memory_kib": 97615056,
+        "local_pci_devices": ["0000:00:* (Host bridge, CBDMA, VT-d, RAS, CHA, IIO)", "0000:5d:* (PCIe Root Port A)", "0000:5e:00.0 (NVMe SSD)", "0000:01:00.0 (NIC1)", "0000:02:00.0 (NIC2)"]
+      },
+      {
+        "id": 1,
+        "socket": 1,
+        "cpus": "20-39,60-79",
+        "memory_kib": 99008420,
+        "local_pci_devices": ["0000:80:* (CBDMA, VT-d, RAS, Ubox)", "0000:85:* (CHA, VT-d, RAS, PCU)", "0000:ae:* (PCIe Root Port A)", "0000:d7:* (PCIe Root Port A)", "0000:af:* (GPU bridge 1)", "0000:d8:* (GPU bridge 2)", "0000:b1:00.0 (GPU1)", "0000:da:00.0 (GPU2)"]
+      }
+    ],
+    "distance_matrix": [[10, 21], [21, 10]],
+    "locality_summary": "Standard 2-socket NUMA. Local=10, remote=21 (2.1x ratio)."
+  },
+  "pci_io": {
+    "root_complexes": [
+      {"domain": "0000:00", "device": "00:00.0", "vendor": "Intel Sky Lake-E DMI3 Registers", "socket": 0},
+      {"domain": "0000:17", "device": "various", "vendor": "Sky Lake-E CHA/PCU/VT-d", "socket": 0},
+      {"domain": "0000:5d", "device": "5d:00.0", "vendor": "Sky Lake-E PCIe Root Port A", "socket": 0},
+      {"domain": "0000:80", "device": "various", "vendor": "Sky Lake-E CBDMA/VT-d/RAS/Ubox", "socket": 1},
+      {"domain": "0000:85", "device": "various", "vendor": "Sky Lake-E CHA/PCU/VT-d", "socket": 1},
+      {"domain": "0000:ae", "device": "ae:00.0", "vendor": "Sky Lake-E PCIe Root Port A", "socket": 1},
+      {"domain": "0000:d7", "device": "d7:00.0", "vendor": "Sky Lake-E PCIe Root Port A", "socket": 1}
+    ],
+    "major_endpoints": [
+      {"role": "GPU 1", "bdf": "b1:00.0", "vendor": "1002", "device": "73a0", "name": "AMD Vega 20 (Radeon Pro VII / MI50)", "driver": "amdgpu", "numa_node": 1, "bar": "16GiB prefetchable", "link_speed_status": "unknown"},
+      {"role": "GPU 2", "bdf": "da:00.0", "vendor": "1002", "device": "73a0", "name": "AMD Vega 20 (Radeon Pro VII / MI50)", "driver": "amdgpu", "numa_node": 1, "bar": "16GiB prefetchable", "link_speed_status": "unknown"},
+      {"role": "NVMe SSD", "bdf": "5e:00.0", "vendor": "1e0f", "device": "0001", "name": "MAXIO MAP1202", "driver": "nvme", "numa_node": 0, "link_speed_status": "unknown"},
+      {"role": "NIC 1", "bdf": "01:00.0", "vendor": "8086", "device": "1533", "name": "Intel I210 Gigabit", "numa_node": 0, "link_speed_status": "unknown"},
+      {"role": "NIC 2", "bdf": "02:00.0", "vendor": "8086", "device": "1533", "name": "Intel I210 Gigabit", "numa_node": 0, "link_speed_status": "unknown"},
+      {"role": "BMC VGA", "bdf": "04:00.0", "vendor": "1a03", "device": "2000", "name": "ASPEED AST2500", "numa_node": 0, "link_speed_status": "unknown"},
+      {"role": "USB xHCI", "bdf": "00:14.0", "vendor": "8086", "device": "a1af", "name": "C620 USB 3.0 xHCI", "numa_node": 0},
+      {"role": "SATA AHCI", "bdf": "00:17.0", "vendor": "8086", "device": "a1d2", "name": "C620 SATA AHCI", "numa_node": 0},
+      {"role": "MEI/HECI", "bdf": "00:16.0-4", "vendor": "8086", "device": "a1ba", "name": "C620 MEI HECI", "numa_node": 0},
+      {"role": "Thermal", "bdf": "00:14.2", "vendor": "8086", "device": "a1b1", "name": "C620 Thermal Subsystem", "numa_node": 0},
+      {"role": "HD Audio", "bdf": "00:1f.3", "vendor": "8086", "device": "a1f0", "name": "C620 HD Audio", "numa_node": 0},
+      {"role": "SMBus", "bdf": "00:1f.4", "vendor": "8086", "device": "a1a3", "name": "C620 SMBus", "numa_node": 0},
+      {"role": "SPI", "bdf": "00:1f.5", "vendor": "8086", "device": "a1a4", "name": "C620 SPI Controller", "numa_node": 0},
+      {"role": "LPC/eSPI", "bdf": "00:1f.0", "vendor": "8086", "device": "a184", "name": "C621 LPC/eSPI", "numa_node": 0}
+    ],
+    "iommu": {
+      "technology": "Intel VT-d",
+      "scalable_mode": true,
+      "units_per_socket": "1+",
+      "dmar_table_present": true,
+      "dmar_table_size_bytes": 576,
+      "dmar_table_revision": 1,
+      "iommu_groups": {"status": "unknown", "reason": "No /sys/kernel/iommu_groups/"}
+    },
+    "pci_bridge_chain_to_gpu1": ["af:00.0 (AMD Bridge) → b0:00.0 (AMD Bridge) → b1:00.0 (GPU)"],
+    "pci_bridge_chain_to_gpu2": ["d8:00.0 (AMD Bridge) → d9:00.0 (AMD Bridge) → da:00.0 (GPU)"]
+  },
+  "firmware_acpi": {
+    "tables": [
+      {"signature": "FACP", "oem_id": "ALASKA", "oem_table_id": "A M I", "revision": 6, "length": 276, "captured": true, "notes": "PM1a=0x20000210, PM1b=0x5000"},
+      {"signature": "FACS", "oem_id": "ALASKA", "oem_table_id": null, "revision": 1, "length": 64, "captured": true, "notes": "FACS v1"},
+      {"signature": "DSDT", "oem_id": "ALASKA", "oem_table_id": "A M I", "revision": 2, "length": 1663052, "captured": true, "notes": "Large DSDT; 1.6 MiB"},
+      {"signature": "SRAT", "oem_id": "ALASKA", "oem_table_id": "A M I", "revision": 3, "length": 5808, "captured": true, "notes": "Processor locality + memory affinity; 2 NUMA nodes"},
+      {"signature": "SLIT", "oem_id": "ALASKA", "oem_table_id": "A M I", "revision": 1, "length": 300, "captured": true, "notes": "2×2 distance matrix: 10,21 / 21,10"},
+      {"signature": "APIC", "oem_id": "ALASKA", "oem_table_id": "A M I", "revision": 3, "length": 3166, "captured": true, "notes": "MPST (Multiple Processor Specification)"},
+      {"signature": "MCFG", "oem_id": "MSFT", "oem_table_id": null, "revision": 1, "length": 60, "captured": true, "notes": "MCFG: 0x00008000, bus range 0-255"},
+      {"signature": "HPET", "oem_id": "ALASKA", "oem_table_id": "A M I", "revision": 1, "length": 56, "captured": true, "notes": "High Precision Event Timer"},
+      {"signature": "DMAR", "oem_id": "ALASKA", "oem_table_id": "A M I", "revision": 1, "length": 576, "captured": true, "notes": "VT-d IOMMU units for both sockets"},
+      {"signature": "SSDT1", "oem_id": "INTEL", "oem_table_id": "ADDRXLAT", "revision": 2, "length": 1132, "captured": true, "notes": "Intel _SB_ ACPI tables"},
+      {"signature": "SSDT2", "oem_id": "INTEL", "oem_table_id": "SSDT  PM", "revision": 2, "length": 105728, "captured": true, "notes": "Power management tables (large)"},
+      {"signature": "SSDT3", "oem_id": "ALASKA", "oem_table_id": null, "revision": 2, "length": 1627, "captured": true, "notes": "OEM-specific SSDT"},
+      {"signature": "SSDT4", "oem_id": "INTEL", "oem_table_id": "SpsNm", "revision": 2, "length": 6990, "captured": true, "notes": "Intel power/resource table"},
+      {"signature": "OEM1", "oem_id": "ALASKA", "oem_table_id": null, "length": 86388, "captured": true, "notes": "OEM AML table"},
+      {"signature": "OEM2", "oem_id": "ALASKA", "oem_table_id": null, "length": 93780, "captured": true, "notes": "OEM AML table"},
+      {"signature": "OEM4", "oem_id": "ALASKA", "oem_table_id": null, "length": 332788, "captured": true, "notes": "OEM AML table (largest)"},
+      {"signature": "BERT", "oem_table_id": null, "length": 48, "captured": true, "notes": "Boot Error Record Table"},
+      {"signature": "BGRT", "oem_table_id": null, "length": 56, "captured": true, "notes": "Boot Graphics Resource Table"},
+      {"signature": "EINJ", "oem_table_id": null, "length": 336, "captured": true, "notes": "Error Injection table"},
+      {"signature": "ERST", "oem_table_id": null, "length": 560, "captured": true, "notes": "Error Record Serialization Table"},
+      {"signature": "HEST", "oem_table_id": null, "length": 168, "captured": true, "notes": "Hardware Error Source Table"},
+      {"signature": "FPDT", "oem_table_id": null, "length": 68, "captured": true, "notes": "Firmware Performance Data Table"},
+      {"signature": "MSCT", "oem_table_id": null, "length": 100, "captured": true, "notes": "Maximum System Characterization Table"},
+      {"signature": "PCAT", "oem_table_id": null, "length": 136, "captured": true, "notes": "PS/2 Alternate Interrupt Table"},
+      {"signature": "PCCT", "oem_table_id": null, "length": 110, "captured": true, "notes": "Platform Comm. Counter Table"},
+      {"signature": "RASF", "oem_table_id": null, "length": 48, "captured": true, "notes": "RAS Feature table"},
+      {"signature": "SPCR", "oem_table_id": null, "length": 80, "captured": true, "notes": "Serial Port Console Redirection"},
+      {"signature": "SPMI", "oem_table_id": null, "length": 65, "captured": true, "notes": "Server Base Mgmt Interface"},
+      {"signature": "SVOS", "oem_table_id": null, "length": 50, "captured": true, "notes": "Vendor-specific (unknown purpose)"},
+      {"signature": "VFCT", "oem_table_id": null, "length": 119968, "captured": true, "notes": "Virtualization Firmware Configuration Table"},
+      {"signature": "WDDT", "oem_table_id": null, "length": 64, "captured": true, "notes": "Watchdog Timer Description Table"},
+      {"signature": "WSMT", "oem_table_id": null, "length": 40, "captured": true, "notes": "Windows SMM Security Mitigation Table"}
+    ],
+    "total_tables": 33
+  },
+  "unknowns": [
+    {"category": "unknown", "item": "DIMM population (per-channel, per-socket)", "reason": "dmidecode blocked; no sysfs DIMM interface", "relevance": "Memory bandwidth/latency analysis"},
+    {"category": "unknown", "item": "Actual memory speed", "reason": "dmidecode blocked", "relevance": "Memory performance baseline"},
+    {"category": "unknown", "item": "ECC support", "reason": "dmidecode blocked", "relevance": "Memory reliability characterization"},
+    {"category": "unknown", "item": "AVX-specific turbo frequency envelope", "reason": "Intel public docs incomplete for this SKU", "relevance": "Workload frequency behavior analysis"},
+    {"category": "unknown", "item": "TjMax (thermal junction max)", "reason": "Not published for this SKU", "relevance": "Thermal control baseline"},
+    {"category": "unknown", "item": "Actual UPI link speed/width", "reason": "PCIe extended config unreadable", "relevance": "Inter-socket bandwidth characterization"},
+    {"category": "unknown", "item": "Actual PCIe link speeds (LnkSta)", "reason": "PCIe extended config unreadable", "relevance": "Endpoint bandwidth characterization"},
+    {"category": "unknown", "item": "DSDT/SSDT AML content", "reason": "No disassembly performed (Step 1)", "relevance": "ACPI analysis (Step 3+)"},
+    {"category": "unknown", "item": "OEM1/OEM2/OEM4 table purposes", "reason": "No disassembly performed (Step 1)", "relevance": "Platform policy identification"},
+    {"category": "unknown", "item": "SVOS table purpose", "reason": "Vendor-specific, no public reference", "relevance": "Unknown"}
+  ],
+  "conflicts": [],
+  "audit_completeness": {
+    "completed": ["platform_identity", "cpu_identity_topology", "cpu_frequency_capability", "cpu_power_thermal", "cpu_performance_control", "numa", "pci_io", "firmware_acpi", "external_sources", "unknowns_conflicts"],
+    "partial": [
+      {"domain": "memory_dimm_details", "reason": "dmidecode blocked"},
+      {"domain": "cpu_power_limits_pl1_pl2", "reason": "Not observable from userspace"},
+      {"domain": "cpu_avx_turbo_envelope", "reason": "Intel public documentation incomplete"},
+      {"domain": "pci_link_negotiated_speeds", "reason": "No elevated privileges for PCIe extended config"},
+      {"domain": "dsdt_ssdt_content", "reason": "No disassembly"}
+    ],
+    "deferred_to_step_2": [
+      "active_cpu_governor",
+      "turbo_policy",
+      "hwp_epp_values",
+      "power_limits_msr",
+      "cstate_residency",
+      "scheduler_policy",
+      "irq_distribution",
+      "runtime_pm_aspm_policy",
+      "sysctl_values",
+      "thermal_values"
+    ]
+  },
+  "handoff_to_step_2": {
+    "stable_facts": [
+      "Platform: HUANANZHI X11D-16D, dual Intel Sky Lake-E, BIOS AMI 5.14 (2024-10-19)",
+      "CPU: 2x Xeon Gold 6248, 20C/40T per socket, 80 logical CPUs, base 2.5GHz, turbo 3.2GHz all-core",
+      "NUMA: 2 nodes; node0(socket 0, CPUs 0-19,40-59); node1(socket 1, CPUs 20-39,60-79)",
+      "Memory: ~192 GiB total; ~96 GiB per node",
+      "PCIe: Dual Sky Lake-E IIO; domains 0000:00, 0000:17, 0000:5d, 0000:80, 0000:85, 0000:af, 0000:d8, 0000:ae, 0000:d7",
+      "GPUs: 2x Vega 20 (1002:73a0) on node 1",
+      "NVMe: MAXIO MAP1202 on node 0",
+      "NICs: 2x Intel I210 on node 0",
+      "IOMMU: Intel VT-d scalable mode enabled",
+      "ACPI: 33 tables; DSDT 1.6MiB; FACP rev 6; SRAT, SLIT, DMAR, MCFG, APIC, HPET",
+      "intel_pstate: active (driver mode); HWP not active"
+    ],
+    "gaps_preserved": [
+      "DIMM population/speed/ECC — unknown",
+      "PCIe negotiated link speeds — unknown",
+      "CPU AVX turbo envelope — partially documented",
+      "TjMax — unknown",
+      "Power limits PL1/PL2 — unknown",
+      "DSDT/SSDT content — unknown"
+    ],
+    "evidence_references": [
+      "EVID-006 (ACPI table inventory)",
+      "EVID-007 (ACPI table headers)",
+      "EVID-014 (DMAR IOMMU enumeration)",
+      "ACPI captures in /home/viktor/LLM/Projects/Platform-Compiler-for-Linux/ACPI/",
+      "EVID-004/EVID-005 (PCI device inventory)",
+      "EVID-013 (NUMA distance matrix: 10 21 / 21 10)"
+    ]
+  },
+  "final_audit_statement": {
+    "platform_identified_sufficiently_for_step_2": true,
+    "most_important_unresolved_gaps": [
+      "DIMM population/speed/ECC (dmidecode blocked)",
+      "PCIe negotiated link speeds (no elevated privileges)",
+      "CPU AVX turbo envelope (Intel docs incomplete)",
+      "TjMax (not published)"
+    ],
+    "source_conflicts": "None identified",
+    "no_diagnosis_or_materialization": true
+  }
+}
