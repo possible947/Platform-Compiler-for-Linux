@@ -6,6 +6,21 @@ of Intel CPUs, Linux, or the named TuneD profiles. Test conditions, workload,
 measurement tooling, and profile state may differ; repeat measurements under a
 controlled common protocol before drawing causal conclusions.
 
+## Observation history
+
+The operator reports approximately three months of observation using Ubuntu
+and Fedora, system tools, and a purpose-built CPU monitor using the Intel PCM
+library. The monitor source and its integration have not been evaluated in
+this repository. A Hackintosh installation using macOS 12 and identifying as
+MacPro7,1 was also prepared, run, and briefly tested as a comparison.
+
+The operator cannot provide the original measurement data for these
+observations. The descriptions and approximate values in this document are
+operator-reported evidence, not reproducible measurement artifacts; the
+specific operating conditions and tools for each value are not established.
+The macOS comparison does not establish a cause or an equivalent controlled
+Linux/macOS workload comparison.
+
 ## Hyper-Threading disabled
 
 The operator reports that disabling HT in firmware restores or substantially
@@ -69,3 +84,16 @@ The available captured inventory is
 with machine-readable questionnaire, report, sources, and run metadata beside
 it. The inventory was captured separately from the operator measurements
 above; do not infer those measurements from the inventory.
+
+The inventory is a candidate with unresolved fields, not a fully verified
+platform specification. Its Markdown report and JSON summary report 26
+unavailable items, while the Markdown unresolved list and run metadata also
+refer to 25; `required_unavailable` in the run metadata may be a different
+count. The timestamps in the Markdown report, JSON report, and run metadata
+differ, without an explanation in the stored artifacts. The report lists
+CPU.032 (TjMax) both as derived and as unavailable. It also labels several
+firmware cross-checks consistent while stating that ACPI table contents were
+unreadable; those cross-checks need their independent source evidence verified.
+The repository includes source descriptions but not the corresponding raw
+captures. Do not treat these affected claims as independently verified until
+their provenance and status are resolved.
