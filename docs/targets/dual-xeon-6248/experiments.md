@@ -3,6 +3,43 @@
 Concise current backlog and history. These are investigations, not accepted
 causal conclusions.
 
+## Workloads and automation
+
+The operator reports using the following workloads in later observations;
+their original measurement artifacts are not available:
+
+- **Target parallel video encoder:** a Pascal project using a custom FFmpeg
+  built on the target for the target, and custom SVT-HEVC adapted for modern
+  Intel architectures without AVX-512. This is the principal intended use:
+  maximize useful use of available resources under high to very high load.
+  The encoder has its own `numactl` and CPU affinity settings.
+- **HandBrake:** a comparison workload used to observe how a tool without
+  target-specific optimization manages its own resources. HandBrakeCLI is a
+  candidate for automated execution; do not assume its behavior is identical
+  to the GUI without verification.
+- **llama.cpp:** built on the target, with CPU-only, GPU-only, and CPU+GPU
+  inference. `llama-cli` is a candidate for automated execution.
+
+The encoder exposes a library with three inputs: working directory, input file,
+and preset. The operator describes it as a predictable CPU, memory, and I/O
+load source; its own NUMA and affinity behavior must be preserved. The
+operator reports more than 200 hours of encoder testing and a design
+requirement for no more than 0.1% variation in the encoder's analysis and
+quality metrics, with stable segment output and synchronization. That
+threshold has not been verified under defined conditions; it is not a
+platform-measurement tolerance. These claims do not establish the variability
+of platform measurements under controlled experimental conditions. Checking
+encoded output or quality is not part of the analyzer's task.
+
+Plan automated execution of explicitly selected scenarios through an
+orchestrator, separate from measurement and policy selection. Record workload
+parameters, component and preset versions, completion, timing, and errors
+alongside the analyzer artifacts. Compare repeated runs under recorded system
+and cache conditions; preserve the same scenario definitions for baseline and
+verification. Study the existing PCM monitor and encoder library before
+choosing their integration, including counter conflicts and process isolation.
+No existing integration is assumed.
+
 ## Priority experiments
 
 - Expand TuneD inheritance and produce effective parameter/state diffs for

@@ -31,6 +31,9 @@ policy effects.
 - **Platform Analyzer/Recorder** measures shared-resource behavior under
   controlled workloads using Intel PCM and verified hardware interfaces; see
   [its component document](platform-analyzer.md).
+- **Experiment orchestrator** runs explicitly defined workload scenarios and
+  coordinates their measurement and artifact collection. It does not choose
+  or change platform policies or infer causes automatically.
 - **Policy experiment/effect matrix** records profile sources, effective
   parameters, observed state, workload results, and confidence without
   converting correlation into causation prematurely.
@@ -45,6 +48,12 @@ policy effects.
 
 The required outputs and transformation boundaries are specified in
 [MATERIALIZATION.md](MATERIALIZATION.md).
+
+Automated execution of a defined workload is separate from autonomous tuning.
+The orchestrator may start approved workload processes or integrations, while
+the analyzer records their behavior. Neither may change platform policy as a
+side effect of an experiment. User-controlled, privileged setup remains
+separate; agents do not perform privileged operations.
 
 ## Coupled hardware domains
 

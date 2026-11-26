@@ -25,6 +25,11 @@ machine-specific requirements. See the [target requirements](docs/targets/dual-x
 and [observations](docs/targets/dual-xeon-6248/observations.md).
 Its objectives include memory-aware NUMA placement and investigation of
 storage caching and I/O behavior for the actual devices and workloads.
+Planned experiments include an automatically orchestrated target video encoder,
+HandBrake, and llama.cpp; see the [experiment backlog](docs/targets/dual-xeon-6248/experiments.md).
+Before implementing their integration, inspect the operator's existing Intel
+PCM monitor and encoder library and evaluate how they can be reused. Their
+availability and integration are not established by this repository.
 
 ## Current non-goals
 
