@@ -15,6 +15,7 @@ env/
 .env
 .env.*
 !.env.example
+/analyzer/third_party/pcm/**/xcuserdata/
 
 # Local workspaces and target-machine data
 /.workspace/

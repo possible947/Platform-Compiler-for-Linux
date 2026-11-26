@@ -1,13 +1,16 @@
 # Platform Analyzer / Recorder
 
-The Platform Analyzer/Recorder is the planned hardware-centered measurement
-component for controlled platform-policy experiments. Its implementation
-direction is compiled C/C++, using Intel PCM as its primary measurement source
-and verified direct hardware interfaces where necessary. PCM availability and
-the actual version must be established in the implementation environment.
-Hardware performance-counter access may require privileges;
-agents do not perform privileged operations, and root operations are performed
-manually by the user.
+The Platform Analyzer/Recorder is the hardware-centered measurement component
+for controlled platform-policy experiments. The first implementation stage is
+complete for Linux CPU/RAPL and restricted PCM core measurements. The compiled
+C++ recorder, tested PCM version, target results, and remaining stages are
+described in the [analyzer README](../analyzer/README.md). Further measurement
+domains require verification on the target; the first stage does not implement
+the full measurement plan below.
+
+Hardware performance-counter access may require privileges; agents do not
+perform privileged operations, and root operations are performed manually by
+the user.
 
 The analyzer is not Python-based, an LLM component, or a tuner. It captures
 measurements; later analysis attributes causes and policy effects.
@@ -30,11 +33,11 @@ manages its own NUMA and CPU affinity settings. The experiment must not
 override those settings. Output-file or encoding-quality verification is not
 an analyzer task.
 
-Before choosing an integration, inspect the operator's existing Intel PCM
-monitor and encoder library. Evaluate reuse of the monitor as a process or
-library versus reuse of its proven techniques, including counter ownership,
-conflicts, permissions, and measurement overhead. Compare an encoder library
-integration with process isolation; neither integration is assumed to exist.
+Use the operator's existing CPU monitor as a reference for measurement sources
+and proven techniques, including counter ownership, conflicts, permissions,
+and overhead; it is not an analyzer runtime dependency. Inspect the encoder
+library and compare its integration with process isolation; neither
+integration is assumed to exist.
 See the [target experiments](targets/dual-xeon-6248/experiments.md).
 
 ## Required scenarios
@@ -67,9 +70,9 @@ the measurement plan covers:
 
 Intel PCM is capable of exposing CPU performance/energy, memory bandwidth,
 NUMA local/remote accesses, cache-related metrics, PCIe/IIO traffic, and
-interconnect-related metrics. The chosen version's actual APIs and tools are
-the implementation source of truth when implementation begins; unsupported
-metrics must not be invented.
+interconnect-related metrics. The selected version's actual APIs and tools are
+the implementation source of truth; capabilities outside the implemented core
+scope must be verified before use. Unsupported metrics must not be invented.
 
 ## Output boundary
 
@@ -86,8 +89,9 @@ The planned experiment artifacts should retain:
 
 Record unavailable information explicitly, rather than fabricating it.
 Experiment artifacts can contain sensitive paths or other identifying data;
-keep them local and review them before sharing. No finalized output schema is
-asserted here.
+keep them local and review them before sharing. The analyzer implements
+versioned schemas for its current limited scope; a complete experiment schema
+is not yet finalized.
 
 > **Analyzer measures. Later analysis attributes causes and policy effects.**
 

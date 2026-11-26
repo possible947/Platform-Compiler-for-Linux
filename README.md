@@ -27,9 +27,8 @@ Its objectives include memory-aware NUMA placement and investigation of
 storage caching and I/O behavior for the actual devices and workloads.
 Planned experiments include an automatically orchestrated target video encoder,
 HandBrake, and llama.cpp; see the [experiment backlog](docs/targets/dual-xeon-6248/experiments.md).
-Before implementing their integration, inspect the operator's existing Intel
-PCM monitor and encoder library and evaluate how they can be reused. Their
-availability and integration are not established by this repository.
+The operator's CPU monitor and encoder library have been inspected as local
+references, but neither is an integrated dependency of this repository.
 
 ## Current non-goals
 
@@ -55,6 +54,8 @@ remediation layer, not the center of the optimization model.
 - [TuneD policy research](docs/tuned-policy-research.md) - profile comparison
   and experimental method.
 - [Platform Analyzer](docs/platform-analyzer.md) - workload measurement role.
+- [Analyzer implementation](analyzer/README.md) - completed first stage,
+  validation results, and planned measurement stages.
 - [Platform Control Tester](docs/platform-control-tester.md) - configured-state
   verification role.
 - [Dual Xeon Gold 6248 target](docs/targets/dual-xeon-6248/requirements.md) -

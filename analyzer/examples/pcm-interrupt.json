@@ -1,0 +1,10 @@
+{
+  "run_id": "pcm-interruption-test",
+  "scenario": "IDLE",
+  "interval_ms": 1000,
+  "duration_ms": 30000,
+  "cpu_required": true,
+  "rapl_required": true,
+  "pcm_enabled": true,
+  "pcm_required": true
+}
