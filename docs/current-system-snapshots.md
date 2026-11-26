@@ -1,5 +1,11 @@
 # Read-only current-system snapshots
 
+This collector records a point-in-time, read-only view of OS-visible platform
+interfaces. It is not the workload-measuring Platform Analyzer and is not by
+itself a complete Platform Control Tester result. See the distinct roles in
+[Platform Control Tester](platform-control-tester.md) and
+[Platform Analyzer](platform-analyzer.md).
+
 Initialize an external workspace once, then capture the currently running Linux
 environment:
 
