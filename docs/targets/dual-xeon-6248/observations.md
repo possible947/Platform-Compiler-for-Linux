@@ -1,0 +1,56 @@
+# Dual Xeon Gold 6248 Target Observations
+
+The values below are approximate developer/operator measurements on the
+specific target in referenced experiments. They are not universal properties
+of Intel CPUs, Linux, or the named TuneD profiles. Test conditions, workload,
+measurement tooling, and profile state may differ; repeat measurements under a
+controlled common protocol before drawing causal conclusions.
+
+## Hyper-Threading disabled
+
+The operator reports that disabling HT in firmware restores or substantially
+improves expected CPU operating steps in tested inference workloads:
+
+- Referenced non-AVX-512 CPU inference: approximately ratio 32 / 3200 MHz.
+- Referenced AVX-512 CPU inference: approximately ratio 25 / 2500 MHz.
+- Referenced socket power: approximately 125/130 W.
+- Temperature: below approximately 55 C using the developer's
+  hardware-oriented monitor.
+- Socket loading was observed to be more even.
+
+These observations support the separate hard BIOS requirement; they are not a
+general scheduling rule or a guarantee for other workloads.
+
+The stored platform inventory reports HT enabled (two threads per core, 80
+logical CPUs) in its point-in-time capture. That inventory is a separate
+platform-state snapshot, not evidence that the required HT-off state is
+currently applied; see the linked [inventory report](../../../preparation/x11d-16d-dual-xeon-g6248/step-01-platform-specification/report.md).
+
+## TuneD profile observations
+
+| Profile/reference | Target observation |
+| --- | --- |
+| `hpc-compute` | Idle approximately 70-75 W per socket. Under heavy CPU load, package power reached approximately 160 W/socket with die temperature around 60 C. Observed/configured behavior disabled automatic NUMA balancing / unwanted memory migration. The system remained more usable under saturation than with `accelerator-performance`, though some multimedia work could still fail or starve. |
+| `accelerator-performance` | Idle approximately 45-55 W/socket. CPU-inference comparison showed higher operating points, including approximately 3500/2800 MHz. Severe collateral degradation under CPU saturation included poor NVMe throughput and UI responsiveness. |
+| Target-installed Intel C-state-oriented performance profile | Idle approximately 35-37 W/socket. Observed CPU performance was modestly lower than `hpc-compute`, with better observed peripheral/system balance. Candidate reference/donor for peripheral and platform-efficiency behavior. Exact profile name is target-local and not asserted here. |
+
+These are observed associations, not proven parameter-level causes. Profile
+inheritance and effective settings must be expanded; see
+[TuneD policy research](../../tuned-policy-research.md).
+
+## NUMA and memory
+
+The stored target inventory reports two NUMA nodes with memory on both nodes.
+It is a topology capture, not a controlled comparison of inference speed,
+power, or thermal behavior under explicit NUMA placement. No quantitative
+NUMA-related performance claim is promoted here without a measurement artifact
+establishing that result. Characterize explicit placement in the target
+[experiment backlog](experiments.md).
+
+## Evidence artifact
+
+The available captured inventory is
+[`report.md`](../../../preparation/x11d-16d-dual-xeon-g6248/step-01-platform-specification/report.md),
+with machine-readable questionnaire, report, sources, and run metadata beside
+it. The inventory was captured separately from the operator measurements
+above; do not infer those measurements from the inventory.

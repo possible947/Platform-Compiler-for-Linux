@@ -1,4 +1,7 @@
-# ADR-001: LLM Inference Architecture
+# Historical ADR-001: LLM Inference Architecture
+
+> **Status:** Superseded historical proposal. Production LLM inference is not
+> part of the current architecture. See `docs/ARCHITECTURE.md` and ADR-003.
 
 - **Status:** Proposed / Initial Baseline
 - **Decision Type:** Architecture

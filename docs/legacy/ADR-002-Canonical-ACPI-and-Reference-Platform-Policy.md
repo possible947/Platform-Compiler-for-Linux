@@ -1,4 +1,8 @@
-# ADR-002: Canonical ACPI and Reference Platform Policy
+# Historical ADR-002: Canonical ACPI and Reference Platform Policy
+
+> **Status:** Superseded historical proposal. ACPI remains a possible evidence
+> and remediation layer, not the current optimization architecture. See
+> `docs/ARCHITECTURE.md` and ADR-003.
 
 - **Status:** Proposed / Initial Implementation Baseline
 - **Decision Type:** Architecture

@@ -1,4 +1,8 @@
-# Platform Compiler Preparation Protocol v1
+# Historical Platform Compiler Preparation Protocol v1
+
+> **Status:** Superseded experimental preparation workflow. It is retained for
+> context only and is not current agent or implementation guidance. The
+> associated obsolete prompts were deleted. See `docs/ARCHITECTURE.md`.
 
 ## 1. Purpose
 

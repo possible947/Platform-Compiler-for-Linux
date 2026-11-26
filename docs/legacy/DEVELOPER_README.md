@@ -1,7 +1,13 @@
+# Historical developer guide: superseded architecture
+
+> **Status:** Historical. This guide contains superseded production LLM,
+> scheduler, and ACPI-centered plans. It is not normative; see the current
+> repository README and `docs/ARCHITECTURE.md`.
+
 # Platform Compiler for Linux: Developer Guide, Project Philosophy, and First-Platform Objectives
 
-> **Document status:** Initial developer baseline  
-> **Intended audience:** contributors, reviewers, platform engineers, and LLM agents working on the repository  
+> **Document status:** Initial developer baseline
+> **Intended audience:** contributors, reviewers, platform engineers, and LLM agents working on the repository
 > **Related architecture records:** ADR-001 (LLM Inference and Runtime Investigation), ADR-002 (Canonical ACPI and Reference Platform Policy)
 
 ## 1. Purpose of This Document
