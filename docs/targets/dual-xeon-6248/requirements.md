@@ -24,6 +24,31 @@ This document records **requirements**, not measured outcomes. See
 - Derive the target TuneD profile from effective parameters and measured
   effects, not by blindly merging profile files.
 
+## Memory and storage objectives
+
+- Adapt memory policy to the target's uneven memory topology and access costs.
+  Investigate prioritizing faster memory for suitable workloads and using
+  slower memory appropriately, based on measured locality and capacity; do not
+  assume fixed tiers or a placement policy before characterization.
+- Minimize memory use that does not help the target workloads, including
+  avoidable storage-cache and read-ahead pressure, while preserving useful
+  performance, responsiveness, and data integrity.
+- Investigate reducing or avoiding read and write caching for SSD workloads
+  where measurement supports it, limiting excessive read-ahead, and tuning
+  block I/O parameters for memory efficiency. Distinguish application,
+  filesystem, kernel, and device caching and use only controls applicable to
+  the measured layer; do not assume all caching can or should be disabled.
+- Consider filesystem mount options and `/etc/fstab` where justified. Account
+  for the target's Btrfs SSDs and XFS rotating disks separately, and verify
+  effective settings, workload effects, and safe rollback.
+- Evaluate the planned Intel Optane NVMe separately after installation, using
+  its actual device and workload behavior rather than transferring results
+  from the current NVMe.
+- Consider both uneven memory and atypical streaming video workloads as
+  candidate explanations for memory and I/O behavior. In particular, include
+  segment encoders reading ProRes and writing raw HEVC in the investigation.
+  Neither is an established cause without controlled evidence.
+
 The existing target inventory describes the captured platform topology in
 [`preparation/x11d-16d-dual-xeon-g6248/step-01-platform-specification/report.md`](../../../preparation/x11d-16d-dual-xeon-g6248/step-01-platform-specification/report.md).
 It is evidence for observed inventory, not a current policy specification.

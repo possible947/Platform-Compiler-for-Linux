@@ -29,12 +29,17 @@ runtime policy through native mechanisms, including:
 - CPU groups, priorities, and affinity where required;
 - IRQ and device locality;
 - PCIe/I/O policy;
+- filesystem mount options, including `/etc/fstab`, where justified;
 - sysctl settings and boot parameters;
 - service/systemd configuration;
 - other verified kernel or system mechanisms.
 
 Only settings with a defined requirement and verification method should be
-materialized.
+materialized. For memory and storage policy, identify the affected cache or
+I/O layer and device, preserve data-integrity requirements, and record the
+original configuration and rollback procedure. Filesystem and block-device
+settings must be verified in their effective state, not just in configuration
+files.
 
 ## Custom TuneD profile
 
