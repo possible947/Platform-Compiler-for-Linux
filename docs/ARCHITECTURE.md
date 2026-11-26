@@ -62,6 +62,23 @@ temperature. The target-level concept [Platform Readiness Cost](#platform-readin
 captures resources spent maintaining responsiveness/performance before or
 alongside useful work.
 
+## Memory and storage policy
+
+Memory capacity and access costs can be uneven across a target's topology.
+Characterize the actual topology and workloads before assigning priority to
+faster and slower memory or choosing NUMA placement and migration policies.
+Reduce memory consumption that does not benefit the target workloads without
+assuming that all cache or reclaimable memory is waste.
+
+Storage caching, read-ahead, writeback, and block-device settings are
+workload- and device-specific candidates for measurement, not universal
+settings. Filesystems and the Linux page cache interact: using Btrfs or XFS
+does not by itself bypass the page cache or make write caching unnecessary.
+Compare memory savings with throughput, latency, responsiveness, and data
+integrity before accepting a change. Mount options and `/etc/fstab` are
+possible system-configuration inputs, subject to the same evidence and
+verification requirements.
+
 ## Platform Readiness Cost
 
 **Platform Readiness Cost** is the package/system resource cost required to

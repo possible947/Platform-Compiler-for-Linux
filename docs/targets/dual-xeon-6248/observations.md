@@ -47,6 +47,21 @@ NUMA-related performance claim is promoted here without a measurement artifact
 establishing that result. Characterize explicit placement in the target
 [experiment backlog](experiments.md).
 
+## Operator-described storage and workload context
+
+The operator describes Btrfs on SSDs and XFS on rotating disks. The current
+inexpensive 1 TB NVMe holds projects, LLM model files, and temporary video
+processing files. A future Intel Optane NVMe is intended to replace it; the
+operator expects sustained read/write speed independent of drive occupancy
+and sees little need to cache it for these uses. The replacement and expected
+behavior are not measurements of the current target or a verified cache
+policy.
+
+An atypical workload uses segment encoders that read ProRes and write raw
+HEVC. The operator proposes this workload, alongside uneven memory topology,
+as a candidate explanation for memory and I/O behavior. These are hypotheses
+to investigate, not established causes.
+
 ## Evidence artifact
 
 The available captured inventory is

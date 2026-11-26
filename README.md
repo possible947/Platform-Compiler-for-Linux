@@ -23,6 +23,8 @@ Measure
 The first target is a dual-socket Xeon Gold 6248 system with explicit
 machine-specific requirements. See the [target requirements](docs/targets/dual-xeon-6248/requirements.md)
 and [observations](docs/targets/dual-xeon-6248/observations.md).
+Its objectives include memory-aware NUMA placement and investigation of
+storage caching and I/O behavior for the actual devices and workloads.
 
 ## Current non-goals
 
