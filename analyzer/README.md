@@ -204,6 +204,35 @@ overwriting prior runs, use restrictive file permissions, and make any
 partial artifacts identifiable. Artifacts may contain sensitive local paths
 or identifying information: keep them local and review before sharing.
 
+## Memory / UPI / IIO resource mode
+
+The resource mode is a fixed-window hardware-recorder mode for the
+`idle`, `cpu`, `gpu`, and `cpu-gpu` scenarios:
+
+```sh
+analyzer/build/analyzer record --scenario idle --duration 60 --output /path/s0
+analyzer/build/analyzer record --scenario cpu --duration 60 --output /path/s1
+analyzer/build/analyzer record --scenario gpu --duration 60 --output /path/s2
+analyzer/build/analyzer record --scenario cpu-gpu --duration 60 --output /path/s3
+```
+
+If PCM requires root, run the four commands above with `sudo env
+PCM_KEEP_NMI_WATCHDOG=1`; the operator starts and stabilizes workloads. The
+recorded artifact is `resource.json`. Optional externally supplied fields may
+include encoder fps, inference tokens/s, NVMe MB/s and an operator note.
+
+Compare the four artifacts:
+
+```sh
+analyzer/build/analyzer compare --idle /path/s0/resource.json --cpu /path/s1/resource.json --gpu /path/s2/resource.json --cpu-gpu /path/s3/resource.json --output /path/resource-delta.json
+```
+
+The comparison is a resource delta matrix. It has no performance score,
+bottleneck classification or recommendation.
+
+See [CAPABILITY-AUDIT.md](CAPABILITY-AUDIT.md) for the exact PCM APIs and
+metric classifications used by this mode.
+
 ## Validation and remaining work
 
 Tests cover delta calculations, fake Linux sources, output and config checks,

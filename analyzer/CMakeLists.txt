@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(platform_analyzer VERSION 0.2.0 LANGUAGES CXX)
+project(platform_analyzer VERSION 0.3.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -8,26 +8,37 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(SYSTEMD REQUIRED IMPORTED_TARGET libsystemd>=254)
 
-add_library(analyzer_core src/summary/deltas.cpp src/collectors/linux.cpp)
+add_library(analyzer_core src/summary/deltas.cpp src/collectors/linux.cpp src/resource/resource_types.cpp)
 target_include_directories(analyzer_core PUBLIC src)
 target_compile_options(analyzer_core PRIVATE -Wall -Wextra -Wpedantic)
 
 set(ANALYZER_PCM_LIBRARY "" CACHE FILEPATH "PCM static library built from this project's modified source")
 if(ANALYZER_PCM_LIBRARY)
 	find_package(Threads REQUIRED)
-	target_sources(analyzer_core PRIVATE src/collectors/pcm.cpp)
+	target_sources(analyzer_core PRIVATE
+		src/collectors/pcm.cpp
+		src/collectors/resource_pcm.cpp
+		third_party/pcm/src/pcm-iio-pmu.cpp
+		third_party/pcm/src/pcm-iio-topology.cpp)
 	target_include_directories(analyzer_core PRIVATE third_party/pcm/src)
 	target_link_libraries(analyzer_core PUBLIC "${ANALYZER_PCM_LIBRARY}" Threads::Threads)
 else()
-	target_sources(analyzer_core PRIVATE src/collectors/pcm_unavailable.cpp)
+	target_sources(analyzer_core PRIVATE
+		src/collectors/pcm_unavailable.cpp
+		src/collectors/resource_pcm_unavailable.cpp)
 endif()
+
+add_executable(test_resource tests/test_resource.cpp src/comparison/resource_comparison.cpp)
+target_link_libraries(test_resource PRIVATE analyzer_core PkgConfig::SYSTEMD)
+target_compile_options(test_resource PRIVATE -UNDEBUG)
+add_test(NAME resource_milestone COMMAND test_resource)
 
 add_library(analyzer_session src/session/session.cpp)
 target_link_libraries(analyzer_session PUBLIC analyzer_core PkgConfig::SYSTEMD)
 target_compile_definitions(analyzer_session PRIVATE ANALYZER_VERSION="${PROJECT_VERSION}")
 target_compile_options(analyzer_session PRIVATE -Wall -Wextra -Wpedantic)
-add_executable(analyzer src/cli/main.cpp)
-target_link_libraries(analyzer PRIVATE analyzer_session)
+add_executable(analyzer src/cli/main.cpp src/cli/resource_record.cpp src/comparison/resource_comparison.cpp)
+target_link_libraries(analyzer PRIVATE analyzer_session analyzer_core)
 target_compile_options(analyzer PRIVATE -Wall -Wextra -Wpedantic)
 add_executable(pmu-perf-check src/cli/pmu_perf_check.cpp)
 target_link_libraries(pmu-perf-check PRIVATE analyzer_core)
