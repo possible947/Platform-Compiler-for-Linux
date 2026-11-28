@@ -1,10 +1,50 @@
-# Analyzer Artifact Contract v1 and v2
+# Analyzer Artifact Contract v1 through v4
 
-This document describes the current CPU/RAPL recorder, not a complete
-experiment or policy-state schema. Artifacts remain local and may contain
-sensitive operator-supplied metadata. No schema migration is implemented.
+Artifacts remain local and may contain sensitive paths, model identity, and
+operator-supplied metadata. No schema migration is implemented. The v4 batch
+contract is the principal workflow; the configuration sections below retain
+the v1/v2 compatibility recorder contract.
 
-## Configuration
+## v4 batch
+
+The canonical command accepts `--scenario`, `--model`, `--output`, and an
+optional `--duration`. Scenario values are `all`, `idle`, `cpu`,
+`cpu-numactl`, `gpu`, `gpu-numactl`, `cpu-gpu`, and `cpu-gpu-numactl`.
+`all` expands to the six workload variants plus `idle` in the documented
+order. `--duration` bounds only idle; workload recording ends at actual child
+completion, interruption, or failure.
+
+| Path | Contents |
+| --- | --- |
+| `batch-manifest.json` | Schema 4, requested scenario, expansion, model, prompt, idle duration, final status and scenario exit codes |
+| `<scenario>/manifest.json` | Scenario status, PCM status, optional-source failures, sample counts |
+| `<scenario>/resource.json` | Unified PCM/resource schema 3 record with per-core PCM, memory, NUMA, UPI, IIO, GPU topology, L3 and limitations |
+| `<scenario>/measurements.jsonl` | Raw `/proc/stat` and Linux RAPL samples with availability and timestamps |
+| `<scenario>/events.jsonl` | Initialization, workload-start, and measurement-finished boundaries |
+| `<scenario>/summary.json` | Stage-one sample count and bounded first/last CPU/RAPL observations |
+| `<scenario>/workloads.json` | Exact argv/command, PID, start/end clocks, exit code and orchestrator termination state |
+| `<scenario>/{cpu,gpu}.stdout` and `.stderr` | Child output captured verbatim |
+
+The batch directory must be absent or empty. PCM initialization happens before
+workload creation. If PCM is unavailable, a scenario failure manifest and
+resource artifact are retained and no workload is started. CPU/RAPL source
+failures produce `partial` when PCM and workload completion otherwise succeed.
+Process or PCM failures produce `failed`; signals produce `interrupted`.
+
+Default CPU and HIP llama.cpp argv is `-m MODEL -p PROMPT`. A numactl scenario
+adds `-numa numactl`; a combined scenario starts both children concurrently.
+The fixed prompt is `show me detailed descriptions about C programing language`.
+When the analyzer is root, children must be dropped to `SUDO_UID`/`SUDO_GID`.
+The command never escalates privileges itself. Raw measurements and process
+observations do not imply application-quality or bottleneck conclusions.
+
+`resource.json` preserves the v3 field names but is measured by the v4 workload
+lifecycle. Its `core_pcm` array contains logical CPU `instructions` and
+`cycles`. The fixed duration is replaced with the actual monotonic interval
+for workload scenarios. IIO values are stack-level unless topology establishes
+a narrower endpoint mapping.
+
+## Legacy v1/v2 configuration
 
 The input is one JSON object. Unknown or repeated top-level keys are rejected.
 

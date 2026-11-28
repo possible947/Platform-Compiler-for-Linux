@@ -185,6 +185,18 @@ bool load_resource_record(const std::string &path, ResourceRecord &record) {
         }
     }
 
+    sd_json_variant *core_pcm = member(root, "core_pcm");
+    if (core_pcm && sd_json_variant_is_array(core_pcm)) {
+        for (size_t i = 0; i < sd_json_variant_elements(core_pcm); ++i) {
+            sd_json_variant *item = sd_json_variant_by_index(core_pcm, i);
+            CorePcmTraffic value;
+            value.cpu = static_cast<uint32_t>(unsigned_number(item, "cpu"));
+            value.instructions = unsigned_number(item, "instructions");
+            value.cycles = unsigned_number(item, "cycles");
+            record.core_pcm.push_back(value);
+        }
+    }
+
     sd_json_variant *metadata = member(root, "workload_metadata");
     if (metadata) {
         record.workload_metadata.encoder_fps = number(metadata, "encoder_fps", -1.0);
@@ -249,6 +261,23 @@ ResourceComparison compare_four_resource_runs(const ResourceRecord &idle,
     for (const auto &stack : cpu.iio) cpu_values["iio.socket." + std::to_string(stack.socket) + ".stack." + std::to_string(stack.stack) + ".inbound_dma_write"] = {stack.inbound_dma_write_bytes_per_second};
     for (const auto &stack : gpu.iio) gpu_values["iio.socket." + std::to_string(stack.socket) + ".stack." + std::to_string(stack.stack) + ".inbound_dma_write"] = {stack.inbound_dma_write_bytes_per_second};
     for (const auto &stack : cpuGpu.iio) combined_values["iio.socket." + std::to_string(stack.socket) + ".stack." + std::to_string(stack.stack) + ".inbound_dma_write"] = {stack.inbound_dma_write_bytes_per_second};
+
+    for (const auto &core : idle.core_pcm) {
+        idle_values["core.cpu." + std::to_string(core.cpu) + ".instructions"] = {static_cast<double>(core.instructions)};
+        idle_values["core.cpu." + std::to_string(core.cpu) + ".cycles"] = {static_cast<double>(core.cycles)};
+    }
+    for (const auto &core : cpu.core_pcm) {
+        cpu_values["core.cpu." + std::to_string(core.cpu) + ".instructions"] = {static_cast<double>(core.instructions)};
+        cpu_values["core.cpu." + std::to_string(core.cpu) + ".cycles"] = {static_cast<double>(core.cycles)};
+    }
+    for (const auto &core : gpu.core_pcm) {
+        gpu_values["core.cpu." + std::to_string(core.cpu) + ".instructions"] = {static_cast<double>(core.instructions)};
+        gpu_values["core.cpu." + std::to_string(core.cpu) + ".cycles"] = {static_cast<double>(core.cycles)};
+    }
+    for (const auto &core : cpuGpu.core_pcm) {
+        combined_values["core.cpu." + std::to_string(core.cpu) + ".instructions"] = {static_cast<double>(core.instructions)};
+        combined_values["core.cpu." + std::to_string(core.cpu) + ".cycles"] = {static_cast<double>(core.cycles)};
+    }
 
     for (const auto &socket : idle.cache_fabric) idle_values["cache_fabric.socket." + std::to_string(socket.socket) + ".l3_misses"] = {static_cast<double>(socket.l3_misses)};
     for (const auto &socket : cpu.cache_fabric) cpu_values["cache_fabric.socket." + std::to_string(socket.socket) + ".l3_misses"] = {static_cast<double>(socket.l3_misses)};

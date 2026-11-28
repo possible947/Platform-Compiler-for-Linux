@@ -13,6 +13,7 @@
 #include <map>
 #include <set>
 #include <thread>
+#include <tuple>
 #include <unistd.h>
 #include <sys/utsname.h>
 
@@ -119,6 +120,18 @@ ResourcePcmStatus ResourcePcmCollector::start() {
 
 ResourceRecord ResourcePcmCollector::measure(const std::string &scenario, double duration_seconds,
                                               const WorkloadMetadata &metadata) {
+    const auto deadline = std::chrono::steady_clock::now() + std::chrono::duration_cast<std::chrono::steady_clock::duration>(
+        std::chrono::duration<double>(duration_seconds));
+    return measure_until(scenario, duration_seconds, metadata,
+                         [deadline]() { return std::chrono::steady_clock::now() < deadline; }, []() {});
+}
+
+ResourceRecord ResourcePcmCollector::measure_until(const std::string &scenario,
+                                                    double iio_sampling_seconds,
+                                                    const WorkloadMetadata &metadata,
+                                                    const std::function<bool()> &keep_running,
+                                                    const std::function<void()> &on_window,
+                                                    const std::function<void()> &on_measurement_start) {
     ResourceRecord record;
     record.schema_version = "3";
     record.scenario = scenario;
@@ -148,20 +161,8 @@ ResourceRecord ResourcePcmCollector::measure(const std::string &scenario, double
 
     record.pcm_version = PCM_VERSION;
 
-    timespec real_start{}, mono_start{}, real_end{}, mono_end{};
-    clock_gettime(CLOCK_REALTIME, &real_start);
-    clock_gettime(CLOCK_MONOTONIC, &mono_start);
-
-    pcm::SystemCounterState system_before;
-    std::vector<pcm::SocketCounterState> socket_before;
-    std::vector<pcm::CoreCounterState> core_before;
-    monitor->getAllCounterStates(system_before, socket_before, core_before, true);
-    std::vector<pcm::ServerUncoreCounterState> server_before(monitor->getNumSockets());
-    for (uint32_t socket = 0; socket < monitor->getNumSockets(); ++socket)
-        server_before[socket] = monitor->getServerUncoreCounterState(socket);
-
     struct pcm_iio_config iio_config;
-    iio_config.pmu_config.delay = duration_seconds;
+    iio_config.pmu_config.delay = iio_sampling_seconds > 0.0 ? iio_sampling_seconds : 1.0;
     std::filesystem::path pcm_dir = find_pcm_source_dir();
     std::error_code ec;
     const auto original_cwd = std::filesystem::current_path(ec);
@@ -171,6 +172,8 @@ ResourceRecord ResourcePcmCollector::measure(const std::string &scenario, double
 
     bool iio_supported = false;
     std::unique_ptr<PcmIioDataCollector> iio_collector;
+    std::map<std::tuple<uint32_t, uint32_t, std::string>, double> iio_sums;
+    std::map<std::tuple<uint32_t, uint32_t, std::string>, size_t> iio_samples;
     if (!ec && monitor->IIOEventsAvailable()) {
         iio_supported = initializePCIeBWCounters(iio_config.pmu_config);
         if (iio_supported) {
@@ -182,7 +185,6 @@ ResourceRecord ResourcePcmCollector::measure(const std::string &scenario, double
             iio_config.pmu_config.evt_ctx.ctrs.swap(filtered);
             if (!iio_config.pmu_config.evt_ctx.ctrs.empty()) {
                 iio_collector = std::make_unique<PcmIioDataCollector>(iio_config.pmu_config);
-                iio_collector->collectData();
             } else {
                 iio_supported = false;
             }
@@ -192,6 +194,45 @@ ResourceRecord ResourcePcmCollector::measure(const std::string &scenario, double
     }
 
     if (!ec && !pcm_dir.empty()) std::filesystem::current_path(original_cwd);
+
+    timespec real_start{}, mono_start{}, real_end{}, mono_end{};
+    clock_gettime(CLOCK_REALTIME, &real_start);
+    clock_gettime(CLOCK_MONOTONIC, &mono_start);
+    pcm::SystemCounterState system_before;
+    std::vector<pcm::SocketCounterState> socket_before;
+    std::vector<pcm::CoreCounterState> core_before;
+    monitor->getAllCounterStates(system_before, socket_before, core_before, true);
+    std::vector<pcm::ServerUncoreCounterState> server_before(monitor->getNumSockets());
+    for (uint32_t socket = 0; socket < monitor->getNumSockets(); ++socket)
+        server_before[socket] = monitor->getServerUncoreCounterState(socket);
+    if (on_measurement_start) on_measurement_start();
+
+    do {
+        if (iio_collector) {
+            iio_collector->collectData();
+            for (const auto &counter : iio_config.pmu_config.evt_ctx.ctrs) {
+                const std::string direction = normalize_iio_name(counter.h_event_name);
+                if (direction.empty() || counter.data.empty()) continue;
+                const auto &sample = counter.data[0];
+                for (uint32_t socket = 0; socket < sample.size(); ++socket) {
+                    for (uint32_t stack = 0; stack < sample[socket].size(); ++stack) {
+                        uint64_t value = 0;
+                        for (const auto &entry : sample[socket][stack]) {
+                            if (entry.first.first == counter.h_id) value += entry.second;
+                        }
+                        const auto key = std::make_tuple(socket, stack, direction);
+                        iio_sums[key] += static_cast<double>(value);
+                        ++iio_samples[key];
+                    }
+                }
+            }
+        } else {
+            const auto pause = std::chrono::duration_cast<std::chrono::steady_clock::duration>(
+                std::chrono::duration<double>(iio_sampling_seconds));
+            std::this_thread::sleep_for(pause);
+        }
+        on_window();
+    } while (keep_running());
 
     pcm::SystemCounterState system_after;
     std::vector<pcm::SocketCounterState> socket_after;
@@ -209,9 +250,15 @@ ResourceRecord ResourcePcmCollector::measure(const std::string &scenario, double
     record.measurement_start_monotonic_ns = uint64_t(mono_start.tv_sec) * 1000000000ULL + mono_start.tv_nsec;
     record.measurement_end_monotonic_ns = uint64_t(mono_end.tv_sec) * 1000000000ULL + mono_end.tv_nsec;
 
-    const double elapsed = duration_seconds > 0.0 ? duration_seconds :
-        (record.measurement_end_monotonic_ns > record.measurement_start_monotonic_ns
-            ? double(record.measurement_end_monotonic_ns - record.measurement_start_monotonic_ns) / 1e9 : 0.0);
+    const double elapsed = record.measurement_end_monotonic_ns > record.measurement_start_monotonic_ns
+        ? double(record.measurement_end_monotonic_ns - record.measurement_start_monotonic_ns) / 1e9 : 0.0;
+
+    for (uint32_t core = 0; core < monitor->getNumCores(); ++core) {
+        if (!monitor->isCoreOnline(core)) continue;
+        record.core_pcm.push_back({core,
+            pcm::getInstructionsRetired(core_before[core], core_after[core]),
+            pcm::getCycles(core_before[core], core_after[core])});
+    }
 
     for (uint32_t socket = 0; socket < monitor->getNumSockets(); ++socket) {
         SocketMemoryTraffic memory;
@@ -249,8 +296,8 @@ ResourceRecord ResourcePcmCollector::measure(const std::string &scenario, double
         numa.socket = socket;
         for (uint32_t core = 0; core < monitor->getNumCores(); ++core) {
             if (monitor->getSocketId(core) == static_cast<int32_t>(socket)) {
-                numa.local_memory_bytes += pcm::getLocalMemoryBW(core_before[core], core_after[core]);
-                numa.remote_memory_bytes += pcm::getRemoteMemoryBW(core_before[core], core_after[core]);
+                numa.local_memory_bytes += static_cast<double>(pcm::getLocalMemoryBW(core_before[core], core_after[core])) * 1024.0 * 1024.0;
+                numa.remote_memory_bytes += static_cast<double>(pcm::getRemoteMemoryBW(core_before[core], core_after[core])) * 1024.0 * 1024.0;
             }
         }
         const double ratio = pcm::getLocalMemoryRequestRatio(socket_before[socket], socket_after[socket]);
@@ -294,22 +341,17 @@ ResourceRecord ResourcePcmCollector::measure(const std::string &scenario, double
                 traffic.socket = socket.socket_id;
                 traffic.stack = stack.iio_unit_id;
                 traffic.name = stack.stack_name;
-                for (const auto &counter : iio_config.pmu_config.evt_ctx.ctrs) {
-                    if (!counter.data.empty()) {
-                        const auto &sample = counter.data[0];
-                        uint64_t sum = 0;
-                        if (socket.socket_id < sample.size() && stack.iio_unit_id < sample[socket.socket_id].size()) {
-                            for (const auto &entry : sample[socket.socket_id][stack.iio_unit_id]) {
-                                if (entry.first.first == counter.h_id) sum += entry.second;
-                            }
-                        }
-                        const std::string name = normalize_iio_name(counter.h_event_name);
-                        if (name == "inbound_dma_read") traffic.inbound_dma_read_bytes_per_second += sum;
-                        else if (name == "inbound_dma_write") traffic.inbound_dma_write_bytes_per_second += sum;
-                        else if (name == "outbound_dma_read") traffic.outbound_dma_read_bytes_per_second += sum;
-                        else if (name == "outbound_dma_write") traffic.outbound_dma_write_bytes_per_second += sum;
-                    }
-                }
+                const auto average = [&](const std::string &direction) {
+                    const auto key = std::make_tuple(socket.socket_id, stack.iio_unit_id, direction);
+                    const auto sum = iio_sums.find(key);
+                    const auto count = iio_samples.find(key);
+                    if (sum == iio_sums.end() || count == iio_samples.end() || count->second == 0) return 0.0;
+                    return sum->second / static_cast<double>(count->second);
+                };
+                traffic.inbound_dma_read_bytes_per_second = average("inbound_dma_read");
+                traffic.inbound_dma_write_bytes_per_second = average("inbound_dma_write");
+                traffic.outbound_dma_read_bytes_per_second = average("outbound_dma_read");
+                traffic.outbound_dma_write_bytes_per_second = average("outbound_dma_write");
                 stacks.push_back(traffic);
 
                 for (const auto &part : stack.parts) {

@@ -171,6 +171,16 @@ void write_resource_json(const std::string &path, const ResourceRecord &record) 
     }
     output << "],\n";
 
+    output << "  \"core_pcm\":[";
+    for (size_t i = 0; i < record.core_pcm.size(); ++i) {
+        if (i) output << ',';
+        const auto &entry = record.core_pcm[i];
+        output << "{\"cpu\":" << entry.cpu
+               << ",\"instructions\":" << entry.instructions
+               << ",\"cycles\":" << entry.cycles << '}';
+    }
+    output << "],\n";
+
     output << "  \"workload_metadata\":{"
            << "\"encoder_fps\":" << record.workload_metadata.encoder_fps
            << ",\"inference_tokens_per_second\":" << record.workload_metadata.inference_tokens_per_second
@@ -186,6 +196,10 @@ void write_resource_json(const std::string &path, const ResourceRecord &record) 
     output << "}\n";
 }
 
+}
+
+void write_resource_artifact(const std::string &path, const ResourceRecord &record) {
+    write_resource_json(path, record);
 }
 
 int resource_record(const std::string &scenario,

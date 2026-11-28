@@ -67,6 +67,12 @@ struct SocketCacheFabricTraffic {
     double l3_hit_ratio = -1.0;
 };
 
+struct CorePcmTraffic {
+    uint32_t cpu = 0;
+    uint64_t instructions = 0;
+    uint64_t cycles = 0;
+};
+
 struct WorkloadMetadata {
     double encoder_fps = -1.0;
     double inference_tokens_per_second = -1.0;
@@ -89,11 +95,13 @@ struct ResourceRecord {
     std::vector<IioStackTraffic> iio;
     std::vector<GpuIioDevice> gpu_devices;
     std::vector<SocketCacheFabricTraffic> cache_fabric;
+    std::vector<CorePcmTraffic> core_pcm;
     WorkloadMetadata workload_metadata;
     std::vector<std::string> limitations;
 };
 
 bool valid_resource_scenario(const std::string &scenario);
+bool valid_batch_scenario(const std::string &scenario);
 double cache_lines_to_bytes_per_second(uint64_t cache_lines, double elapsed_seconds);
 double isolated_s1_plus_s2(double isolated_cpu, double isolated_gpu);
 double resource_delta(double cpu_gpu, double isolated_sum);

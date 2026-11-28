@@ -16,6 +16,16 @@ ResourceRecord ResourcePcmCollector::measure(const std::string &scenario, double
     return record;
 }
 
+ResourceRecord ResourcePcmCollector::measure_until(
+    const std::string &scenario,
+    double,
+    const WorkloadMetadata &metadata,
+    const std::function<bool()> &,
+    const std::function<void()> &,
+    const std::function<void()> &) {
+    return measure(scenario, 0.0, metadata);
+}
+
 void ResourcePcmCollector::stop() {
 }
 

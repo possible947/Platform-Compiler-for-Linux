@@ -2,17 +2,17 @@
 
 ## Status
 
-The first implementation stage is complete within the CPU/RAPL and restricted
-PCM core-only scope. The Linux recorder reads `/proc/stat`
-and Linux RAPL powercap, writes version 1 local artifacts, and computes CPU
-load and, when explicitly bounded, RAPL power. An optional PCM core backend
-records per-CPU instructions and cycles via Linux perf in version 2 artifacts.
-The operator's root test passed and a five-pair Phi-4 CPU workload experiment
-completed on the target. The experiment provides an initial overhead observation with
-substantial variability, not a proof of negligible impact or an accepted
-threshold. A separate read-only PCM MSR diagnostic also passed.
-Memory bandwidth, NUMA, UPI and IIO collection,
-workload orchestration, and policy-state verification are not implemented.
+The principal analyzer workflow is an orchestrated v4 batch recording. One
+`record` invocation can observe idle or launch the selected llama.cpp CPU,
+HIP, and combined scenarios, including their `numactl` variants. Each scenario
+records `/proc/stat`, Linux RAPL, PCM core instructions/cycles, socket memory
+and NUMA traffic, UPI, IIO/DMA, GPU topology, and supported L3 metrics into one
+coordinated artifact set.
+
+The earlier v1/v2 configured recorder remains available for compatibility,
+along with deterministic four-run comparison. The analyzer does not select or
+apply platform policy, classify bottlenecks, verify model output, or score
+application performance.
 
 The current project contract is documented in
 [Platform Analyzer](../docs/platform-analyzer.md) and the
@@ -22,13 +22,14 @@ open, it does not establish a new project-wide requirement.
 ## Purpose and boundaries
 
 The analyzer records platform behavior before, during, and after a defined
-workload or idle observation. Its measurements support later comparison of
-platform policies on the same target and under the same scenarios.
+workload or idle observation. For v4 batch recordings, its record command is
+also the narrowly scoped workload orchestrator: it launches only the two
+known llama.cpp executables and retains exact arguments, process status, and
+measurement boundaries.
 
-The analyzer does not select or apply policies, launch workloads, verify
-encoder output, or attribute causes. A separate experiment orchestrator can
-run explicitly selected workloads, preserve their own CPU and NUMA placement,
-coordinate measurement boundaries, and record workload results. The Platform
+The analyzer still does not select or apply policies, interpret application
+throughput, verify model output, or attribute causes. The llama.cpp applications
+retain responsibility for their own CPU and NUMA placement. The Platform
 Control Tester separately verifies configured and effective control state.
 
 The external CPU Monitor is a reference for measurement sources and techniques,
@@ -47,11 +48,13 @@ analyzer/
   examples/       Example configurations
   experiments/    Explicitly selected experiment scripts
   src/
-    cli/          Command-line parsing and entry point
-    session/      Measurement lifecycle, scheduling, and event boundaries
+    batch/        Canonical workload orchestration and v4 batch lifecycle
+    cli/          Command-line parsing and compatibility entry points
+    session/      Legacy configured measurement lifecycle
     collectors/   PCM and Linux measurement sources
-    recording/    Artifact writing and completeness status
-    summary/      Derived results, separate from observations
+    resource/     Unified resource records and metric definitions
+    comparison/   Deterministic resource deltas, without conclusions
+    summary/      Derived CPU/RAPL results for v1/v2
   tests/          Unit and integration tests
   third_party/    Copied Intel PCM source and prebuilt library
 ```
@@ -71,12 +74,12 @@ Current and planned collector domains, subject to target and interface support:
 
 | Domain | Candidate sources | Important boundary |
 | --- | --- | --- |
-| CPU | `/proc/stat` | Implemented per-CPU raw counters and load; OS-visible only |
-| CPU performance counters | Intel PCM and Linux perf | Optional restricted core-only mode; short root test passed on target |
-| Energy and power | Linux RAPL powercap | Implemented energy; power requires an operator-supplied bound |
-| Cache, NUMA, memory bandwidth, interconnect, IIO/PCIe | Intel PCM | Planned; events and compatibility must be verified |
-| Temperature and residency | PCM, hwmon, or other verified interfaces | Planned; sensor scope and source must be preserved |
-| Memory, block I/O and pressure | Linux `/proc` and sysfs | Planned; derived averages are not latency distributions |
+| CPU | `/proc/stat` | Per-CPU raw counters and load in batch recordings |
+| CPU performance counters | Intel PCM and Linux perf | Per-core instructions and cycles |
+| Energy and power | Linux RAPL powercap | Raw energy in v4; v1/v2 can derive bounded power |
+| Memory, NUMA, cache, UPI, IIO/PCIe | Intel PCM | Unified v4 resource measurements with explicit availability |
+| GPU ownership topology | Linux PCM/PCIe topology | BDF, vendor and device identity where mapping is trustworthy |
+| Temperature and residency | Not implemented in v4 | No values are invented |
 
 Where PCM exposes only a calculated metric, identify it as such instead of
 claiming it is a raw hardware counter. Never fabricate unsupported values.
@@ -152,76 +155,97 @@ and the extended manual root scenario are described in [ROOT_TEST.md](ROOT_TEST.
 
 ## Usage
 
-The interface has three operations:
+The principal interface is one batch command:
+
+```sh
+analyzer/build/analyzer record \
+  --scenario all|idle|cpu|cpu-numactl|gpu|gpu-numactl|cpu-gpu|cpu-gpu-numactl \
+  --model /path/model.gguf \
+  --output /path/new-output-directory \
+  --duration 60
+```
+
+`all` expands in this exact order: `idle`, `cpu`, `cpu-numactl`, `gpu`,
+`gpu-numactl`, `cpu-gpu`, `cpu-gpu-numactl`. `--duration` controls only the
+idle window. Every workload runs until all selected llama.cpp children finish;
+the model is required for workload scenarios. The canonical prompt is
+`show me detailed descriptions about C programing language`.
+
+The CPU and HIP executables are launched directly with `-m MODEL -p PROMPT`.
+The three `*-numactl` variants add exactly `-numa numactl`. Combined scenarios
+start CPU and HIP llama.cpp concurrently. A root analyzer drops each child to
+`SUDO_UID`/`SUDO_GID`; the analyzer never invokes `sudo` or reconfigures the
+host. Workload-only selections ignore `--duration`.
+
+Compatibility and diagnostic operations remain available:
 
 ```sh
 analyzer/build/analyzer probe
 analyzer/build/analyzer clock
-analyzer/build/analyzer record --config analyzer/examples/idle.json --output /tmp/my-new-analyzer-run
+analyzer/build/analyzer record --config analyzer/examples/idle.json --output /tmp/legacy-run
+analyzer/build/analyzer compare --idle IDLE/resource.json --cpu CPU/resource.json \
+  --gpu GPU/resource.json --cpu-gpu CPU_GPU/resource.json --output delta.json
 ```
 
-The output directory must not already exist. The probe reads CPU and RAPL
-interfaces and checks MSR readability; it does not initialize PCM or program
-PMUs. The configuration supplies run identity, scenario, interval, duration,
-required source flags, an optional RAPL power bound, and optional operator
-metadata. See [ARTIFACTS.md](ARTIFACTS.md) for fields, statuses, exit codes,
-and the limitations of derived values. Configuration does not apply policy or
-override CPU/NUMA affinity.
-
-`analyzer clock` prints one monotonic/realtime timestamp pair for external
-workload coordination. The prepared paired Phi-4 overhead experiment is
-described in [OVERHEAD_TEST.md](OVERHEAD_TEST.md); it requires manual `sudo`.
-
-For manual experiments, start recording, run the explicitly selected workload
-separately, and stop recording with `SIGINT` or `SIGTERM`. The future
-orchestrator must communicate workload start and end events and retain its
-completion status, duration, and errors; the coordination protocol remains to
-be designed. Record observation windows before, during, and after the workload
-where supported.
-
-Required experiment scenarios are **IDLE**, **CPU**, **I/O**, and **CPU+I/O**.
-Use the same workload definitions and measurement protocol for baseline and
-verification; record relevant cache, device, and system conditions.
+`probe` checks CPU, RAPL and MSR readability without programming PMUs. The
+legacy configured recorder retains its v1/v2 artifact contract. `compare` is a
+four-run resource delta matrix and does not emit a performance score or a
+bottleneck conclusion.
 
 ## Output
 
-Each run produces a private local directory:
+A v4 batch creates a private output directory (new or empty):
 
 ```text
-run/
-  manifest.json       Run identity, configuration, versions, and completion
-  measurements.jsonl  Source observations and availability/errors
-  events.jsonl        Observation and workload boundaries and errors
-  summary.json        Separately derived interval metrics and aggregates
+batch/
+  batch-manifest.json
+  idle/
+    manifest.json
+    resource.json
+    measurements.jsonl
+    events.jsonl
+    summary.json
+  cpu/
+    ...the same measurement files...
+    workloads.json
+    cpu.stdout
+    cpu.stderr
+  gpu/ ...
+  cpu-gpu/ ...
 ```
 
-The version 1 and 2 schemas and their current omissions are documented in
-[ARTIFACTS.md](ARTIFACTS.md). Operator-supplied metadata is not independently
-verified. Workload boundaries and effective policy are not yet collected.
+`batch-manifest.json` retains the selected expansion, model, prompt, idle
+duration, final batch status, and per-scenario exit codes. Each scenario manifest records completion and source state. Exact
+argv, PIDs, monotonic/realtime boundaries, exit codes, logs, and termination
+state are retained per workload. `resource.json` contains the unified PCM and
+resource record; Linux CPU/RAPL observations and events remain raw and separate.
+See [ARTIFACTS.md](ARTIFACTS.md) for the v4 and legacy contracts.
 
 An interrupted or storage-failed run must not appear complete. Avoid
 overwriting prior runs, use restrictive file permissions, and make any
 partial artifacts identifiable. Artifacts may contain sensitive local paths
 or identifying information: keep them local and review before sharing.
 
-## Memory / UPI / IIO resource mode
+## Resource batch and root operation
 
-The resource mode is a fixed-window hardware-recorder mode for the
-`idle`, `cpu`, `gpu`, and `cpu-gpu` scenarios:
+A complete batch uses PCM's full memory, uncore and IIO APIs and therefore
+normally requires manual root execution. For example, from a login shell:
 
 ```sh
-analyzer/build/analyzer record --scenario idle --duration 60 --output /path/s0
-analyzer/build/analyzer record --scenario cpu --duration 60 --output /path/s1
-analyzer/build/analyzer record --scenario gpu --duration 60 --output /path/s2
-analyzer/build/analyzer record --scenario cpu-gpu --duration 60 --output /path/s3
+sudo env PCM_KEEP_NMI_WATCHDOG=1 analyzer/build/analyzer record \
+  --scenario all \
+  --model /home/viktor/LLM/models/lmstudio-community/phi-4-GGUF/phi-4-Q4_K_M.gguf \
+  --output /home/viktor/LLM/analyzer-experiments/batch-01 \
+  --duration 60
 ```
 
-If PCM requires root, run the four commands above with `sudo env
-PCM_KEEP_NMI_WATCHDOG=1`; the operator starts and stabilizes workloads. The
-recorded artifact is `resource.json`. Optional externally supplied fields may
-include encoder fps, inference tokens/s, NVMe MB/s and an operator note.
+The agent never executes this privileged command. `SUDO_UID` and `SUDO_GID`
+identify the unprivileged caller to which llama.cpp children are dropped. If
+PCM is unavailable, the analyzer writes a failure artifact and does not start
+workloads. IIO values are stack-level PCM observations unless trustworthy
+PCIe topology establishes a narrower association.
 
-Compare the four artifacts:
+For a compatibility four-run comparison:
 
 ```sh
 analyzer/build/analyzer compare --idle /path/s0/resource.json --cpu /path/s1/resource.json --gpu /path/s2/resource.json --cpu-gpu /path/s3/resource.json --output /path/resource-delta.json
@@ -235,40 +259,19 @@ metric classifications used by this mode.
 
 ## Validation and remaining work
 
-Tests cover delta calculations, fake Linux sources, output and config checks,
-interruption, storage failure, a mocked root scenario, PCM read-only access,
-mocked perf events, and restricted PCM mode. On 2026-11-26, the operator ran the
-[manual root scenario](ROOT_TEST.md) on the dual Xeon Gold 6248 target; both
-the initial CPU/RAPL checks and the later restricted PCM recorder check passed.
-The later [Phi-4 overhead experiment](OVERHEAD_TEST.md) exercised five
-real-hardware PCM recordings under CPU inference and stopped each with SIGINT;
-subsequent recordings started successfully. It provides an initial, variable
-overhead estimate, not an accepted threshold or independent accuracy check.
-Counter conflicts and broader controlled load experiments remain unverified.
+Tests cover CPU/RAPL deltas, fake Linux sources, artifact contracts, scenario
+expansion, interruption, storage failures, PCM read-only access, mocked perf
+events, restricted PCM mode, and deterministic resource comparison. Earlier
+manual target tests validated CPU/RAPL and the restricted PCM recorder on the
+dual Xeon Gold 6248 host.
 
-## Planned stages
+The unified v4 workflow has build and no-privilege artifact checks. A complete
+real-hardware run of CPU, HIP and combined llama.cpp children still requires an
+operator-run root session and target verification of cleanup, process placement,
+IIO rotation, and PMU restoration. Runtime and workload results remain context
+for resource interpretation, not an optimization target.
 
-These stages remain planned; exact event sets and ordering require target
-verification. Runtime measurement is context for understanding resource use
-and measurement influence, not an instruction to maximize throughput.
-
-1. **Completed: CPU/RAPL baseline.** Record Linux CPU and energy counters,
-  restricted PCM core counters, source availability, errors, and timing;
-  validate on the target and characterize initial recorder overhead.
-2. **Characterize additional PCM events.** Verify target support, access,
-  ownership, conflicts, simultaneous event sets, and cleanup before enabling
-  additional collectors. Retain explicit unsupported and error states.
-3. **Memory and NUMA.** Record verified memory-controller bandwidth and
-  local/remote behavior, supplemented by relevant OS-visible node and memory
-  state. Do not equate node allocation with measured access locality.
-4. **Interconnect and I/O fabric.** Add supported UPI and IIO/PCIe measurements
-  only after checking event compatibility and target device mapping.
-5. **Platform context.** Add applicable temperature, residency, block I/O,
-  cache and resource-pressure measurements with clear scope and provenance.
-6. **Experiment coordination.** Implement the separate orchestrator for
-  explicitly selected workloads and the IDLE, CPU, I/O and CPU+I/O scenarios;
-  preserve workload-owned affinity and NUMA settings.
-7. **Comparison and verification.** Repeat the same scenarios and workloads
-  across recorded baseline and candidate states; preserve measurement,
-  interpretation, and causal claims separately. Materialization and control
-  verification remain distinct project roles.
+Remaining work is verification and extensions with demonstrated target support:
+additional PCIe endpoint mapping, temperature/residency, and broader comparison
+of paired default/`numactl` runs. Materialization and policy-control verification
+remain separate project roles.

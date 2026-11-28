@@ -3,7 +3,13 @@
 namespace analyzer {
 
 bool valid_resource_scenario(const std::string &scenario) {
-    return scenario == "idle" || scenario == "cpu" || scenario == "gpu" || scenario == "cpu-gpu";
+    return scenario == "idle" || scenario == "cpu" || scenario == "cpu-numactl" ||
+           scenario == "gpu" || scenario == "gpu-numactl" ||
+           scenario == "cpu-gpu" || scenario == "cpu-gpu-numactl";
+}
+
+bool valid_batch_scenario(const std::string &scenario) {
+    return scenario == "all" || valid_resource_scenario(scenario);
 }
 
 double cache_lines_to_bytes_per_second(uint64_t cache_lines, double elapsed_seconds) {
