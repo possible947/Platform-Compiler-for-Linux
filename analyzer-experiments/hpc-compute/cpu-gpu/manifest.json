@@ -1,0 +1,1 @@
+{"schema_version":"4","scenario":"cpu-gpu","status":"complete","pcm_status":"available","cpu_error":false,"rapl_error":false,"stage_one_samples":271,"resource_samples":2,"workload_processes":10,"gpu_passes":9}

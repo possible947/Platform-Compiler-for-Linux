@@ -1,0 +1,3 @@
+{"type":"measurement_initialized","monotonic_ns":84748014388119,"realtime_ns":1795866724764122676}
+{"type":"workload_started","monotonic_ns":84748232657076,"realtime_ns":1795866724982391672,"detail":"cpu"}
+{"type":"measurement_finished","monotonic_ns":84987023073029,"realtime_ns":1795866963772807586}

@@ -139,6 +139,8 @@ bool adopt_tree(const std::filesystem::path &path) {
 
 struct ChildProcess {
     std::string workload;
+    std::string role;
+    uint32_t attempt = 1;
     std::vector<std::string> argv;
     std::filesystem::path stdout_path;
     std::filesystem::path stderr_path;
@@ -146,6 +148,7 @@ struct ChildProcess {
     int exit_code = -1;
     bool exited = false;
     bool terminated_by_orchestrator = false;
+    std::string termination_reason;
     uint64_t start_monotonic_ns = 0;
     uint64_t start_realtime_ns = 0;
     uint64_t end_monotonic_ns = 0;
@@ -213,18 +216,36 @@ bool any_process_running(const std::vector<ChildProcess> &processes) {
     return false;
 }
 
+bool process_failed(const ChildProcess &process) {
+    return process.exited && process.exit_code != 0 &&
+           process.termination_reason != "cpu_completed";
+}
+
 bool any_process_failed(const std::vector<ChildProcess> &processes) {
-    for (const auto &process : processes) if (process.exited && process.exit_code != 0) return true;
+    for (const auto &process : processes) if (process_failed(process)) return true;
     return false;
 }
 
-void terminate_remaining(std::vector<ChildProcess> &processes, int signal = SIGINT) {
+void terminate_remaining(std::vector<ChildProcess> &processes,
+                         int signal = SIGINT,
+                         const std::string &reason = "scenario_failed") {
     for (auto &process : processes) {
         if (!process.exited && process.pid > 0) {
-            process.terminated_by_orchestrator = true;
-            kill(process.pid, signal);
+            if (process.termination_reason.empty()) process.termination_reason = reason;
+            if (kill(process.pid, signal) == 0) process.terminated_by_orchestrator = true;
         }
     }
+}
+
+std::filesystem::path pass_log_path(const std::filesystem::path &directory,
+                                    const std::string &role,
+                                    uint32_t attempt,
+                                    const std::string &stream,
+                                    bool combined) {
+    if (!combined) return directory / (role + "." + stream);
+    std::ostringstream name;
+    name << role << '.' << std::setw(3) << std::setfill('0') << attempt << '.' << stream;
+    return directory / name.str();
 }
 
 struct StageOneSummary {
@@ -241,9 +262,11 @@ public:
 
     bool valid() const { return measurements_.good() && events_.good(); }
 
-    void event(const std::string &name, TimePoint time) {
+    void event(const std::string &name, TimePoint time, const std::string &detail = {}) {
         events_ << "{\"type\":\"" << json_escape(name) << "\",\"monotonic_ns\":" << time.monotonic_ns
-                << ",\"realtime_ns\":" << time.realtime_ns << "}\n";
+                << ",\"realtime_ns\":" << time.realtime_ns;
+        if (!detail.empty()) events_ << ",\"detail\":\"" << json_escape(detail) << '"';
+        events_ << "}\n";
         events_.flush();
     }
 
@@ -365,12 +388,15 @@ void write_processes(const std::filesystem::path &path, const std::vector<ChildP
         if (index) output << ',';
         const auto &process = processes[index];
         output << "{\"workload\":\"" << json_escape(process.workload)
-               << "\",\"argv\":" << json_args(process.argv)
+               << "\",\"role\":\"" << json_escape(process.role)
+               << "\",\"attempt\":" << process.attempt
+               << ",\"argv\":" << json_args(process.argv)
                << ",\"command\":\"" << json_escape(join_argv(process.argv))
                << "\",\"pid\":" << process.pid
                << ",\"exit_code\":" << process.exit_code
                << ",\"terminated_by_orchestrator\":" << (process.terminated_by_orchestrator ? "true" : "false")
-               << ",\"start_monotonic_ns\":" << process.start_monotonic_ns
+               << ",\"termination_reason\":\"" << json_escape(process.termination_reason)
+               << "\",\"start_monotonic_ns\":" << process.start_monotonic_ns
                << ",\"start_realtime_ns\":" << process.start_realtime_ns
                << ",\"end_monotonic_ns\":" << process.end_monotonic_ns
                << ",\"end_realtime_ns\":" << process.end_realtime_ns << '}';
@@ -410,13 +436,6 @@ bool uses_cpu(const std::string &scenario) {
 
 bool uses_gpu(const std::string &scenario) {
     return scenario == "gpu" || scenario == "gpu-numactl" || scenario == "cpu-gpu" || scenario == "cpu-gpu-numactl";
-}
-
-std::vector<std::string> process_args(const std::string &cli, const BatchRecordOptions &options,
-                                      bool numactl) {
-    std::vector<std::string> args{cli, "-m", options.model, "-p", options.prompt};
-    if (numactl) { args.push_back("-numa"); args.push_back("numactl"); }
-    return args;
 }
 
 std::string scenario_status(const std::vector<ChildProcess> &processes,
@@ -467,9 +486,42 @@ int run_one_scenario(const BatchRecordOptions &options, const std::string &scena
 
     bool workload_launch_error = false;
     auto idle_deadline = std::chrono::steady_clock::now();
+    const bool combined = scenario == "cpu-gpu" || scenario == "cpu-gpu-numactl";
+    const bool with_numactl = is_numactl_scenario(scenario);
+    size_t cpu_process_index = 0;
+    size_t gpu_process_index = 0;
+    uint32_t gpu_attempt = 0;
 
-    bool termination_started = false;
-    auto force_kill_deadline = std::chrono::steady_clock::now();
+    const auto start_cpu = [&]() {
+        ChildProcess process;
+        process.workload = with_numactl ? "cpu-numactl" : "cpu";
+        process.role = "cpu";
+        process.argv = llama_process_args(options.cpu_cli, options, with_numactl);
+        process.stdout_path = scenario_dir / "cpu.stdout";
+        process.stderr_path = scenario_dir / "cpu.stderr";
+        if (!spawn_workload(process, scenario_dir)) return false;
+        cpu_process_index = processes.size();
+        processes.push_back(std::move(process));
+        stage_one.event("workload_started", now(), "cpu");
+        return true;
+    };
+
+    const auto start_gpu = [&]() {
+        ChildProcess process;
+        process.workload = with_numactl ? "gpu-numactl" : "gpu";
+        process.role = "gpu";
+        process.attempt = ++gpu_attempt;
+        process.argv = llama_process_args(options.gpu_cli, options, with_numactl);
+        process.stdout_path = pass_log_path(scenario_dir, "gpu", gpu_attempt, "stdout", combined);
+        process.stderr_path = pass_log_path(scenario_dir, "gpu", gpu_attempt, "stderr", combined);
+        if (!spawn_workload(process, scenario_dir)) return false;
+        gpu_process_index = processes.size();
+        processes.push_back(std::move(process));
+        stage_one.event("workload_started", now(),
+                        "gpu attempt " + std::to_string(gpu_attempt));
+        return true;
+    };
+
     ResourceRecord resource = collector.measure_until(
         scenario,
         1.0,
@@ -478,14 +530,40 @@ int run_one_scenario(const BatchRecordOptions &options, const std::string &scena
             if (interrupted != 0 || workload_launch_error) return false;
             if (scenario == "idle") return std::chrono::steady_clock::now() < idle_deadline;
             poll_processes(processes);
-            if (any_process_failed(processes)) {
-                if (!termination_started) {
-                    termination_started = true;
-                    force_kill_deadline = std::chrono::steady_clock::now() + std::chrono::seconds(5);
-                    terminate_remaining(processes);
-                } else if (std::chrono::steady_clock::now() >= force_kill_deadline) {
-                    terminate_remaining(processes, SIGKILL);
+            if (combined) {
+                const ChildProcess &cpu_process = processes[cpu_process_index];
+                const ChildProcess &gpu_process = processes[gpu_process_index];
+                switch (combined_loop_action(cpu_process.exited, cpu_process.exit_code,
+                                             gpu_process.exited, gpu_process.exit_code)) {
+                case CombinedLoopAction::continue_running:
+                    return true;
+                case CombinedLoopAction::restart_gpu:
+                    stage_one.event("gpu_pass_completed", now(),
+                                    "attempt " + std::to_string(gpu_process.attempt));
+                    if (!start_gpu()) {
+                        workload_launch_error = true;
+                        terminate_remaining(processes, SIGINT, "gpu_restart_failed");
+                        return false;
+                    }
+                    return true;
+                case CombinedLoopAction::stop_cpu_completed: {
+                    stage_one.event("cpu_anchor_completed", now());
+                    ChildProcess &active_gpu = processes[gpu_process_index];
+                    if (!active_gpu.exited) {
+                        active_gpu.termination_reason = "cpu_completed";
+                        active_gpu.terminated_by_orchestrator =
+                            kill(active_gpu.pid, SIGINT) == 0;
+                    }
+                    return false;
                 }
+                case CombinedLoopAction::stop_failed:
+                    terminate_remaining(processes, SIGINT, "combined_workload_failed");
+                    return false;
+                }
+            }
+            if (any_process_failed(processes)) {
+                terminate_remaining(processes, SIGINT, "workload_failed");
+                return false;
             }
             return any_process_running(processes);
         },
@@ -500,37 +578,21 @@ int run_one_scenario(const BatchRecordOptions &options, const std::string &scena
                         std::chrono::duration<double>(options.idle_duration_seconds));
                 return;
             }
-            const bool with_numactl = is_numactl_scenario(scenario);
-            if (uses_cpu(scenario)) {
-                ChildProcess process;
-                process.workload = with_numactl ? "cpu-numactl" : "cpu";
-                process.argv = process_args(options.cpu_cli, options, with_numactl);
-                process.stdout_path = scenario_dir / "cpu.stdout";
-                process.stderr_path = scenario_dir / "cpu.stderr";
-                if (!spawn_workload(process, scenario_dir)) {
-                    workload_launch_error = true;
-                    return;
-                }
-                processes.push_back(std::move(process));
+            if (uses_cpu(scenario) && !start_cpu()) {
+                workload_launch_error = true;
+                return;
             }
-            if (uses_gpu(scenario)) {
-                ChildProcess process;
-                process.workload = with_numactl ? "gpu-numactl" : "gpu";
-                process.argv = process_args(options.gpu_cli, options, with_numactl);
-                process.stdout_path = scenario_dir / "gpu.stdout";
-                process.stderr_path = scenario_dir / "gpu.stderr";
-                if (!spawn_workload(process, scenario_dir)) {
-                    workload_launch_error = true;
-                    terminate_remaining(processes);
-                    return;
-                }
-                processes.push_back(std::move(process));
+            if (uses_gpu(scenario) && !start_gpu()) {
+                workload_launch_error = true;
+                terminate_remaining(processes, SIGINT, "gpu_start_failed");
             }
-            stage_one.event("workload_started", now());
         });
     collector.stop();
     poll_processes(processes);
-    if (interrupted != 0 || any_process_failed(processes)) terminate_remaining(processes);
+    if (interrupted != 0)
+        terminate_remaining(processes, SIGINT, "interrupted");
+    else if (any_process_failed(processes) || workload_launch_error)
+        terminate_remaining(processes, SIGINT, "scenario_failed");
     const auto reap_deadline = std::chrono::steady_clock::now() + std::chrono::seconds(5);
     while (any_process_running(processes)) {
         poll_processes(processes);
@@ -547,6 +609,9 @@ int run_one_scenario(const BatchRecordOptions &options, const std::string &scena
 
     const std::string status = scenario_status(processes, pcm_status, workload_launch_error,
         stage_one.cpu_error() || stage_one.rapl_error(), interrupted != 0);
+    const size_t gpu_passes = static_cast<size_t>(std::count_if(
+        processes.begin(), processes.end(),
+        [](const ChildProcess &process) { return process.role == "gpu"; }));
     std::ofstream manifest(scenario_dir / "manifest.json");
     manifest << "{\"schema_version\":\"4\",\"scenario\":\"" << scenario
              << "\",\"status\":\"" << status << "\",\"pcm_status\":\"" << json_escape(pcm_status.status)
@@ -554,7 +619,8 @@ int run_one_scenario(const BatchRecordOptions &options, const std::string &scena
              << ",\"rapl_error\":" << (stage_one.rapl_error() ? "true" : "false")
              << ",\"stage_one_samples\":" << stage_one.summary().samples
              << ",\"resource_samples\":" << resource.memory.size()
-             << ",\"workload_processes\":" << processes.size() << "}\n";
+             << ",\"workload_processes\":" << processes.size()
+             << ",\"gpu_passes\":" << gpu_passes << "}\n";
     manifest.close();
     if (!adopt_tree(scenario_dir)) std::cerr << "cannot assign scenario artifacts to the invoking user\n";
     std::cout << scenario << ' ' << status << ' ' << scenario_dir.string() << '\n';
@@ -568,6 +634,31 @@ std::vector<std::string> expand_batch_scenarios(const std::string &scenario) {
         return {"idle", "cpu", "cpu-numactl", "gpu", "gpu-numactl", "cpu-gpu", "cpu-gpu-numactl"};
     if (valid_resource_scenario(scenario)) return {scenario};
     return {};
+}
+
+std::vector<std::string> llama_process_args(const std::string &cli,
+                                            const BatchRecordOptions &options,
+                                            bool numactl) {
+    std::vector<std::string> args{
+        cli, "-m", options.model, "-p", options.prompt, "-st"};
+    if (numactl) {
+        args.push_back("--numa");
+        args.push_back("numactl");
+    }
+    return args;
+}
+
+CombinedLoopAction combined_loop_action(bool cpu_exited, int cpu_exit_code,
+                                        bool gpu_exited, int gpu_exit_code) {
+    if (cpu_exited) {
+        if (cpu_exit_code != 0) return CombinedLoopAction::stop_failed;
+        if (gpu_exited && gpu_exit_code != 0) return CombinedLoopAction::stop_failed;
+        return CombinedLoopAction::stop_cpu_completed;
+    }
+    if (!gpu_exited) return CombinedLoopAction::continue_running;
+    return gpu_exit_code == 0
+        ? CombinedLoopAction::restart_gpu
+        : CombinedLoopAction::stop_failed;
 }
 
 int batch_record(const BatchRecordOptions &options) {
@@ -606,20 +697,40 @@ int batch_record(const BatchRecordOptions &options) {
     }
 
     std::error_code ec;
-    if (std::filesystem::is_symlink(std::filesystem::symlink_status(options.output, ec))) {
+    const auto initial_output_status = std::filesystem::symlink_status(options.output, ec);
+    if (std::filesystem::is_symlink(initial_output_status)) {
         std::cerr << "output directory must not be a symbolic link\n";
+        return 1;
+    }
+    const bool output_existed = std::filesystem::exists(initial_output_status);
+    if (output_existed && !std::filesystem::is_directory(initial_output_status)) {
+        std::cerr << "output path is not a directory\n";
         return 1;
     }
     ec.clear();
     std::filesystem::create_directories(options.output, ec);
     if (ec) { std::cerr << "cannot create output: " << ec.message() << '\n'; return 1; }
-    if (!std::filesystem::is_empty(options.output, ec)) {
-        std::cerr << "output directory must be new or empty\n";
+    for (const auto &scenario : scenarios) {
+        const std::filesystem::path scenario_path = std::filesystem::path(options.output) / scenario;
+        if (std::filesystem::exists(scenario_path, ec)) {
+            std::cerr << "scenario output already exists: " << scenario_path << '\n';
+            return 1;
+        }
+    }
+    if (options.scenario == "all" &&
+        std::filesystem::exists(std::filesystem::path(options.output) / "batch-manifest.json", ec)) {
+        std::cerr << "batch manifest already exists\n";
         return 1;
     }
-    if (chmod(options.output.c_str(), 0700) != 0) {
-        std::cerr << "cannot secure output directory: " << std::strerror(errno) << '\n';
-        return 1;
+    if (!output_existed) {
+        if (chmod(options.output.c_str(), 0700) != 0) {
+            std::cerr << "cannot secure output directory: " << std::strerror(errno) << '\n';
+            return 1;
+        }
+        if (!adopt_path(options.output)) {
+            std::cerr << "cannot assign output directory to the invoking user\n";
+            return 1;
+        }
     }
 
     std::signal(SIGINT, interrupt_handler);
@@ -627,18 +738,25 @@ int batch_record(const BatchRecordOptions &options) {
     interrupted = 0;
 
     std::vector<std::pair<std::string, int>> results;
-    write_batch_manifest(options, scenarios, results, "running");
+    const bool batch_manifest = options.scenario == "all";
+    if (batch_manifest) write_batch_manifest(options, scenarios, results, "running");
     for (const auto &scenario : scenarios) {
         const int result = run_one_scenario(options, scenario, std::filesystem::path(options.output) / scenario);
         results.emplace_back(scenario, result);
         if (result != 0) {
-            write_batch_manifest(options, scenarios, results, interrupted != 0 ? "interrupted" : "failed");
-            if (!adopt_tree(options.output)) std::cerr << "cannot assign batch artifacts to the invoking user\n";
+            if (batch_manifest) {
+                write_batch_manifest(options, scenarios, results, interrupted != 0 ? "interrupted" : "failed");
+                if (!adopt_path(std::filesystem::path(options.output) / "batch-manifest.json"))
+                    std::cerr << "cannot assign batch manifest to the invoking user\n";
+            }
             return result;
         }
     }
-    write_batch_manifest(options, scenarios, results, "complete");
-    if (!adopt_tree(options.output)) std::cerr << "cannot assign batch artifacts to the invoking user\n";
+    if (batch_manifest) {
+        write_batch_manifest(options, scenarios, results, "complete");
+        if (!adopt_path(std::filesystem::path(options.output) / "batch-manifest.json"))
+            std::cerr << "cannot assign batch manifest to the invoking user\n";
+    }
     return 0;
 }
 

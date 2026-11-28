@@ -22,18 +22,31 @@ completion, interruption, or failure.
 | `<scenario>/measurements.jsonl` | Raw `/proc/stat` and Linux RAPL samples with availability and timestamps |
 | `<scenario>/events.jsonl` | Initialization, workload-start, and measurement-finished boundaries |
 | `<scenario>/summary.json` | Stage-one sample count and bounded first/last CPU/RAPL observations |
-| `<scenario>/workloads.json` | Exact argv/command, PID, start/end clocks, exit code and orchestrator termination state |
-| `<scenario>/{cpu,gpu}.stdout` and `.stderr` | Child output captured verbatim |
+| `<scenario>/workloads.json` | Exact argv/command, role, attempt, PID, start/end clocks, exit code, termination request and reason |
+| `<scenario>/{cpu,gpu}.stdout` and `.stderr` | Single-engine child output captured verbatim |
+| `<scenario>/gpu.NNN.stdout` and `.stderr` | Numbered GPU passes from combined scenarios |
 
-The batch directory must be absent or empty. PCM initialization happens before
-workload creation. If PCM is unavailable, a scenario failure manifest and
+The output root may be new or existing. Each selected scenario requires a new
+`output/<scenario>/` directory; existing scenario directories are never
+overwritten. Only `--scenario all` publishes `output/batch-manifest.json`.
+PCM initialization happens before workload creation. If PCM is unavailable, a scenario failure manifest and
 resource artifact are retained and no workload is started. CPU/RAPL source
 failures produce `partial` when PCM and workload completion otherwise succeed.
 Process or PCM failures produce `failed`; signals produce `interrupted`.
+Combined scenario manifests include `gpu_passes`, and each `workloads.json`
+entry includes role, one-based attempt, and termination reason. The final GPU
+pass may therefore have a nonzero signal-derived exit code while retaining a
+successful combined scenario, solely when its reason is `cpu_completed`.
 
-Default CPU and HIP llama.cpp argv is `-m MODEL -p PROMPT`. A numactl scenario
-adds `-numa numactl`; a combined scenario starts both children concurrently.
-The fixed prompt is `show me detailed descriptions about C programing language`.
+Default CPU and HIP llama.cpp argv is `-m MODEL -p PROMPT -st`. The `-st`
+flag selects one completed turn and prevents an interactive wait after the
+response. A numactl scenario adds `--numa numactl`; a combined scenario starts
+both children concurrently. In a combined scenario CPU is the measurement
+anchor. A GPU exit code of zero while CPU remains active starts the next GPU
+attempt immediately. Successful CPU completion stops the active GPU pass;
+that pass is retained with `termination_reason=cpu_completed` and is not treated
+as a workload failure. Any other nonzero engine exit fails the scenario. The
+fixed prompt is `show me detailed descriptions about C programing language`.
 When the analyzer is root, children must be dropped to `SUDO_UID`/`SUDO_GID`.
 The command never escalates privileges itself. Raw measurements and process
 observations do not imply application-quality or bottleneck conclusions.

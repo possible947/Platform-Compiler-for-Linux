@@ -171,11 +171,16 @@ idle window. Every workload runs until all selected llama.cpp children finish;
 the model is required for workload scenarios. The canonical prompt is
 `show me detailed descriptions about C programing language`.
 
-The CPU and HIP executables are launched directly with `-m MODEL -p PROMPT`.
-The three `*-numactl` variants add exactly `-numa numactl`. Combined scenarios
-start CPU and HIP llama.cpp concurrently. A root analyzer drops each child to
-`SUDO_UID`/`SUDO_GID`; the analyzer never invokes `sudo` or reconfigures the
-host. Workload-only selections ignore `--duration`.
+The CPU and HIP executables are launched directly with `-m MODEL -p PROMPT -st`,
+so each llama.cpp call performs one turn and exits instead of entering the
+interactive prompt. The three `*-numactl` variants add exactly `--numa numactl`.
+Combined scenarios start CPU and HIP llama.cpp concurrently, with CPU as the
+measurement anchor. Whenever a successful GPU pass finishes before CPU, the
+analyzer starts a new GPU pass. When CPU exits successfully, the current GPU
+pass is stopped with `SIGINT` and marked `termination_reason=cpu_completed`.
+A nonzero exit from either engine fails the scenario. A root analyzer drops each
+child to `SUDO_UID`/`SUDO_GID`; the analyzer never invokes `sudo` or reconfigures
+the host. Workload-only selections ignore `--duration`.
 
 Compatibility and diagnostic operations remain available:
 
@@ -194,7 +199,11 @@ bottleneck conclusion.
 
 ## Output
 
-A v4 batch creates a private output directory (new or empty):
+A v4 batch uses the supplied directory as a shared output root. The root may
+already exist and contain unrelated completed scenarios. Every selected scenario
+gets its own new `root/<scenario>/` directory and existing scenario directories
+are never overwritten. `batch-manifest.json` is published at the root only for
+`--scenario all`.
 
 ```text
 batch/
@@ -211,7 +220,13 @@ batch/
     cpu.stdout
     cpu.stderr
   gpu/ ...
-  cpu-gpu/ ...
+  cpu-gpu/
+    gpu.001.stdout
+    gpu.001.stderr
+    gpu.002.stdout
+    gpu.002.stderr
+    ...the same measurement and manifest files...
+  cpu-gpu-numactl/ ...
 ```
 
 `batch-manifest.json` retains the selected expansion, model, prompt, idle

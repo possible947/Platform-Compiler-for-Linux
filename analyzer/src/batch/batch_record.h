@@ -16,7 +16,19 @@ struct BatchRecordOptions {
     std::string metadata_path;
 };
 
+enum class CombinedLoopAction {
+    continue_running,
+    restart_gpu,
+    stop_cpu_completed,
+    stop_failed
+};
+
 std::vector<std::string> expand_batch_scenarios(const std::string &scenario);
+std::vector<std::string> llama_process_args(const std::string &cli,
+                                            const BatchRecordOptions &options,
+                                            bool numactl);
+CombinedLoopAction combined_loop_action(bool cpu_exited, int cpu_exit_code,
+                                        bool gpu_exited, int gpu_exit_code);
 int batch_record(const BatchRecordOptions &options);
 
 }

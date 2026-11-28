@@ -1,0 +1,1 @@
+{"schema_version":"4","scenario":"gpu-numactl","status":"complete","pcm_status":"available","cpu_error":false,"rapl_error":false,"stage_one_samples":24,"resource_samples":2,"workload_processes":1,"gpu_passes":1}

@@ -25,13 +25,16 @@ The v4 analyzer `record` path is the llama.cpp experiment orchestrator. It
 expands a selection, initializes measurement, launches only the configured
 CPU/HIP executables, coordinates their real start/end boundaries, and retains
 argv, PID, process status, logs, and errors. Combined scenarios launch both
-engines concurrently and wait for both children.
+engines concurrently. CPU anchors the measurement: every successful early GPU
+completion starts the next GPU pass, while successful CPU completion stops the
+current GPU pass and records `termination_reason=cpu_completed`. A failed
+engine or restart attempt fails the combined scenario.
 
 This orchestration boundary does not select or apply platform policies,
 reconfigure devices, verify model output, or attribute causes. The launched
-applications retain responsibility for CPU and NUMA placement. The three
-`*-numactl` scenarios express that choice through llama.cpp's own
-`-numa numactl` option. No other workload family is launched by this command.
+applications retain responsibility for CPU and NUMA placement. The three `*-numactl` scenarios express that choice through llama.cpp's own
+`--numa numactl` option. Every llama.cpp invocation uses `-st` so it completes
+one turn and exits. No other workload family is launched by this command.
 
 Use the operator's existing CPU monitor as a reference for measurement sources
 and proven techniques, including counter ownership, conflicts, permissions,
@@ -54,8 +57,9 @@ The stable v4 scenario set and `all` expansion order are:
 
 `--duration` applies only to `idle`. Workload scenarios continue until all
 launched llama.cpp processes complete, fail, or receive an interruption.
-The canonical CPU/HIP argv is `-m MODEL -p PROMPT`; `*-numactl` adds exactly
-`-numa numactl`. Combined scenarios use both executables concurrently.
+The canonical CPU/HIP argv is `-m MODEL -p PROMPT -st`; `*-numactl` adds exactly
+`--numa numactl`. Combined scenarios use both executables concurrently, repeat
+GPU until CPU finishes, and retain each GPU attempt as numbered logs.
 
 Use the same model, prompt and executables for paired default/`numactl` and
 combined runs. Application throughput and correctness remain external
@@ -140,8 +144,10 @@ report PCM unavailable; it must not elevate itself or launch a workload after
 PCM setup fails. The root process drops llama.cpp children to the original
 `SUDO_UID` and `SUDO_GID`.
 
-A v4 output directory contains `batch-manifest.json` and one directory per
-selected scenario. Scenario artifacts include `manifest.json`, `resource.json`,
+A v4 output root contains one new `output/<scenario>/` directory per selection.
+It may already contain unrelated completed scenarios, but a selected directory
+is never overwritten. `batch-manifest.json` is written at the root for
+`--scenario all`. Scenario artifacts include `manifest.json`, `resource.json`,
 `measurements.jsonl`, `events.jsonl`, `summary.json`, workload status and log
 files. The legacy config recorder and four-run comparison remain compatibility
 interfaces described in the [analyzer README](../analyzer/README.md).

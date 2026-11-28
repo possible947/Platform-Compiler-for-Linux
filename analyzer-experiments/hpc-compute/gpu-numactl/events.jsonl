@@ -1,0 +1,3 @@
+{"type":"measurement_initialized","monotonic_ns":85360465624188,"realtime_ns":1795867337215358852}
+{"type":"workload_started","monotonic_ns":85360680403220,"realtime_ns":1795867337430137882,"detail":"gpu attempt 1"}
+{"type":"measurement_finished","monotonic_ns":85382675525369,"realtime_ns":1795867359425259926}

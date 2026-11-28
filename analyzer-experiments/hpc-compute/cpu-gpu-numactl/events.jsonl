@@ -1,0 +1,39 @@
+{"type":"measurement_initialized","monotonic_ns":85657480270190,"realtime_ns":1795867634230004753}
+{"type":"workload_started","monotonic_ns":85657695635954,"realtime_ns":1795867634445370546,"detail":"cpu"}
+{"type":"workload_started","monotonic_ns":85657697056775,"realtime_ns":1795867634446791332,"detail":"gpu attempt 1"}
+{"type":"gpu_pass_completed","monotonic_ns":85689188267465,"realtime_ns":1795867665938002017,"detail":"attempt 1"}
+{"type":"workload_started","monotonic_ns":85689189841539,"realtime_ns":1795867665939576097,"detail":"gpu attempt 2"}
+{"type":"gpu_pass_completed","monotonic_ns":85722828544268,"realtime_ns":1795867699578278828,"detail":"attempt 2"}
+{"type":"workload_started","monotonic_ns":85722830081814,"realtime_ns":1795867699579816412,"detail":"gpu attempt 3"}
+{"type":"gpu_pass_completed","monotonic_ns":85759528171581,"realtime_ns":1795867736277906138,"detail":"attempt 3"}
+{"type":"workload_started","monotonic_ns":85759531263586,"realtime_ns":1795867736280998154,"detail":"gpu attempt 4"}
+{"type":"gpu_pass_completed","monotonic_ns":85789065622525,"realtime_ns":1795867765815357077,"detail":"attempt 4"}
+{"type":"workload_started","monotonic_ns":85789070598964,"realtime_ns":1795867765820333571,"detail":"gpu attempt 5"}
+{"type":"gpu_pass_completed","monotonic_ns":85824704574312,"realtime_ns":1795867801454308864,"detail":"attempt 5"}
+{"type":"workload_started","monotonic_ns":85824706019226,"realtime_ns":1795867801455753819,"detail":"gpu attempt 6"}
+{"type":"gpu_pass_completed","monotonic_ns":85862374418888,"realtime_ns":1795867839124153445,"detail":"attempt 6"}
+{"type":"workload_started","monotonic_ns":85862375940006,"realtime_ns":1795867839125674603,"detail":"gpu attempt 7"}
+{"type":"gpu_pass_completed","monotonic_ns":85899100192868,"realtime_ns":1795867875849927424,"detail":"attempt 7"}
+{"type":"workload_started","monotonic_ns":85899101881191,"realtime_ns":1795867875851615797,"detail":"gpu attempt 8"}
+{"type":"gpu_pass_completed","monotonic_ns":85931707213703,"realtime_ns":1795867908456948255,"detail":"attempt 8"}
+{"type":"workload_started","monotonic_ns":85931708682925,"realtime_ns":1795867908458417583,"detail":"gpu attempt 9"}
+{"type":"gpu_pass_completed","monotonic_ns":85962248401721,"realtime_ns":1795867938998136281,"detail":"attempt 9"}
+{"type":"workload_started","monotonic_ns":85962250110215,"realtime_ns":1795867938999844808,"detail":"gpu attempt 10"}
+{"type":"gpu_pass_completed","monotonic_ns":85993910212510,"realtime_ns":1795867970659947067,"detail":"attempt 10"}
+{"type":"workload_started","monotonic_ns":85993911751308,"realtime_ns":1795867970661485875,"detail":"gpu attempt 11"}
+{"type":"gpu_pass_completed","monotonic_ns":86026525534971,"realtime_ns":1795868003275269527,"detail":"attempt 11"}
+{"type":"workload_started","monotonic_ns":86026526968756,"realtime_ns":1795868003276703408,"detail":"gpu attempt 12"}
+{"type":"gpu_pass_completed","monotonic_ns":86058100289909,"realtime_ns":1795868034850024468,"detail":"attempt 12"}
+{"type":"workload_started","monotonic_ns":86058101768467,"realtime_ns":1795868034851503061,"detail":"gpu attempt 13"}
+{"type":"gpu_pass_completed","monotonic_ns":86096808038389,"realtime_ns":1795868073557772946,"detail":"attempt 13"}
+{"type":"workload_started","monotonic_ns":86096809546253,"realtime_ns":1795868073559280895,"detail":"gpu attempt 14"}
+{"type":"gpu_pass_completed","monotonic_ns":86131467262146,"realtime_ns":1795868108216996702,"detail":"attempt 14"}
+{"type":"workload_started","monotonic_ns":86131468801580,"realtime_ns":1795868108218536147,"detail":"gpu attempt 15"}
+{"type":"gpu_pass_completed","monotonic_ns":86163089448463,"realtime_ns":1795868139839183014,"detail":"attempt 15"}
+{"type":"workload_started","monotonic_ns":86163091085222,"realtime_ns":1795868139840819775,"detail":"gpu attempt 16"}
+{"type":"gpu_pass_completed","monotonic_ns":86194764070802,"realtime_ns":1795868171513805358,"detail":"attempt 16"}
+{"type":"workload_started","monotonic_ns":86194766097382,"realtime_ns":1795868171515831983,"detail":"gpu attempt 17"}
+{"type":"gpu_pass_completed","monotonic_ns":86226337229790,"realtime_ns":1795868203086964346,"detail":"attempt 17"}
+{"type":"workload_started","monotonic_ns":86226341637232,"realtime_ns":1795868203091371832,"detail":"gpu attempt 18"}
+{"type":"cpu_anchor_completed","monotonic_ns":86232456375860,"realtime_ns":1795868209206110416}
+{"type":"measurement_finished","monotonic_ns":86232727590398,"realtime_ns":1795868209477325058}
